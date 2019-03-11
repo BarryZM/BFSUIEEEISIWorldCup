@@ -2,4 +2,4 @@
 
 # module for models
 
-print(1)
+print('1')
