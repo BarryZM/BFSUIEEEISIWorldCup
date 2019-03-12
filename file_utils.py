@@ -18,3 +18,9 @@ def copy_file(srcfile, dstfile):
             os.makedirs(fpath)  # create the destination path
         shutil.copyfile(srcfile, dstfile)  # copy
         print "copy %s -> %s" % (srcfile, dstfile)
+
+
+def check_file_url(fpath):
+    if not os.path.exists(fpath):
+        os.makedirs(fpath)  # create the destination path
+    return fpath
