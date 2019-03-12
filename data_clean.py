@@ -4,21 +4,18 @@
  module for data clean
 """
 
-import xlrd
-import xlwt
 import pandas
 import file_utils
 import os
 from openpyxl.workbook import child as openpyxl_child
 
-origin_file_url = u'data/赛题1数据材料/赛题1数据集/赛题1数据集/'  # the original file folder url, files in it should be read only
-working_file_url = u'data/processed_data/raw_data/'  # the working file folder, a copy from the original file folder, can be changed during work
-statistic_data_file_url = u'data/processed_data/statistic_data/'  # statistic info for every table
+from file_directions import origin_file_url, working_file_url, statistic_data_file_url
 
 
 def data_excel_statistic_info(file_name):
     """
-    get simple statistic info for one data file
+    get the simple statistic info for one data file, the info will be stored under statistic_data_file_url with the
+    same file name with file_name, every sheet is one column's info with sheet name be the column's name.
     :param file_name: the file name of the excel, e.g. data.xls
     :return:
     """
@@ -30,7 +27,7 @@ def data_excel_statistic_info(file_name):
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
-        # to name a sheet, there's
+        # to name a sheet, there's some rules need to adopt
         m = openpyxl_child.INVALID_TITLE_REGEX.search(column)
         if m:
             for item in m.group():
