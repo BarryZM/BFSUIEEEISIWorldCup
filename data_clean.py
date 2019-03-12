@@ -16,8 +16,12 @@ working_file_url = u'data/processed_data/raw_data/'  # the working file folder, 
 statistic_data_file_url = u'data/processed_data/statistic_data/'  # statistic info for every table
 
 
-# get simple statistic info for one data file
 def data_excel_statistic_info(file_name):
+    """
+    get simple statistic info for one data file
+    :param file_name: the file name of the excel, e.g. data.xls
+    :return:
+    """
     init_file = origin_file_url + file_name
     work_file = working_file_url + file_name
 
@@ -26,6 +30,7 @@ def data_excel_statistic_info(file_name):
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
+        # to name a sheet, there's
         m = openpyxl_child.INVALID_TITLE_REGEX.search(column)
         if m:
             for item in m.group():
@@ -35,12 +40,19 @@ def data_excel_statistic_info(file_name):
     writer.save()
 
 
-# get simple statistic info for all data files in specific file holder
 def describe_file_folder(file_holder_url):
+    """
+    get simple statistic info for all data files in specific file holder
+    :param file_holder_url: the folder direction to be described
+    :return:
+    """
     for file_name in os.listdir(file_holder_url):
         data_excel_statistic_info(file_name)
 
 
-# get simple statistic info for all data files in our problem
 def describe_work():
+    """
+    get simple statistic info for all data files in our problem
+    :return:
+    """
     describe_file_folder(origin_file_url)
