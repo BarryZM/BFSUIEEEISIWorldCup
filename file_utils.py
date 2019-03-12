@@ -1,8 +1,8 @@
 # *- coding:utf-8 -*-
 
-# ------------------------------------
-# module for utils
-# ------------------------------------
+"""
+ module for utils
+"""
 
 import os
 import shutil
