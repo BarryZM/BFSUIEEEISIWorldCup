@@ -68,9 +68,6 @@ def data_categorize():
     writer = pandas.ExcelWriter(new_file_name)
     for column in categorize_info.columns:
         categorized_data = pandas.DataFrame(columns=data.columns.tolist())
-        # for i in range(0, len(data)):
-        #     if categorize_info[column].tolist().__contains__(data.iat[i, 0]):
-        #         categorized_data.append(pandas.DataFrame(data[i:i+1], columns=data.columns.tolist()), ignore_index=True)
         for row in data.itertuples():
             if categorize_info[column].tolist().__contains__(row[1]):
                 row_data = [list(row[1:len(row)])]
