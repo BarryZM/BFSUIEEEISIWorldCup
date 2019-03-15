@@ -71,8 +71,7 @@ def data_categorize():
         for row in data.itertuples():
             if categorize_info[column].tolist().__contains__(row[1]):
                 row_data = [list(row[1:len(row)])]
-                print (row_data)
-                categorized_data = pandas.concat([categorized_data, pandas.DataFrame(row_data)], ignore_index=True)
+                categorized_data = pandas.concat([categorized_data, pandas.DataFrame(row_data, columns=data.columns.tolist())], ignore_index=True)
         categorized_data.to_excel(writer, sheet_name=column)
 
     writer.save()
