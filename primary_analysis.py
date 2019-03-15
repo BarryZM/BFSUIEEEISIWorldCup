@@ -4,11 +4,12 @@
  module for primary analysis before we start data clean
 """
 
-import pandas
-import file_utils
 import os
+
+import pandas
 from openpyxl.workbook import child as openpyxl_child
 
+import file_utils
 from file_directions import origin_file_url, working_file_url, statistic_data_file_url
 
 
@@ -53,3 +54,31 @@ def describe_work():
     :return:
     """
     describe_file_folder(origin_file_url)
+
+
+def data_categorize():
+    """
+    categorize these tables
+    :return:
+    """
+    file_name = u'数据初整理.xlsx'
+    new_file_name = u'categorize数据初整理.xlsx'
+    data = pandas.read_excel(file_name, sheet_name='data')
+    categorize_info = pandas.read_excel(file_name, sheet_name='categorize')
+    writer = pandas.ExcelWriter(new_file_name)
+    for column in categorize_info.columns:
+        categorized_data = pandas.DataFrame(columns=data.columns.tolist())
+        # for i in range(0, len(data)):
+        #     if categorize_info[column].tolist().__contains__(data.iat[i, 0]):
+        #         categorized_data.append(pandas.DataFrame(data[i:i+1], columns=data.columns.tolist()), ignore_index=True)
+        for row in data.itertuples():
+            if categorize_info[column].tolist().__contains__(row[1]):
+                row_data = [list(row[1:len(row)])]
+                print (row_data)
+                categorized_data = pandas.concat([categorized_data, pandas.DataFrame(row_data)], ignore_index=True)
+        categorized_data.to_excel(writer, sheet_name=column)
+
+    writer.save()
+
+
+print (data_categorize())
