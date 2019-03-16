@@ -21,21 +21,34 @@ from file_directions import clean_data_temp_file_url
 
 
 def duplicate_handle_basic_info():
+    """
+    handle duplicate data
+    :return:
+    """
     dcu.merge_rows(u'年报-企业基本信息.xlsx', [u'企业编号', u'年报年份'])
 
 
-def primary_analysis():
+# TODO handle all the duplicate data in all tables listed in '年报类'
+
+
+def primary_analysis_after_duplicate_handled():
+    """
+    primary analysis after duplicate data handled
+    :return:
+    """
     panaly.list_category_columns_values([u'年报-企业基本信息'], u'年报类_basic_info', file_url=clean_data_temp_file_url)
 
 
-def dirty_value_handle_basic_info():
-    """
-    dirty value handle and numeric for table 年报-企业基本信息.
-    First we merge rows that should be in one row -- the same 企业编号 and 年报年份
+"""
+    Dirty value handle for table 年报-企业基本信息.
     First we'll drop rows that empty value is too many.
     ['企业经营状态','从业人数','是否有网站或网点','企业是否有投资信息或购买其他公司股权',
         '有限责任公司本年度是否发生股东股权转','是否提供对外担保']
     Once there are more than 3 empties in these 6 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
 
     -----------------------------
     注册资本
@@ -86,5 +99,20 @@ def dirty_value_handle_basic_info():
 
 
     -----------------------------
+    :return:
+"""
+
+
+def empty_value_handle_basic_info():
+    """
+    empty_value handle for table 年报-企业基本信息.
+    :return:
+    """
+
+
+
+def numeric_handle_basic_info():
+    """
+    numeric data for table 年报-企业基本信息.
     :return:
     """
