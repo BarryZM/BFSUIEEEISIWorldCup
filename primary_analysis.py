@@ -130,6 +130,7 @@ def list_file_columns_values(file_name):
     columns_dict = {}
     data = pandas.read_excel(working_file_url + file_name)
     for column in data.columns:
+        print ('column:%s' % column)
         if list(data.columns).index(column) == 0:  # ignore the first column -- the number of company
             continue
         dropped_data = data.drop_duplicates(subset=[column], keep='first')
