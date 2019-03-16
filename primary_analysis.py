@@ -84,17 +84,7 @@ def data_categorize():
     writer.save()
 
 
-"""
-年报-企业基本信息
-年报-企业资产状况信息
-年报-对外投资信息
-年报-的对外提供保证担保信息
-年报-社保信息
-年报-网站或网点信息
-年报-股东股权转让
-年报-股东（发起人）及出资信息
-"""
-
+# categories files
 category_annual_report_files = [u'年报-企业基本信息',
                                 u'年报-企业资产状况信息',
                                 u'年报-对外投资信息',
@@ -108,27 +98,29 @@ category_annual_report_files = [u'年报-企业基本信息',
 # TODO: other categories here
 
 
-def list_single_column_values(file_name, column_name):
+def list_single_column_values(file_name, column_name, file_url=working_file_url):
     """
     list a single column's all values
     :param file_name: the file name to be handled (all files should be stored in file_directions.working_file_url)
     :param column_name: the column name to be handled
+    :param file_url:
     :return: a list of column values
     """
-    data = pandas.read_excel(working_file_url + file_name)
+    data = pandas.read_excel(file_url + file_name)
 
     dropped_data = data.drop_duplicates(subset=[column_name], keep='first')
     return dropped_data[column_name].tolist()
 
 
-def list_file_columns_values(file_name):
+def list_file_columns_values(file_name, file_url=working_file_url):
     """
 
     :param file_name:
+    :param file_url:
     :return:
     """
     columns_dict = {}
-    data = pandas.read_excel(working_file_url + file_name)
+    data = pandas.read_excel(file_url + file_name)
     for column in data.columns:
         print ('column:%s' % column)
         if list(data.columns).index(column) == 0:  # ignore the first column -- the number of company
@@ -163,11 +155,12 @@ def list_file_columns_values(file_name):
     return columns_dict
 
 
-def list_category_columns_values(category, category_name):
+def list_category_columns_values(category, category_name, file_url=categorized_data_file_url):
     """
 
     :param category:
     :param category_name:
+    :param file_url:
     :return:
     """
 
@@ -177,7 +170,7 @@ def list_category_columns_values(category, category_name):
     for file_name in category:
         print (file_name)
         ws = wb.add_worksheet(unicode(file_name))
-        cols_dict = list_file_columns_values(unicode(file_name) + '.xlsx')
+        cols_dict = list_file_columns_values(unicode(file_name) + '.xlsx', file_url=file_url)
         index_column = 0
         cols_sort_keys = cols_dict.keys()
         cols_sort_keys.sort()
@@ -230,5 +223,5 @@ def rearrange_annual_report_share_holder_info():
     wb.close()
 
 
-print(list_category_columns_values(category_annual_report_files, u'年报类'))
+# print(list_category_columns_values(category_annual_report_files, u'年报类'))
 # print(rearrange_annual_report_share_holder_info())
