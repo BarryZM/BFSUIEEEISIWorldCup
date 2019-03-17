@@ -17,7 +17,16 @@
 
 import data_clean_utils as dcu
 import primary_analysis as panaly
+from files_category_info import category_annual_report_files
 from file_directions import clean_data_temp_file_url
+
+
+def raw_files_primary_analysis():
+    """
+    primary analysis for raw files without handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_annual_report_files, u'年报类')
 
 
 def duplicate_handle_basic_info():
@@ -28,7 +37,19 @@ def duplicate_handle_basic_info():
     dcu.merge_rows(u'年报-企业基本信息.xlsx', [u'企业编号', u'年报年份'])
 
 
+def duplicate_handle_assets_info():
+    """
+    handle duplicate data
+    :return:
+    """
+    dcu.merge_rows(u'年报-企业资产状况信息.xlsx', [u'企业编号', u'年报年份'])
+
 # TODO handle all the duplicate data in all tables listed in '年报类'
+
+
+def duplicate_handle():
+    for name in category_annual_report_files:
+        dcu.merge_rows(name + '.xlsx')
 
 
 def primary_analysis_after_duplicate_handled():
@@ -36,7 +57,8 @@ def primary_analysis_after_duplicate_handled():
     primary analysis after duplicate data handled
     :return:
     """
-    panaly.list_category_columns_values([u'年报-企业基本信息'], u'年报类_basic_info', file_url=clean_data_temp_file_url)
+    panaly.list_category_columns_values(category_annual_report_files, u'年报类_dup_handled',
+                                        file_url=clean_data_temp_file_url)
 
 
 """
@@ -108,7 +130,6 @@ def empty_value_handle_basic_info():
     empty_value handle for table 年报-企业基本信息.
     :return:
     """
-
 
 
 def numeric_handle_basic_info():
