@@ -239,6 +239,6 @@ def comments_generate():
             comment_str += column_str_ori.replace('{$$$}', column_list[i].encode('utf-8'))
 
         comment_str += '\n    -----------------------------'
-        with open(file_utils.check_file_url('comments/') + file_name + '_comments.txt', 'w+') as f:
+        with open(file_utils.check_file_url('dirty_value_handle_comments/') + file_name + '_comments.txt', 'w+') as f:
             f.write(comment_str)
     return
