@@ -125,7 +125,268 @@ def primary_analysis_after_duplicate_handled():
     -----------------------------
     :return:
 """
+"""
+    Dirty value handle for table 年报-企业资产状况信息.
+    First we'll drop rows that empty value is too many.
+    ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
 
+    -----------------------------
+    主营业务收入
+    ------
+
+    -----------------------------
+    净利润
+    ------
+
+    -----------------------------
+    利润总额
+    ------
+
+    -----------------------------
+    实际员工数量
+    ------
+
+    -----------------------------
+    年报年份
+    ------
+
+    -----------------------------
+    所有者权益合计
+    ------
+
+    -----------------------------
+    纳税总额
+    ------
+
+    -----------------------------
+    营业总收入
+    ------
+
+    -----------------------------
+    负债总额
+    ------
+
+    -----------------------------
+    资产总额
+    ------
+
+    -----------------------------
+    
+    :return:
+"""
+"""
+    Dirty value handle for table 年报-对外投资信息.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+    
+    -----------------------------
+    年报年份
+    ------
+
+    -----------------------------
+    投资占比
+    ------
+
+    -----------------------------
+    投资金额
+    ------
+
+    -----------------------------
+    
+    :return
+"""
+"""
+    Dirty value handle for table 年报-的对外提供保证担保信息.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    主债权数额
+    ------
+
+    -----------------------------
+    主债权种类
+    ------
+
+    -----------------------------
+    保证担保的范围
+    ------
+
+    -----------------------------
+    保证的方式
+    ------
+
+    -----------------------------
+    保证的期间
+    ------
+
+    -----------------------------
+    履行债务的期限
+    ------
+
+    -----------------------------
+    年报年份
+    ------
+
+    -----------------------------
+
+    :return
+"""
+"""
+    Dirty value handle for table 年报-社保信息.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    单位参加城镇职工基本养老保险累计欠缴金额
+    ------
+
+    -----------------------------
+    单位参加城镇职工基本养老保险缴费基数
+    ------
+
+    -----------------------------
+    单位参加失业保险累计欠缴金额
+    ------
+
+    -----------------------------
+    单位参加失业保险缴费基数
+    ------
+
+    -----------------------------
+    单位参加工伤保险累计欠缴金额
+    ------
+
+    -----------------------------
+    单位参加工伤保险缴费基数
+    ------
+
+    -----------------------------
+    单位参加生育保险累计欠缴金额
+    ------
+
+    -----------------------------
+    单位参加生育保险缴费基数
+    ------
+
+    -----------------------------
+    单位参加职工基本医疗保险累计欠缴金额
+    ------
+
+    -----------------------------
+    单位参加职工基本医疗保险缴费基数
+    ------
+
+    -----------------------------
+    参加城镇职工基本养老保险本期实际缴费金额
+    ------
+
+    -----------------------------
+    参加失业保险本期实际缴费金额
+    ------
+
+    -----------------------------
+    参加工伤保险本期实际缴费金额
+    ------
+
+    -----------------------------
+    参加生育保险本期实际缴费金额
+    ------
+
+    -----------------------------
+    参加职工基本医疗保险本期实际缴费金额
+    ------
+
+    -----------------------------
+    城镇职工基本养老保险人数
+    ------
+
+    -----------------------------
+    失业保险人数
+    ------
+
+    -----------------------------
+    工伤保险人数
+    ------
+
+    -----------------------------
+    年报年份
+    ------
+
+    -----------------------------
+    生育保险人数
+    ------
+
+    -----------------------------
+    职工基本医疗保险人数
+    ------
+
+    -----------------------------
+
+    :return
+"""
+"""
+    Dirty value handle for table 年报-的对外提供保证担保信息.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    主债权数额
+    ------
+
+    -----------------------------
+    主债权种类
+    ------
+
+    -----------------------------
+    保证担保的范围
+    ------
+
+    -----------------------------
+    保证的方式
+    ------
+
+    -----------------------------
+    保证的期间
+    ------
+
+    -----------------------------
+    履行债务的期限
+    ------
+
+    -----------------------------
+    年报年份
+    ------
+
+    -----------------------------
+
+    :return
+"""
 
 def empty_value_handle_basic_info():
     """

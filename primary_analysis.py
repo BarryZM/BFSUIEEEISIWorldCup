@@ -211,3 +211,34 @@ def rearrange_annual_report_share_holder_info():
 
 # print(list_category_columns_values(category_annual_report_files, u'年报类'))
 # print(rearrange_annual_report_share_holder_info())
+
+def comments_generate():
+    """
+    generate comments for each table's dirty value handle
+    :return:
+    """
+    comment_str_ori = u"\
+    Dirty value handle for table {$$}.\n\
+    First we'll drop rows that empty value is too many.\n\
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']\n\
+    # Once there are more than 3 empties in these 8 columns we will drop that row.\n\
+    Then we check nulls column by column and decide how to process with it.\n\
+    Next we should numeric all the value for future process.\n\
+    After these are done, it's time to work out features we can use in this table which belongs\n\
+        to exploratory data analysis. \n\
+".encode('utf-8')
+    column_str_ori = "\n\
+    -----------------------------\n\
+    {$$$}\n\
+    ------\n"
+    for file_name in os.listdir(working_file_url):
+        comment_str = comment_str_ori.replace('{$$}', file_name.encode('utf-8'))
+        df = file_utils.read_file_to_df(working_file_url, file_name)
+        column_list = df.columns.tolist()
+        for i in range(1, len(column_list)):
+            comment_str += column_str_ori.replace('{$$$}', column_list[i].encode('utf-8'))
+
+        comment_str += '\n    -----------------------------'
+        with open(file_utils.check_file_url('comments/') + file_name + '_comments.txt', 'w+') as f:
+            f.write(comment_str)
+    return
