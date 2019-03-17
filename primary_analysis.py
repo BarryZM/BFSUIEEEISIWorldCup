@@ -30,7 +30,7 @@ def data_excel_statistic_info(file_name):
     work_file = working_file_url + file_name
 
     file_utils.copy_file(init_file, work_file)
-    data = file_utils.read_file(init_file)
+    data = file_utils.read_file_to_df(origin_file_url, file_name)
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
@@ -40,7 +40,7 @@ def data_excel_statistic_info(file_name):
             for item in m.group():
                 scolumn = column.encode('utf-8').replace(item.encode('utf-8'), '-')
                 column = scolumn.decode('utf-8')
-        described_data.to_excel(writer, sheet_name=column)
+        file_utils.write_file_without_save(described_data, writer, sheet_name=column)
     writer.save()
 
 
@@ -67,10 +67,10 @@ def data_categorize():
     categorize these tables
     :return:
     """
-    file_name = u'数据初整理.xlsx'
+    file_name = u'数据初整理'
     new_file_name = u'categorize数据初整理.xlsx'
-    data = file_utils.read_file(file_name, sheet_name='data')
-    categorize_info = file_utils.read_file(file_name, sheet_name='categorize')
+    data = file_utils.read_file_to_df('', file_name, sheet_name='data')
+    categorize_info = file_utils.read_file_to_df('', file_name, sheet_name='categorize')
     writer = pandas.ExcelWriter(new_file_name)
     for column in categorize_info.columns:
         categorized_data = pandas.DataFrame(columns=data.columns.tolist())
@@ -79,7 +79,7 @@ def data_categorize():
                 row_data = [list(row[1:len(row)])]
                 categorized_data = pandas.concat(
                     [categorized_data, pandas.DataFrame(row_data, columns=data.columns.tolist())], ignore_index=True)
-        categorized_data.to_excel(writer, sheet_name=column)
+        file_utils.write_file_without_save(categorized_data, writer, sheet_name=column, index=False)
 
     writer.save()
 
@@ -92,7 +92,7 @@ def list_single_column_values(file_name, column_name, file_url=working_file_url)
     :param file_url:
     :return: a list of column values
     """
-    data = file_utils.read_file(file_url + file_name)
+    data = file_utils.read_file_to_df(file_url, file_name)
 
     dropped_data = data.drop_duplicates(subset=[column_name], keep='first')
     return dropped_data[column_name].tolist()
@@ -106,7 +106,7 @@ def list_file_columns_values(file_name, file_url=working_file_url):
     :return:
     """
     columns_dict = {}
-    data = file_utils.read_file(file_url + file_name)
+    data = file_utils.read_file_to_df(file_url, file_name)
     for column in data.columns:
         print ('column:%s' % column)
         if list(data.columns).index(column) == 0:  # ignore the first column -- the number of company
@@ -156,7 +156,7 @@ def list_category_columns_values(category, category_name, file_url=categorized_d
     for file_name in category:
         print (file_name)
         ws = wb.add_worksheet(unicode(file_name))
-        cols_dict = list_file_columns_values(unicode(file_name) + '.xlsx', file_url=file_url)
+        cols_dict = list_file_columns_values(unicode(file_name), file_url=file_url)
         index_column = 0
         cols_sort_keys = cols_dict.keys()
         cols_sort_keys.sort()

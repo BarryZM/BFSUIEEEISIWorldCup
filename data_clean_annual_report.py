@@ -19,6 +19,7 @@ import data_clean_utils as dcu
 import primary_analysis as panaly
 from files_category_info import category_annual_report_files
 from file_directions import clean_data_temp_file_url
+import file_utils
 
 
 def raw_files_primary_analysis():
@@ -169,7 +170,11 @@ def empty_value_handle_out_invest_info():
     :return:
     """
 
-    # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
+    df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-对外投资信息')
+    df = df.fillna(0)
+    file_utils.write_file(df, clean_data_temp_file_url, u'年报-对外投资信息')
+
+    # panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
     return
 

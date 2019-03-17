@@ -53,21 +53,20 @@ def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=cle
     # for df in data_frames:
     #     data_frame = pandas.merge(data_frame, df, how='left', on=origin_df.columns.tolist())
 
-    data_frame = file_utils.read_file(file_url + file_name)
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
     data_frame = data_frame.drop_duplicates()
 
-    writer = pandas.ExcelWriter(file_utils.check_file_url(dst_file_url) + file_name)
-    data_frame.to_excel(writer, sheet_name='Sheet', index=False)
-    writer.save()
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+
     return
 
 
 def drop_rows_too_many_empty(file_name, columns, thresh=2, file_url=clean_data_temp_file_url,
                              dst_file_url=clean_data_temp_file_url):
-    data_frame = file_utils.read_file(file_url + file_name)
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
     data_frame = data_frame.dropna(subset=columns, thresh=thresh)
 
-    writer = pandas.ExcelWriter(file_utils.check_file_url(dst_file_url) + file_name)
-    data_frame.to_excel(writer, sheet_name='Sheet', index=False)
-    writer.save()
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
     return
