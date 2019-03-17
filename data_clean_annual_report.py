@@ -143,6 +143,37 @@ def empty_value_handle_basic_info():
     return
 
 
+def empty_value_handle_assets_info():
+    """
+    empty_value handle for table 年报-企业资产状况信息.
+    :return:
+    """
+    empty_check_list = [u'主营业务收入'.encode('utf-8'),
+                        u'净利润'.encode('utf-8'),
+                        u'利润总额'.encode('utf-8'),
+                        u'所有者权益合计'.encode('utf-8'),
+                        u'纳税总额'.encode('utf-8'),
+                        u'营业总收入'.encode('utf-8'),
+                        u'负债总额'.encode('utf-8'),
+                        u'资产总额'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-企业资产状况信息.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
+def empty_value_handle_out_invest_info():
+    """
+    empty_value handle for table 年报-对外投资信息.
+    Don't drop data in this table, just replace the empty with 0.
+    :return:
+    """
+
+    # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
 def numeric_handle_basic_info():
     """
     numeric data for table 年报-企业基本信息.

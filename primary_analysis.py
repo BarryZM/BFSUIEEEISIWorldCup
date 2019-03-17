@@ -30,7 +30,7 @@ def data_excel_statistic_info(file_name):
     work_file = working_file_url + file_name
 
     file_utils.copy_file(init_file, work_file)
-    data = pandas.read_excel(init_file)
+    data = file_utils.read_file(init_file)
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
@@ -69,8 +69,8 @@ def data_categorize():
     """
     file_name = u'数据初整理.xlsx'
     new_file_name = u'categorize数据初整理.xlsx'
-    data = pandas.read_excel(file_name, sheet_name='data')
-    categorize_info = pandas.read_excel(file_name, sheet_name='categorize')
+    data = file_utils.read_file(file_name, sheet_name='data')
+    categorize_info = file_utils.read_file(file_name, sheet_name='categorize')
     writer = pandas.ExcelWriter(new_file_name)
     for column in categorize_info.columns:
         categorized_data = pandas.DataFrame(columns=data.columns.tolist())
@@ -92,7 +92,7 @@ def list_single_column_values(file_name, column_name, file_url=working_file_url)
     :param file_url:
     :return: a list of column values
     """
-    data = pandas.read_excel(file_url + file_name)
+    data = file_utils.read_file(file_url + file_name)
 
     dropped_data = data.drop_duplicates(subset=[column_name], keep='first')
     return dropped_data[column_name].tolist()
@@ -106,7 +106,7 @@ def list_file_columns_values(file_name, file_url=working_file_url):
     :return:
     """
     columns_dict = {}
-    data = pandas.read_excel(file_url + file_name)
+    data = file_utils.read_file(file_url + file_name)
     for column in data.columns:
         print ('column:%s' % column)
         if list(data.columns).index(column) == 0:  # ignore the first column -- the number of company

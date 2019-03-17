@@ -7,6 +7,12 @@
 import os
 import shutil
 
+import pandas
+
+
+def read_file(file_dir):
+    return pandas.read_excel(file_dir)
+
 
 def copy_file(srcfile, dstfile):
     """
