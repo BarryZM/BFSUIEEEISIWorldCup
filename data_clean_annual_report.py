@@ -44,6 +44,7 @@ def duplicate_handle_assets_info():
     """
     dcu.merge_rows(u'年报-企业资产状况信息.xlsx', [u'企业编号', u'年报年份'])
 
+
 # TODO handle all the duplicate data in all tables listed in '年报类'
 
 
@@ -79,7 +80,7 @@ def primary_analysis_after_duplicate_handled():
     -----------------------------
     企业经营状态
     ------
-    Empty percentage is 1.5%(219 out of 15056).
+    Empty percentage is 1.5%(214 out of 14862).
     8 status this value has, they are ['停业','其他','存续','开业','开业/正常经营','歇业','正常开业','清算'].
     We just add another status for the empty value:'Unknown'.
     And based on the counts for every status, we simplify these status to ['正常经营','非正常经营','Unknown']
@@ -88,7 +89,7 @@ def primary_analysis_after_duplicate_handled():
     -----------------------------
     从业人数
     ------
-    Empty percentage is 1.5%(218 out of 15056), and some value end with '人' while some are pure number.
+    Empty percentage is 1.5%(213 out of 14862), and some value end with '人' while some are pure number.
     But also there are lots of value valued '企业选择不公示'(11623) and a few valued '人' without number.
     For empty value, we replace with -1 indicating there's no value(be careful here, we don't trigger them as -1 people,
         -1 here works as a status). Those end with '人', we simply drop '人'. Those valued '企业选择不公示',
@@ -97,7 +98,7 @@ def primary_analysis_after_duplicate_handled():
     -----------------------------
     是否有网站或网点
     ------
-    Empty percentage is 1.5%(218 out of 15056).
+    Empty percentage is 1.5%(213 out of 14862).
     There are 4 status here:['否','无','是','有'], and ['否','无'] should belong to 'No', ['是','有'] belong to 'Yes'.
     Empty value will be replaced with
     -----------------------------
@@ -130,6 +131,16 @@ def empty_value_handle_basic_info():
     empty_value handle for table 年报-企业基本信息.
     :return:
     """
+    empty_check_list = [u'企业经营状态'.encode('utf-8'),
+                        u'从业人数'.encode('utf-8'),
+                        u'是否有网站或网点'.encode('utf-8'),
+                        u'企业是否有投资信息或购买其他公司股权'.encode('utf-8'),
+                        u'有限责任公司本年度是否发生股东股权转'.encode('utf-8'),
+                        u'是否提供对外担保'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-企业基本信息.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'年报-企业基本信息'], u'年报-企业基本信息_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
 
 
 def numeric_handle_basic_info():

@@ -60,3 +60,14 @@ def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=cle
     data_frame.to_excel(writer, sheet_name='Sheet', index=False)
     writer.save()
     return
+
+
+def drop_rows_too_many_empty(file_name, columns, thresh=2, file_url=clean_data_temp_file_url,
+                             dst_file_url=clean_data_temp_file_url):
+    data_frame = pandas.read_excel(file_url + file_name)
+    data_frame = data_frame.dropna(subset=columns, thresh=thresh)
+
+    writer = pandas.ExcelWriter(file_utils.check_file_url(dst_file_url) + file_name)
+    data_frame.to_excel(writer, sheet_name='Sheet', index=False)
+    writer.save()
+    return
