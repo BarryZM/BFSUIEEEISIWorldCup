@@ -1,7 +1,7 @@
 # *- coding:utf-8 -*-
 
 """
- module for utils
+ module for file utils
 """
 
 import os
@@ -11,6 +11,11 @@ import pandas
 
 
 def read_file(file_dir):
+    """
+    read file from the file_dir, currently we read excel. Once the data type changed, we are convenient to change here.
+    :param file_dir:
+    :return:
+    """
     return pandas.read_excel(file_dir)
 
 
