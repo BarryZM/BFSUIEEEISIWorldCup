@@ -16,3 +16,5 @@ category_annual_report_files = [u'年报-企业基本信息',
                                 u'年报-网站或网点信息',
                                 u'年报-股东股权转让',
                                 u'年报-股东（发起人）及出资信息_rearranged']
+
+category_competing_products = [u'竞品']

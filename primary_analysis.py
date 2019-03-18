@@ -125,9 +125,15 @@ def list_file_columns_values(file_name, file_url=working_file_url):
             if item == 'Total Num':
                 count_list.append(data.__len__())
             elif item == 'Nan Percent':
-                count_list.append(float(float(data[column].isna().sum()) / float(data[column].__len__())))
+                try:
+                    count_list.append(float(float(data[column].isna().sum()) / float(data[column].__len__())))
+                except AttributeError as ae:
+                    count_list.append(0)
             elif item is numpy.nan:
-                count_list.append(data[column].isna().sum())
+                try:
+                    count_list.append(data[column].isna().sum())
+                except AttributeError as ae:
+                    count_list.append(0)
             elif isinstance(item, unicode):
                 counted_data = data[data[column] == item.encode('utf-8')]
                 count_list.append(counted_data.__len__())
