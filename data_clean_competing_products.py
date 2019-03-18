@@ -1,0 +1,122 @@
+# *- coding:utf-8 -*-
+
+"""
+ module for competing products data clean.
+ including:
+
+
+ Empty values are mostly replaced by -1.
+"""
+
+import data_clean_utils as dcu
+import primary_analysis as panaly
+from files_category_info import category_competing_products
+from file_directions import clean_data_temp_file_url
+import file_utils
+
+
+def raw_files_primary_analysis():
+    """
+    primary analysis for raw files without handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_competing_products, u'竞品')
+
+
+# TODO handle all the duplicate data in all tables listed in '竞品'
+
+
+def duplicate_handle():
+    for name in category_competing_products:
+        dcu.merge_rows(name + '.xlsx')
+
+
+def primary_analysis_after_duplicate_handled():
+    """
+    primary analysis after duplicate data handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_competing_products, u'竞品_dup_handled',
+                                        file_url=clean_data_temp_file_url)
+
+
+"""
+    Dirty value handle for table 竞品
+    First we'll drop rows that empty value is too many.
+    ['竞品的标签','竞品轮次','竞品运营状态','竞品成立时间']
+    Once there are more than 3 empties in these 4 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+    -----------------------------
+    竞品的行业
+    ------
+    Empty percentage is 94.0%(31400 out of 33388).
+    27 status this value has, they are ['VR·AR','人工智能','企业服务','体育','光电','公共事业','农业','化工','医疗健康',
+    '地产建筑','工具','房产家居','教育','文娱传媒','旅游','无人机','材料','汽车交通','消费生活','物流','环保','生产制造',
+    '电商','硬件','社交','能源矿产','金融'].
+    Though there are  lots of empty value in this part, It still be an important information for the future research.
+    So we just add another status for the empty value:'Unknown'.
+    -----------------------------
+
+    竞品的标签
+    ------
+    Empty percentage is 0.02%(7 out of 33388).
+    Considering that there are few empty columns in this part, we could choose to replace with 0 indicating we don't
+    know the type of the product. What's more, we need to figure out that although it seems a mass to find out the kind
+    in the existing values, it will be useful to guess what kind of industry did the company or the product lives in.
+    -----------------------------
+
+    竞品轮次
+    ------
+    Empty percentage is 30.9%(10314 out of 33388).
+    35 status this value has, they are ['A轮','A+轮','B+轮','B轮','C+轮','C轮','D轮','E轮','E轮及以后','F轮','ICO','IPO'
+    'IPO后','Pre-A','Pre-B','Pre-IPO','上市','主板定向增发','众筹','债券融资','后期阶段','天使轮','并购','战略合并','战略投资',
+    '扶持资金','新三板','新三板定增','新四板','未知轮次','未融资','私有化','种子轮','股权转让','被收购'].
+    As the values already have the kind about Unknown: We just add another status for the empty value:'未知轮次'.
+    -----------------------------
+    竞品详细地址
+    ------
+    Empty percentage is 7.2%(2404 out of 33388).
+    As the values already have the kind about Unknown: We just add another status for the empty value:'未知'.
+    And based on the counts for every status, we simplify these status to ['北京','上海','广州','深圳',,'杭州','国外'，'未知']
+    So we can map these total 7 status to three: {'北京':0,'上海':1,'广州':2,'深圳':3,'杭州':4,'国外':5,'未知':-6}.
+    -----------------------------
+    竞品运营状态
+    ------
+    Empty percentage is 8.34%(2783 out of 33388).
+    4 status can be concluded in this part, they are [‘停止更新’，‘已关闭’，‘融资中’，‘运营中’]
+    We just add another status for the empty value:'Unknown'.
+    So we can map these total 5 status to three: {‘停止更新’:0,‘已关闭’:1,融资中’:2,‘运营中’:3,'Unknown':-6}.
+    -----------------------------
+    竞品成立时间
+    ------
+    Empty percentage is 6.82%(2277 out of 33388).
+    We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'
+    -----------------------------
+"""
+
+
+def empty_value_handle_basic_info():
+    """
+    empty_value handle for table 竞品.
+    :return:
+    """
+    empty_check_list = [u'竞品的标签',
+                        u'竞品轮次',
+                        u'竞品运营状态',
+                        u'竞品成立时间']
+    dcu.drop_rows_too_many_empty(u'竞品.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'竞品'], u'竞品_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
+def numeric_handle_basic_info():
+    """
+    numeric data for table 竞品.
+    :return:
+    """
+
+print(duplicate_handle())
