@@ -1,3 +1,46 @@
+# *- coding:utf-8 -*-
+
+"""
+ module for competing products data clean.
+ including:
+
+
+ Empty values are mostly replaced by -1.
+"""
+
+import data_clean_utils as dcu
+import primary_analysis as panaly
+from files_category_info import category_competing_products
+from file_directions import clean_data_temp_file_url
+import file_utils
+
+
+def raw_files_primary_analysis():
+    """
+    primary analysis for raw files without handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_competing_products, u'竞品')
+
+
+# TODO handle all the duplicate data in all tables listed in '竞品'
+
+
+def duplicate_handle():
+    for name in category_competing_products:
+        dcu.merge_rows(name + '.xlsx')
+
+
+def primary_analysis_after_duplicate_handled():
+    """
+    primary analysis after duplicate data handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_competing_products, u'竞品_dup_handled',
+                                        file_url=clean_data_temp_file_url)
+
+
+"""
     Dirty value handle for table 竞品
     First we'll drop rows that empty value is too many.
     ['竞品的标签','竞品轮次','竞品运营状态','竞品成立时间']
@@ -52,3 +95,28 @@
     Empty percentage is 6.82%(2277 out of 33388).
     We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'
     -----------------------------
+"""
+
+
+def empty_value_handle_basic_info():
+    """
+    empty_value handle for table 竞品.
+    :return:
+    """
+    empty_check_list = [u'竞品的标签',
+                        u'竞品轮次',
+                        u'竞品运营状态',
+                        u'竞品成立时间']
+    dcu.drop_rows_too_many_empty(u'竞品.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'竞品'], u'竞品_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
+def numeric_handle_basic_info():
+    """
+    numeric data for table 竞品.
+    :return:
+    """
+
+print(duplicate_handle())

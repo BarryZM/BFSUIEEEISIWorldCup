@@ -3,19 +3,18 @@
 """
  Data clean utils
 """
-
-from file_directions import working_file_url, clean_data_temp_file_url
-import file_utils
-
 import sys
+
+import file_utils
+from file_directions import working_file_url, clean_data_temp_file_url
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):#删除重复的行
+def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):
     """
-    merge a table's rows with the same unique keys.去除重复
+    merge a table's rows with the same unique keys.
     :param file_name:
     :param keys:
     :param file_url:
@@ -64,6 +63,15 @@ def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=cle
 
 def drop_rows_too_many_empty(file_name, columns, thresh=2, file_url=clean_data_temp_file_url,
                              dst_file_url=clean_data_temp_file_url):
+    """
+    drop rows that too many values are empty.
+    :param file_name:
+    :param columns: the columns we need to check if it is empty
+    :param thresh: how many empty is 'too many'
+    :param file_url: input file url
+    :param dst_file_url: where to store the result
+    :return:
+    """
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     data_frame = data_frame.dropna(subset=columns, thresh=thresh)
 
