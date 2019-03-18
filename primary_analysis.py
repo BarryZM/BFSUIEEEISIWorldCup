@@ -147,7 +147,7 @@ def list_file_columns_values(file_name, file_url=working_file_url):
     return columns_dict
 
 
-def list_category_columns_values(category, category_name, file_url=categorized_data_file_url):
+def list_category_columns_values(category, category_name, file_url=working_file_url):
     """
 
     :param category:
