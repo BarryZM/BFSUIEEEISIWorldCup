@@ -27,3 +27,6 @@ category_finance_files = [u'上市公司财务信息-每股指标',
                           u'上市信息财务信息资产负债表']
 
 category_competing_products = [u'竞品']
+
+category_paying_taxes = [u'纳税A级年份',
+                         u'一般纳税人']
