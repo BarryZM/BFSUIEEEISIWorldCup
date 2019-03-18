@@ -3,7 +3,7 @@
 """
  Data clean utils
 """
-import pandas
+
 from file_directions import working_file_url, clean_data_temp_file_url
 import file_utils
 
@@ -13,9 +13,9 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):
+def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):#删除重复的行
     """
-    merge a table's rows with the same unique keys.
+    merge a table's rows with the same unique keys.去除重复
     :param file_name:
     :param keys:
     :param file_url:

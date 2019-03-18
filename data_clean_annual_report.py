@@ -445,3 +445,7 @@ def numeric_handle_basic_info():
     numeric data for table 年报-企业基本信息.
     :return:
     """
+    print 'mmmmm'
+
+
+print(numeric_handle_basic_info())
