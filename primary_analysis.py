@@ -42,6 +42,7 @@ def data_excel_statistic_info(file_name, init_file_dir=origin_file_url, work_fil
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
+        print (described_data)
         # to name a sheet, there's some rules need to adopt
         m = openpyxl_child.INVALID_TITLE_REGEX.search(column)
         if m:
@@ -50,7 +51,7 @@ def data_excel_statistic_info(file_name, init_file_dir=origin_file_url, work_fil
                 column = scolumn
         if len(unicode(column)) > 10:
             column = unicode(column)[0:10]
-        file_utils.write_file_without_save(described_data, writer, sheet_name=column)
+        file_utils.write_file_without_save(described_data, writer, sheet_name=column, index=True)
     writer.save()
 
 
