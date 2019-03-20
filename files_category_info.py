@@ -30,3 +30,8 @@ category_competing_products = [u'竞品']
 
 category_paying_taxes = [u'纳税A级年份',
                          u'一般纳税人']
+category_basic_information = [u'工商基本信息表',
+                              u'海关进出口信用',
+                              u'招投标',
+                              u'债券信息',
+                              u'融资信息']
