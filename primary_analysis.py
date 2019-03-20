@@ -34,8 +34,11 @@ def data_excel_statistic_info(file_name, init_file_dir=origin_file_url, work_fil
     if work_file_dir is not None:
         work_file = work_file_dir + file_name
         file_utils.copy_file(init_file, work_file)
+        print ('copy file: ' + file_name)
 
+    print (init_file)
     data = file_utils.read_file_to_df(init_file_dir, file_name)
+
     writer = pandas.ExcelWriter(unicode(file_utils.check_file_url(statistic_data_file_url) + file_name))
     for column in data.columns:
         described_data = data[column].describe()
@@ -44,7 +47,9 @@ def data_excel_statistic_info(file_name, init_file_dir=origin_file_url, work_fil
         if m:
             for item in m.group():
                 scolumn = column.encode('utf-8').replace(item.encode('utf-8'), '-')
-                column = scolumn.decode('utf-8')
+                column = scolumn
+        if len(unicode(column)) > 10:
+            column = unicode(column)[0:10]
         file_utils.write_file_without_save(described_data, writer, sheet_name=column)
     writer.save()
 
@@ -57,7 +62,9 @@ def describe_file_folder(file_holder_url, copy_file_dir=None):
     :return:
     """
     for file_name in os.listdir(file_holder_url):
-        data_excel_statistic_info(file_name, work_file_dir=copy_file_dir)
+        if file_name.startswith('.'):  # ignore .DS_Store
+            continue
+        data_excel_statistic_info(file_name, init_file_dir=file_holder_url, work_file_dir=copy_file_dir)
 
 
 def describe_work():
