@@ -81,14 +81,14 @@ def primary_analysis_after_duplicate_handled():
     Empty percentage is 7.2%(2404 out of 33388).
     As the values already have the kind about Unknown: We just add another status for the empty value:'未知'.
     And based on the counts for every status, we simplify these status to ['北京','上海','广州','深圳',,'杭州','国外'，'未知']
-    So we can map these total 7 status to three: {'北京':0,'上海':1,'广州':2,'深圳':3,'杭州':4,'国外':5,'未知':-6}.
+    So we can map these total 7 status to three: {'北京':0,'上海':1,'广州':2,'深圳':3,'杭州':4,'国外':5,'未知':-1}.
     -----------------------------
     竞品运营状态
     ------
     Empty percentage is 8.34%(2783 out of 33388).
     4 status can be concluded in this part, they are [‘停止更新’，‘已关闭’，‘融资中’，‘运营中’]
     We just add another status for the empty value:'Unknown'.
-    So we can map these total 5 status to three: {‘停止更新’:0,‘已关闭’:1,融资中’:2,‘运营中’:3,'Unknown':-6}.
+    So we can map these total 5 status to three: {‘停止更新’:0,‘已关闭’:1,融资中’:2,‘运营中’:3,'Unknown':-1}.
     -----------------------------
     竞品成立时间
     ------
