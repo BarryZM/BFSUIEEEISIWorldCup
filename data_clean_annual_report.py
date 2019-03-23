@@ -218,9 +218,11 @@ def empty_value_handle_assets_info():
     主营业务
     ------
     This value is very complicated with 80% empty(11745 out of 14657). But we think it's somehow important.
-    We extract some key words:['农','土地','电器','光纤','电器','化学','医疗','药','信息','钢','乳','互联网','电机','自动化',
-    '交通','汽车','投资','园区','房地产','有线','日用','服饰','矿','开采','国有','酒', '银行', '金融','证券'](the sequence is
-    ordered to match the first), Others are into 'Others'. Empty values are replaced with 'Unknown'.
+    We extract some key words:[u'农', u'土地', u'电器', u'光纤', u'电器', u'化学', u'医疗', u'药', u'信息', u'钢', u'乳',
+                u'互联网', u'电机', u'自动化', u'交通', u'汽车', u'投资', u'园区', u'房地产', u'有线', u'日用', u'服饰',
+                u'矿', u'开采', u'国有', u'酒', u'银行', u'金融', u'证券', u'航空', u'航天', u'采掘', u'发电', u'工程',
+                u'制造'](the sequence is ordered to match the first), Others are into 'Others'. Empty values are
+    replaced with 'Unknown'.
 
     -----------------------------
     净利润
@@ -258,19 +260,19 @@ def empty_value_handle_assets_info():
     :return:
     """
     # EMPTY CHECK
-    # empty_check_list = [u'主营业务收入'.encode('utf-8'),
-    #                     u'净利润'.encode('utf-8'),
-    #                     u'利润总额'.encode('utf-8'),
-    #                     u'所有者权益合计'.encode('utf-8'),
-    #                     u'纳税总额'.encode('utf-8'),
-    #                     u'营业总收入'.encode('utf-8'),
-    #                     u'负债总额'.encode('utf-8'),
-    #                     u'资产总额'.encode('utf-8')]
-    # dcu.drop_rows_too_many_empty(u'年报-企业资产状况信息.xlsx', columns=empty_check_list, thresh=3)
+    empty_check_list = [u'主营业务收入'.encode('utf-8'),
+                        u'净利润'.encode('utf-8'),
+                        u'利润总额'.encode('utf-8'),
+                        u'所有者权益合计'.encode('utf-8'),
+                        u'纳税总额'.encode('utf-8'),
+                        u'营业总收入'.encode('utf-8'),
+                        u'负债总额'.encode('utf-8'),
+                        u'资产总额'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-企业资产状况信息.xlsx', columns=empty_check_list, thresh=3)
 
     # LIST OUT VALUES AFTER EMPTY ROWS HANDLED
-    # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
+                                        file_url=clean_data_temp_file_url)
 
     # COLUMNS HANDLE
     # 资产总额
@@ -289,6 +291,10 @@ def empty_value_handle_assets_info():
     dcu.drop_unit(u'年报-企业资产状况信息', u'主营业务收入'.encode('utf-8'), [u'万元', u' 万元'])
 
     # 主营业务
+    keywords = [u'农', u'土地', u'电器', u'光纤', u'电器', u'化学', u'医疗', u'药', u'信息', u'钢', u'乳', u'互联网', u'电机',
+                u'自动化', u'交通', u'汽车', u'投资', u'园区', u'房地产', u'有线', u'日用', u'服饰', u'矿', u'开采', u'国有',
+                u'酒', u'银行', u'金融', u'证券', u'航空', u'航天', u'采掘', u'发电', u'工程', u'制造']
+    dcu.extract_keyword(u'年报-企业资产状况信息', u'主营业务'.encode('utf-8'), keywords)
 
     # 净利润
     dcu.drop_unit(u'年报-企业资产状况信息', u'净利润'.encode('utf-8'), [u'万元', u' 万元'])
@@ -300,6 +306,7 @@ def empty_value_handle_assets_info():
     dcu.drop_unit(u'年报-企业资产状况信息', u'负债总额'.encode('utf-8'), [u'万元', u' 万元'])
 
     # 实际员工数量
+    dcu.drop_columns(u'年报-企业资产状况信息', [u'实际员工数量'.encode('utf-8')])
 
     # 年报年份
 

@@ -128,3 +128,24 @@ def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
     return
+
+
+def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', others_mask='Others', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(keywords)):
+            if keywords[j] in str(content):
+                data_frame.set_value(index, column_name, keywords[j])
+
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if content not in keywords:
+            data_frame.set_value(index, column_name, others_mask)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
