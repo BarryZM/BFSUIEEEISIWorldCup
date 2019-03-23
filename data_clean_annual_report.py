@@ -32,6 +32,8 @@ def raw_files_primary_analysis():
 
 def duplicate_handle():
     for name in category_annual_report_files:
+        if name == u'年报-对外投资信息':
+            continue
         dcu.merge_rows(name + '.xlsx')
 
 
@@ -315,8 +317,33 @@ def empty_value_handle_assets_info():
 
 def empty_value_handle_out_invest_info():
     """
-    empty_value handle for table 年报-对外投资信息.
-    Don't drop data in this table, just replace the empty with 0.
+    Dirty value handle for table 年报-对外投资信息.xlsx.
+    First we'll drop rows that empty value is too many.
+    This table has too many empty values, but they should be indicating the number is 0 or not published
+    instead of dirty value. We want the counted number of each company, so we don't drop rows here.
+    We don't drop data in this table, just replace them with 0.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    投资金额
+    ------
+    Empty values replaced with 0.
+
+    -----------------------------
+    投资占比
+    ------
+    Empty values replaced with 0.
+    There's some value are far greater than 100, and we think it's unreasonable, so we need to mark them -1.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty replaced with 0, indicating it's a 'Unknown' value.
+
+    -----------------------------
     :return:
     """
 
@@ -324,14 +351,72 @@ def empty_value_handle_out_invest_info():
     df = df.fillna(0)
     file_utils.write_file(df, clean_data_temp_file_url, u'年报-对外投资信息')
 
-    # panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
+                                        file_url=clean_data_temp_file_url)
+
+    dcu.mark_invalid_num_data(u'年报-对外投资信息', u'投资占比'.encode('utf-8'), '>', 100)
     return
 
 
 def empty_value_handle_out_warrant_info():
     """
-    empty_value handle for table 年报-的对外提供保证担保信息.
+    Dirty value handle for table 年报-的对外提供保证担保信息.xlsx.
+    First we'll drop rows that empty value is too many.
+    ['主债权数额','主债权种类','保证的方式']
+    Once there are more than 3 empties in these 3 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    主债权数额
+    ------
+    Empty percentage is 0%(0 out of 6893).
+    Other values are formatted with end '万元' or pure numbers, but there's some have blank between number and unit,
+    we just drop the unit and clear the blanks.
+
+    -----------------------------
+    保证担保的范围
+    ------
+    Empty percentage is 0%(0 out of 6893). We need not to change this line at this point.
+
+    -----------------------------
+    保证的期间
+    ------
+    Empty percentage is 0.0435%(3 out of 6893). We just make them the same with '企业选择不公示'.
+    Other values mainly '期限'(6348 out of 6893), and we merge '期间','期限','限期' into one('期限'), also there's a few
+    listed as time periods, we merge them into '期限' too. The other value is '未约定'.
+
+    -----------------------------
+    保证的方式
+    ------
+    Empty percentage is 0%(0 out of 6893).
+    There are 6 values: ['0', '6', '一般保证', '企业选择不公示', '未约定', '连带保证'], cause '0','6','未约定' counts too
+    small(59,1,38 separately), we merge them into 'Others'.
+
+    -----------------------------
+    主债权种类
+    ------
+    Empty percentage is 0%(0 out of 6893).
+    There are 3 values: ['企业选择不公示', '其他', '合同'].
+
+    -----------------------------
+    履行债务的期限
+    ------
+    Empty percentage is 0.0145%(1 out of 6893).
+    Mainly time periods, but the format is not uniformed, some are like '2018年03月24日-2020年11月24日',
+    some '2018年03月24日-', some '2017年8月7日-2018年8月6日', some '2015-01-07至2016-01-07', some '2014-04-04~2016-04-04',
+    some '-2018年09月29日' and 6 '-'s, also some are '期限' or '企业选择不公示'. We first format all the time periods into
+    '2014/4/4~2016/4/4' so we can handle it properly later.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty percentage is 0%(0 out of 6893).
+    They are properly formatted.
+
+    -----------------------------
     :return:
     """
     # empty_check_list = [u'主债权数额'.encode('utf-8'),
@@ -341,6 +426,23 @@ def empty_value_handle_out_warrant_info():
     # panaly.list_category_columns_values([u'年报-的对外提供保证担保信息'], u'年报-的对外提供保证担保信息_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
 
+    # 主债权数额
+    dcu.drop_unit(u'年报-的对外提供保证担保信息', u'主债权数额'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 保证的期间
+    status_period = [u'期间', u'期限', u'限期']
+    status_list = [status_period]
+    status_after = [u'期间']
+    dcu.merge_status(u'年报-的对外提供保证担保信息', u'保证的期间'.encode('utf-8'), status_list, status_after)
+
+    # 保证的方式
+    status_period = ['0', '6', u'未约定']
+    status_list = [status_period]
+    status_after = [u'Others']
+    dcu.merge_status(u'年报-的对外提供保证担保信息', u'保证的方式'.encode('utf-8'), status_list, status_after)
+
+    # 履行债务的期限
+    dcu.time_periods_format(u'年报-的对外提供保证担保信息', u'履行债务的期限'.encode('utf-8'))
 
     return
 

@@ -138,6 +138,59 @@ def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst
                           sheet_name='Sheet', index=False)
     return
 
+
+def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if not (isinstance(content, float) or isinstance(content, int)):
+            continue
+
+        isvalid = True
+        if operator == '<':
+            isvalid = not (content < thresh_value)
+        elif operator == '>':
+            isvalid = not (content > thresh_value)
+        elif operator == '>=':
+            isvalid = not (content >= thresh_value)
+        elif operator == '<=':
+            isvalid = not (content <= thresh_value)
+
+        if not isvalid:
+            data_frame.set_value(index, column_name, error_mask)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def drop_invalid_data(file_name, column_name, operator, thresh_value, error_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if not (isinstance(content, float) or isinstance(content, int)):
+            continue
+
+        isvalid = True
+        if operator == '<':
+            isvalid = not (content < thresh_value)
+        elif operator == '>':
+            isvalid = not (content > thresh_value)
+        elif operator == '>=':
+            isvalid = not (content >= thresh_value)
+        elif operator == '<=':
+            isvalid = not (content <= thresh_value)
+
+        if not isvalid:
+            data_frame = data_frame.drop(index=index)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
 def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
 
@@ -176,3 +229,23 @@ def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', othe
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
     return
+
+
+def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, '-')
+            continue
+        if u'年' in content:
+            content = str(content).replace('-', '~').replace(u'年', '/').replace(u'月', '/').replace(u'日', '/')
+        elif '~' in content:
+            content = str(content).replace('-', '/')
+        elif u'至' in content:
+            content = str(content).replace(u'至', '~').replace('-', '/')
+
+        data_frame.set_value(index, column_name, content)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
