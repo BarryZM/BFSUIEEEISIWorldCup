@@ -110,6 +110,32 @@ def merge_status(file_name, column_name, status, status_names, empty_mask='Unkno
                           sheet_name='Sheet', index=False)
     return
 
+# 把万，亿，万亿结尾的金额改为数字
+def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type status_names: list
+    :type status: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if str(content).endswith(u'万'):
+            num=str(content).replace(u'万', '') # 把前面的改成后面的，此处是删去结尾的'万'
+            numb=float(num)
+            data_frame.set_value(index, column_name, numb*(10**4))
+        elif str(content).endswith(u'万亿'):
+            num=str(content).replace(u'万亿', '') # 把前面的改成后面的，此处是删去结尾的'万'
+            numb=float(num)
+            data_frame.set_value(index, column_name, numb*(10**12))
+        elif str(content).endswith(u'亿'):
+            num = str(content).replace(u'亿', '')  # 把前面的改成后面的，此处是删去结尾的'万'
+            numb = float(num)
+            data_frame.set_value(index, column_name, numb * (10 ** 8))
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
 
 def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
 

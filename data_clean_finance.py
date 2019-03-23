@@ -30,7 +30,7 @@ def raw_files_primary_analysis():
 
 
 
-def duplicate_handle(): #该类别下所有的表都合并
+def duplicate_handle(): #删除重复行
     for name in category_finance_files:
         dcu.merge_rows(name + '.xlsx')
 
@@ -43,95 +43,120 @@ def primary_analysis_after_duplicate_handled():
     panaly.list_category_columns_values(category_finance_files, u'财务信息类_dup_handled',
                                         file_url=clean_data_temp_file_url)
 
+def data_clean_finance_mgzb():
+    """
+            Dirty value handle for table 上市公司财务信息-每股指标.xlsx.
+        # ['企业总评分','标题','日期','基本每股收益(元)', '扣非每股收益(元)','稀释每股收益(元)',
+        '每股净资产(元)','每股公积金(元)','每股未分配利润(元)','每股经营现金流(元)']
+        In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
 
-"""
-        Dirty value handle for table 上市公司财务信息-每股指标.xlsx.
-    # ['企业总评分','标题','日期','基本每股收益(元)', '扣非每股收益(元)','稀释每股收益(元)',
-    '每股净资产(元)','每股公积金(元)','每股未分配利润(元)','每股经营现金流(元)']
-    In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
+        -----------------------------
+       企业总评分(企业编号)
+        ------
+        no change
+        -----------------------------
+        标题
+        ------
+        drop this column
+        -----------------------------
+        日期
+        ------
+        no change
+        -----------------------------
+        基本每股收益(元)
+        ------
+        turn '--' into 'NA'
+        -----------------------------
+        扣非每股收益(元)
+        ------
+        turn '--' into 'NA'
+        -----------------------------
+        稀释每股收益(元)
+        ------
+        turn null into 'NA'
+        turn '--' into 'NA'
+        -----------------------------
+        每股净资产(元)
+        ------
+        turn null into 'NA'
+        turn '--' into 'NA'
+        -----------------------------
+        每股公积金(元)
+        ------
+        turn null into 'NA'
+        turn '--' into 'NA'
+        -----------------------------
+        每股未分配利润(元)
+        ------
+        turn null into 'NA'
+        turn '--' into 'NA'
+        -----------------------------
+        每股经营现金流(元)
+        ------
+        turn null into 'NA'
+        turn '--' into 'NA'
+        -----------------------------
+    """
+    dcu.drop_columns(u'上市公司财务信息-每股指标', [u'标题'.encode('utf-8')])# 不行
 
-    -----------------------------
-   企业总评分(企业编号)
-    ------
-    no change
-    -----------------------------
-    标题
-    ------
-    drop this column
-    -----------------------------
-    日期
-    ------
-    no change
-    turn '--' into 'NA'
-    -----------------------------
-    基本每股收益(元)
-    ------
-    turn '--' into 'NA'
-    -----------------------------
-    扣非每股收益(元)
-    ------
-    turn '--' into 'NA'
-    -----------------------------
-    稀释每股收益(元)
-    ------
-    turn null into 'NA'
-    turn '--' into 'NA'
-    -----------------------------
-    每股净资产(元)
-    ------
-    turn null into 'NA'
-    turn '--' into 'NA'
-    -----------------------------
-    每股公积金(元)
-    ------
-    turn null into 'NA'
-    turn '--' into 'NA'
-    -----------------------------
-    每股未分配利润(元)
-    ------
-    turn null into 'NA'
-    turn '--' into 'NA'
-    -----------------------------
-    每股经营现金流(元)
-    ------
-    turn null into 'NA'
-    turn '--' into 'NA'
-    -----------------------------
-"""
-"""
+    status_normal = [u'--'] # 搜索满足这个条件的
+    status_list = [status_normal]
+    status_after = ['Unknown'] # 改成这个
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'基本每股收益(元)', status_list, status_after)
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'扣非每股收益(元)', status_list, status_after)
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'稀释每股收益(元)', status_list, status_after, empty_mask='Unknown') # 空值改为Unknown
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'每股净资产(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'每股公积金(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'每股未分配利润(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市公司财务信息-每股指标', u'每股经营现金流(元)', status_list, status_after, empty_mask='Unknown')
+    return
+
+def data_clean_finance_cwfxzb():
+    """
         Dirty value handle for table 上市信息财务信息-财务风险指标.xlsx.
-    First we'll drop rows that empty value is too many.
-    # ['企业总评分','标题','日期','资产负债率(%)','流动负债/总负债(%)','流动比率','速动比率']
-    In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
+        First we'll drop rows that empty value is too many.
+        # ['企业总评分','标题','日期','资产负债率(%)','流动负债/总负债(%)','流动比率','速动比率']
+        In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
 
 
-    -----------------------------
-    标题
-    ------
-    drop this column
-    -----------------------------
-    日期
-    ------
-    no change
-    -----------------------------
-    资产负债率(%)
-    ------
-    turn '--%' into 'NA'
-    -----------------------------
-    流动负债/总负债(%)
-    ------
-    turn '--%' into 'NA'
-    -----------------------------
-    流动比率
-    ------
-    turn '--' into 'NA'
-    -----------------------------
-    速动比率
-    ------
-    turn '--' into 'NA'
-    -----------------------------
-"""
-"""
+        -----------------------------
+        标题
+        ------
+        drop this column
+        -----------------------------
+        日期
+        ------
+        no change
+        -----------------------------
+        资产负债率(%)
+        ------
+        turn '--%' into 'NA'
+        -----------------------------
+        流动负债/总负债(%)
+        ------
+        turn '--%' into 'NA'
+        -----------------------------
+        流动比率
+        ------
+        turn '--' into 'NA'
+        -----------------------------
+        速动比率
+        ------
+        turn '--' into 'NA'
+        -----------------------------
+    """
+    status_normal = [u'--', u'--%']  # 搜索满足这个条件的
+    status_list = [status_normal]
+    status_after = ['Unknown']  # 改成这个
+
+    dcu.merge_status(u'上市信息财务信息-财务风险指标', u'资产负债率(%)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-财务风险指标', u'流动负债/总负债(%)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-财务风险指标', u'流动比率', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-财务风险指标', u'速动比率', status_list, status_after, empty_mask='Unknown')
+    return
+
+def data_clean_finance_cznlzb():
+    """
         Dirty value handle for table 上市信息财务信息-成长能力指标.xlsx.
     ['企业总评分','标题','日期','营业总收入(元)','毛利润(元)','归属净利润(元)',
     '扣非净利润(元)','营业总收入同比增长(元)','归属净利润同比增长(元)','扣非净利润同比增长(元)',
@@ -225,7 +250,34 @@ def primary_analysis_after_duplicate_handled():
     turn '--%' into 'NA'
 
     -----------------------------
-"""
+    dcu.change_number(u'temp',u'a',empty_mask='Unknown')
+    """
+    status_normal = [u'--', u'--%']  # 搜索满足这个条件的
+    status_list = [status_normal]
+    status_after = ['Unknown']  # 改成这个
+
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'营业总收入(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'毛利润(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'归属净利润(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'扣非净利润(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'营业总收入同比增长(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'归属净利润同比增长(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'扣非净利润同比增长(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'营业总收入滚动环比增长(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'归属净利润滚动环比增长(元)', status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'上市信息财务信息-成长能力指标', u'扣非净利润滚动环比增长(元)', status_list, status_after, empty_mask='Unknown')
+
+    return
+
+content = u'1.2万'
+if str(content).endswith(u'万'):
+    num = str(content).replace(u'万', '')  # 把前面的改成后面的，此处是删去结尾的'万'
+    numb = float(num)
+    a = numb * (10 ** 4)
+print(a)
+# data_frame.set_value(index, column_name, numb * (10 ** 4))
+reload(dcu)
+dcu.change_number(u'temp', 'a')
 """
         Dirty value handle for table 上市信息财务信息-利润表.xlsx.
     First we'll drop rows that empty value is too many.
