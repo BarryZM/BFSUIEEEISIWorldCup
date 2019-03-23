@@ -1,114 +1,302 @@
     Dirty value handle for table 上市信息财务信息-现金流量表.xlsx.
-    First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+
+
+    ['企业总评分','标题','日期','经营:销售商品、提供劳务收到的现金(元)','经营:收到的税费返还(元)','经营:收到其他与经营活动有关的现金(元)',
+    	'经营:经营活动现金流入小计(元)','经营:购买商品、接受劳务支付的现金(元)','经营:支付给职工以及为职工支付的现金(元)',
+    	'经营:支付的各项税费(元)','经营:支付其他与经营活动有关的现金(元)','经营:经营活动现金流出小计(元)','经营:经营活动产生的现金流量净额(元)',
+    	'投资:取得投资收益所收到的现金(元)','投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)','投资:投资活动现金流入小计(元)',
+    	'投资:购建固定资产、无形资产和其他长期资产支付的现金(元)','投资:投资支付的现金(元)','投资:投资活动现金流出小计(元)',
+    	'投资:投资活动产生的现金流量净额(元)','筹资:吸收投资收到的现金(元)','筹资:取得借款收到的现金(元)','筹资:筹资活动现金流入小计(元)',
+    	'筹资:偿还债务支付的现金(元)','筹资:分配股利、利润或偿付利息支付的现金(元)','筹资:筹资活动现金流出小计(元)','筹资活动产生的现金流量净额(元)']
+
+
 
     -----------------------------
     标题
     ------
-
+    drop this column
     -----------------------------
     日期
     ------
-
+    no change
     -----------------------------
     经营:销售商品、提供劳务收到的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:收到的税费返还(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:收到其他与经营活动有关的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:经营活动现金流入小计(元)
     ------
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:购买商品、接受劳务支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:支付给职工以及为职工支付的现金(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:支付的各项税费(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:支付其他与经营活动有关的现金(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:经营活动现金流出小计(元)
     ------
+    turn '--' into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     经营:经营活动产生的现金流量净额(元)
     ------
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:取得投资收益所收到的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:投资活动现金流入小计(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:购建固定资产、无形资产和其他长期资产支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:投资支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:投资活动现金流出小计(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     投资:投资活动产生的现金流量净额(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:吸收投资收到的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:取得借款收到的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:筹资活动现金流入小计(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:偿还债务支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:分配股利、利润或偿付利息支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资:筹资活动现金流出小计(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
     筹资活动产生的现金流量净额(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------

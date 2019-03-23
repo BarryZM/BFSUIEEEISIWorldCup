@@ -60,6 +60,10 @@ def empty_value_handle_basic_info():
 
 
 def rearrange_excel():
+    """
+
+    :return:
+    """
     wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'一般纳税人.xlsx',
                              sheet_name=u'一般纳税人')
     wr1.fillna({u'纳税人资格': 'unknown'}) # 对空值进行处理以进行索引

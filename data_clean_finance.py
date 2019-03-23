@@ -45,328 +45,936 @@ def primary_analysis_after_duplicate_handled():
 
 
 """
-    Dirty value handle for table 年报-企业基本信息.
+        Dirty value handle for table 上市公司财务信息-每股指标.xlsx.
+    # ['企业总评分','标题','日期','基本每股收益(元)', '扣非每股收益(元)','稀释每股收益(元)',
+    '每股净资产(元)','每股公积金(元)','每股未分配利润(元)','每股经营现金流(元)']
+    In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
+
+    -----------------------------
+   企业总评分(企业编号)
+    ------
+    no change
+    -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    turn '--' into 'NA'
+    -----------------------------
+    基本每股收益(元)
+    ------
+    turn '--' into 'NA'
+    -----------------------------
+    扣非每股收益(元)
+    ------
+    turn '--' into 'NA'
+    -----------------------------
+    稀释每股收益(元)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    -----------------------------
+    每股净资产(元)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    -----------------------------
+    每股公积金(元)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    -----------------------------
+    每股未分配利润(元)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    -----------------------------
+    每股经营现金流(元)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    -----------------------------
+"""
+"""
+        Dirty value handle for table 上市信息财务信息-财务风险指标.xlsx.
     First we'll drop rows that empty value is too many.
-    ['企业经营状态','从业人数','是否有网站或网点','企业是否有投资信息或购买其他公司股权',
-        '有限责任公司本年度是否发生股东股权转','是否提供对外担保']
-    Once there are more than 3 empties in these 6 columns we will drop that row.
+    # ['企业总评分','标题','日期','资产负债率(%)','流动负债/总负债(%)','流动比率','速动比率']
+    In this table, we turn all the '--' and nulls into 'NA'. Valid data are all in the form of double(float)
+
+
+    -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    -----------------------------
+    资产负债率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    流动负债/总负债(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    流动比率
+    ------
+    turn '--' into 'NA'
+    -----------------------------
+    速动比率
+    ------
+    turn '--' into 'NA'
+    -----------------------------
+"""
+"""
+        Dirty value handle for table 上市信息财务信息-成长能力指标.xlsx.
+    ['企业总评分','标题','日期','营业总收入(元)','毛利润(元)','归属净利润(元)',
+    '扣非净利润(元)','营业总收入同比增长(元)','归属净利润同比增长(元)','扣非净利润同比增长(元)',
+    '营业总收入滚动环比增长(元)','归属净利润滚动环比增长(元)','扣非净利润滚动环比增长(元)']
+
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    -----------------------------
+    营业总收入(元)
+    ------
+    turn '--' into 'NA'
+    if end with u'万亿'
+        drop u'万亿'
+        *10^12
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+    -----------------------------
+    毛利润(元)
+    ------
+    turn '--' into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    归属净利润(元)
+    ------
+    turn '--' into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    扣非净利润(元)
+    ------
+    turn '--' into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    营业总收入同比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+    归属净利润同比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+    扣非净利润同比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+    营业总收入滚动环比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+    归属净利润滚动环比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+    扣非净利润滚动环比增长(元)(%)
+    ------
+    turn '--%' into 'NA'
+
+    -----------------------------
+"""
+"""
+        Dirty value handle for table 上市信息财务信息-利润表.xlsx.
+    First we'll drop rows that empty value is too many.
+   ['企业总评分','标题','日期','营业收入(元)','营业成本(元)','销售费用(元)','财务费用(元)',
+   '管理费用(元)','资产减值损失(元)','投资收益(元)','营业利润(元)','利润总额(元)','所得税(元)','归属母公司所有者净利润(元)']'
+
+
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
         to exploratory data analysis. 
 
     -----------------------------
-    注册资本
+    标题
     ------
-    Based on the primary analysis data, we can drop column 注册资本 which empty percentage is 88%
+    drop this column
     -----------------------------
-    企业经营状态
+    日期
     ------
-    Empty percentage is 1.5%(214 out of 14862).
-    8 status this value has, they are ['停业','其他','存续','开业','开业/正常经营','歇业','正常开业','清算'].
-    We just add another status for the empty value:'Unknown'.
-    And based on the counts for every status, we simplify these status to ['正常经营','非正常经营','Unknown']
-    ['开业','开业/正常经营','正常开业'] belongs to '正常经营' and ['停业','其他','存续','歇业','清算'] belongs to '非正常经营'.
-    So we can map these total 9 status to three: {'正常经营':0,'非正常经营':1,'Unknown':-1}.
+    no change
     -----------------------------
-    从业人数
+    营业收入(元)
     ------
-    Empty percentage is 1.5%(213 out of 14862), and some value end with '人' while some are pure number.
-    But also there are lots of value valued '企业选择不公示'(11623) and a few valued '人' without number.
-    For empty value, we replace with -1 indicating there's no value(be careful here, we don't trigger them as -1 people,
-        -1 here works as a status). Those end with '人', we simply drop '人'. Those valued '企业选择不公示',
-        we replace it as number 0 which also works as a status, there's 8 '0人's in the original value but
-        shouldn't matter.
-    -----------------------------
-    是否有网站或网点
-    ------
-    Empty percentage is 1.5%(213 out of 14862).
-    There are 4 status here:['否','无','是','有'], and ['否','无'] should belong to 'No', ['是','有'] belong to 'Yes'.
-    Empty value will be replaced with
-    -----------------------------
-    企业是否有投资信息或购买其他公司股权
-    ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    有限责任公司本年度是否发生股东股权转
+    营业成本(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    是否提供对外担保
+    销售费用(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    发布日期
+    财务费用(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    年报年份
-
+    管理费用(元)
+    ------
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    :return:
+    资产减值损失(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资收益(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    营业利润(元)
+    ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    利润总额(元)
+    ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    所得税(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    归属母公司所有者净利润(元)
+    ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
 """
 """
-    Dirty value handle for table 年报-企业资产状况信息.
-    First we'll drop rows that empty value is too many.
-    ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+        Dirty value handle for table 上市信息财务信息-现金流量表.xlsx.
+
+
+    ['企业总评分','标题','日期','经营:销售商品、提供劳务收到的现金(元)','经营:收到的税费返还(元)','经营:收到其他与经营活动有关的现金(元)',
+    	'经营:经营活动现金流入小计(元)','经营:购买商品、接受劳务支付的现金(元)','经营:支付给职工以及为职工支付的现金(元)',
+    	'经营:支付的各项税费(元)','经营:支付其他与经营活动有关的现金(元)','经营:经营活动现金流出小计(元)','经营:经营活动产生的现金流量净额(元)',
+    	'投资:取得投资收益所收到的现金(元)','投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)','投资:投资活动现金流入小计(元)',
+    	'投资:购建固定资产、无形资产和其他长期资产支付的现金(元)','投资:投资支付的现金(元)','投资:投资活动现金流出小计(元)',
+    	'投资:投资活动产生的现金流量净额(元)','筹资:吸收投资收到的现金(元)','筹资:取得借款收到的现金(元)','筹资:筹资活动现金流入小计(元)',
+    	'筹资:偿还债务支付的现金(元)','筹资:分配股利、利润或偿付利息支付的现金(元)','筹资:筹资活动现金流出小计(元)','筹资活动产生的现金流量净额(元)']
+
+
 
     -----------------------------
-    主营业务收入
+    标题
     ------
-
+    drop this column
     -----------------------------
-    净利润
+    日期
     ------
-
+    no change
     -----------------------------
-    利润总额
+    经营:销售商品、提供劳务收到的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    实际员工数量
+    经营:收到的税费返还(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    年报年份
+    经营:收到其他与经营活动有关的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    所有者权益合计
+    经营:经营活动现金流入小计(元)
     ------
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    纳税总额
+    经营:购买商品、接受劳务支付的现金(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    营业总收入
+    经营:支付给职工以及为职工支付的现金(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    负债总额
+    经营:支付的各项税费(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    资产总额
+    经营:支付其他与经营活动有关的现金(元)
     ------
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    
-    :return:
+    经营:经营活动现金流出小计(元)
+    ------
+    turn '--' into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    经营:经营活动产生的现金流量净额(元)
+    ------
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:取得投资收益所收到的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:投资活动现金流入小计(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:购建固定资产、无形资产和其他长期资产支付的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:投资支付的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:投资活动现金流出小计(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    投资:投资活动产生的现金流量净额(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:吸收投资收到的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:取得借款收到的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:筹资活动现金流入小计(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:偿还债务支付的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:分配股利、利润或偿付利息支付的现金(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资:筹资活动现金流出小计(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
+    筹资活动产生的现金流量净额(元)
+    ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
+
+    -----------------------------
 """
 """
-    Dirty value handle for table 年报-对外投资信息.
+        Dirty value handle for table 上市信息财务信息盈利能力指标.xlsx.
+
+    ['企业总评分','标题','日期','加权净资产收益率(%)','摊薄净资产收益率(%)','摊薄总资产收益率(%)','毛利率(%)','净利率(%)','实际税率(%)']'
+
+
+
+   -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    -----------------------------
+    加权净资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    摊薄净资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    摊薄总资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    毛利率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+    净利率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+    实际税率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+"""
+"""
+    Dirty value handle for table 上市信息财务信息盈利能力指标.xlsx.
+
+    ['企业总评分','标题','日期','加权净资产收益率(%)','摊薄净资产收益率(%)','摊薄总资产收益率(%)','毛利率(%)','净利率(%)','实际税率(%)']'
+
+
+
+   -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    -----------------------------
+    加权净资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    摊薄净资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    摊薄总资产收益率(%)
+    ------
+    turn '--%' into 'NA'
+    -----------------------------
+    毛利率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+    净利率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+    实际税率(%)
+    ------
+    turn '--%' into 'NA'
+    if >100%
+        turn into 'ERROR'
+    -----------------------------
+    """
+"""
+    Dirty value handle for table 上市信息财务信息运营能力指标.xlsx.
+
+    ['企业总评分','标题','日期','总资产周转率(次)','应收账款周转天数(天)','存货周转天数(天)']'
+
+
+    -----------------------------
+    标题
+    ------
+    drop this column
+    -----------------------------
+    日期
+    ------
+    no change
+    -----------------------------
+    总资产周转率(次)
+    ------
+    turn null into 'NA'
+    -----------------------------
+    应收账款周转天数(天)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if <0
+        turn into 'ERROR'
+    -----------------------------
+    存货周转天数(天)
+    ------
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if <0
+        turn into 'ERROR'
+    -----------------------------
+    """
+"""
+    Dirty value handle for table 上市信息财务信息资产负债表.xlsx.
     First we'll drop rows that empty value is too many.
     # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
-    
+   ['企业总评分','标题','日期','资产:货币资金(元)','资产:应收账款(元)','资产:其它应收款(元)','资产:存货(元)','资产:流动资产合计(元)','资产:长期股权投资(元)','资产:累计折旧(元)','资产:固定资产(元)','资产:无形资产(元)','资产:资产总计(元)','负债:应付账款(元)','负债:预收账款(元)','负债:存货跌价准备(元)','负债:流动负债合计(元)','负债:长期负债合计(元)','负债:负债合计(元)','权益:实收资本(或股本)(元)','权益:资本公积金(元)','权益:盈余公积金(元)','权益:股东权益合计(元)','流动比率']
+
+
     -----------------------------
-    年报年份
+    标题
     ------
-
+    drop this column
     -----------------------------
-    投资占比
+    日期
     ------
-
+    no change
     -----------------------------
-    投资金额
+    资产:货币资金(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    
-    :return
-"""
-"""
-    Dirty value handle for table 年报-的对外提供保证担保信息.
-    First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
-
-    -----------------------------
-    主债权数额
+    资产:应收账款(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    主债权种类
+    资产:其它应收款(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    保证担保的范围
+    资产:存货(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    保证的方式
+    资产:流动资产合计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    保证的期间
+    资产:长期股权投资(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    履行债务的期限
+    资产:累计折旧(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    年报年份
+    资产:固定资产(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-
-    :return
-"""
-"""
-    Dirty value handle for table 年报-社保信息.
-    First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
-
-    -----------------------------
-    单位参加城镇职工基本养老保险累计欠缴金额
+    资产:无形资产(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加城镇职工基本养老保险缴费基数
+    资产:资产总计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加失业保险累计欠缴金额
+    负债:应付账款(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加失业保险缴费基数
+    负债:预收账款(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加工伤保险累计欠缴金额
+    负债:存货跌价准备(元)
     ------
+    turn '--' into 'NA'
+    turn null into 'NA'
+    if end with u'万'
+        drop u'万'
+        *10^4
+    if end with u'亿'
+        drop u'亿'
+        *10^8
 
     -----------------------------
-    单位参加工伤保险缴费基数
+    负债:流动负债合计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加生育保险累计欠缴金额
+    负债:长期负债合计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加生育保险缴费基数
+    负债:负债合计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加职工基本医疗保险累计欠缴金额
+    权益:实收资本(或股本)(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    单位参加职工基本医疗保险缴费基数
+    权益:资本公积金(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    参加城镇职工基本养老保险本期实际缴费金额
+    权益:盈余公积金(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    参加失业保险本期实际缴费金额
+    权益:股东权益合计(元)
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
+    if end with u'亿' or u'亿'
+        ='NA'
     -----------------------------
-    参加工伤保险本期实际缴费金额
+    流动比率
     ------
-
+    turn null into 'NA'
+    turn '--' into 'NA'
     -----------------------------
-    参加生育保险本期实际缴费金额
-    ------
-
-    -----------------------------
-    参加职工基本医疗保险本期实际缴费金额
-    ------
-
-    -----------------------------
-    城镇职工基本养老保险人数
-    ------
-
-    -----------------------------
-    失业保险人数
-    ------
-
-    -----------------------------
-    工伤保险人数
-    ------
-
-    -----------------------------
-    年报年份
-    ------
-
-    -----------------------------
-    生育保险人数
-    ------
-
-    -----------------------------
-    职工基本医疗保险人数
-    ------
-
-    -----------------------------
-
-    :return
-"""
-"""
-    Dirty value handle for table 年报-的对外提供保证担保信息.
-    First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
-    Next we should numeric all the value for future process.
-    After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
-
-    -----------------------------
-    主债权数额
-    ------
-
-    -----------------------------
-    主债权种类
-    ------
-
-    -----------------------------
-    保证担保的范围
-    ------
-
-    -----------------------------
-    保证的方式
-    ------
-
-    -----------------------------
-    保证的期间
-    ------
-
-    -----------------------------
-    履行债务的期限
-    ------
-
-    -----------------------------
-    年报年份
-    ------
-
-    -----------------------------
-
-    :return
 """
 
 def empty_value_handle_basic_info():
