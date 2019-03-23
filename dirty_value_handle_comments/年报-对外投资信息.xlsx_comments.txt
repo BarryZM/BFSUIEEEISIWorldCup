@@ -1,6 +1,7 @@
     Dirty value handle for table 年报-对外投资信息.xlsx.
     First we'll drop rows that empty value is too many.
-    This table has too many empty values, but they should be indicating the number is 0 instead of dirty value.
+    This table has too many empty values, but they should be indicating the number is 0 or not published
+    instead of dirty value. We want the counted number of each company, so we don't drop rows here.
     We don't drop data in this table, just replace them with 0.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
@@ -16,6 +17,7 @@
     投资占比
     ------
     Empty values replaced with 0.
+    There's some value are far greater than 100, and we think it's unreasonable, so we need to mark them -1.
 
     -----------------------------
     年报年份
