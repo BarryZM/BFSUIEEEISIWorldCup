@@ -15,7 +15,7 @@
     -----------------------------
     企业经营状态
     ------
-    Empty percentage is 1.5%(214 out of 14862).
+    Empty percentage is 0%(1 out of 14862).
     8 status this value has, they are ['停业','其他','存续','开业','开业/正常经营','歇业','正常开业','清算'].
     We just add another status for the empty value:'Unknown'.
     And based on the counts for every status, we simplify these status to ['正常经营','非正常经营','Unknown']
@@ -24,7 +24,7 @@
     -----------------------------
     从业人数
     ------
-    Empty percentage is 1.5%(213 out of 14862), and some value end with '人' while some are pure number.
+    Empty percentage is 0%(0 out of 14862), and some value end with '人' while some are pure number.
     But also there are lots of value valued '企业选择不公示'(11623) and a few valued '人' without number.
     For empty value, we replace with -1 indicating there's no value(be careful here, we don't trigger them as -1 people,
         -1 here works as a status). Those end with '人', we simply drop '人'. Those valued '企业选择不公示',
@@ -33,27 +33,34 @@
     -----------------------------
     是否有网站或网点
     ------
-    Empty percentage is 1.5%(213 out of 14862).
+    Empty percentage is 0%(0 out of 14862).
     There are 4 status here:['否','无','是','有'], and ['否','无'] should belong to 'No', ['是','有'] belong to 'Yes'.
-    Empty value will be replaced with
     -----------------------------
     企业是否有投资信息或购买其他公司股权
     ------
-
+    Empty percentage is 0.02%(3 out of 14862).
+    There are 4 status here:['否','无','是','有'], and ['否','无'] should belong to 'No', ['是','有'] belong to 'Yes'.
+    Empty value will be mapped to 'Unknown'
     -----------------------------
     有限责任公司本年度是否发生股东股权转
     ------
-
+    Empty percentage is 0.013%(2 out of 14862).
+    There are 4 status here:['否','无','是','有'], and ['否','无'] should belong to 'No', ['是','有'] belong to 'Yes'.
+    Empty value will be mapped to 'Unknown'
     -----------------------------
     是否提供对外担保
     ------
-
+    Empty percentage is 0.075%(11 out of 14862).
+    There are 2 status here:['否','是'], we map them to ['No', 'Yes']
     -----------------------------
     发布日期
     ------
+    Empty percentage is 0%(0 out of 14862).
+    And it's well formatted, so without any process on this column.
 
     -----------------------------
     年报年份
-
-
+    ------
+    Empty percentage is 0%(0 out of 14862).
+    And it's well formatted, so without any process on this column.
     -----------------------------
