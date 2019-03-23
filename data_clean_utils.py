@@ -100,7 +100,7 @@ def merge_status(file_name, column_name, status, status_names, empty_mask='Unkno
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
-        if pandas.isnull(content):
+        if pandas.isnull(content) or pandas.isna(content):
             data_frame.set_value(index, column_name, empty_mask)
         for j in range(0, len(status)):
             if content in status[j]:

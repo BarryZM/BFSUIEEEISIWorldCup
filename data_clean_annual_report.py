@@ -170,7 +170,91 @@ def empty_value_handle_basic_info():
 
 def empty_value_handle_assets_info():
     """
-    empty_value handle for table 年报-企业资产状况信息.
+    Dirty value handle for table 年报-企业资产状况信息.xlsx.
+    First we'll drop rows that empty value is too many.
+    ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    资产总额
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11064 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    所有者权益合计
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11235 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    营业总收入
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11344 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    利润总额
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11304 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    主营业务收入
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11529 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    主营业务
+    ------
+    This value is very complicated with 80% empty(11745 out of 14657). But we think it's somehow important.
+    We extract some key words:['农','土地','电器','光纤','电器','化学','医疗','药','信息','钢','乳','互联网','电机','自动化',
+    '交通','汽车','投资','园区','房地产','有线','日用','服饰','矿','开采','国有','酒', '银行', '金融','证券'](the sequence is
+    ordered to match the first), Others are into 'Others'. Empty values are replaced with 'Unknown'.
+
+    -----------------------------
+    净利润
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11292 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    纳税总额
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11292 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    负债总额
+    ------
+    Empty percentage is 0%(0 out of 14657). But there is 11160 is '企业选择不公示'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    实际员工数量
+    ------
+    Empty percentage is 91%(13353 out of 14657). We just drop it.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty percentage is 0%(0 out of 14657).
+    There's no need to handle the empty.
+
+    -----------------------------
     :return:
     """
     # EMPTY CHECK
@@ -187,6 +271,37 @@ def empty_value_handle_assets_info():
     # LIST OUT VALUES AFTER EMPTY ROWS HANDLED
     # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
+
+    # COLUMNS HANDLE
+    # 资产总额
+    dcu.drop_unit(u'年报-企业资产状况信息', u'资产总额'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 所有者权益合计
+    dcu.drop_unit(u'年报-企业资产状况信息', u'所有者权益合计'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 营业总收入
+    dcu.drop_unit(u'年报-企业资产状况信息', u'营业总收入'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 利润总额
+    dcu.drop_unit(u'年报-企业资产状况信息', u'利润总额'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 主营业务收入
+    dcu.drop_unit(u'年报-企业资产状况信息', u'主营业务收入'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 主营业务
+
+    # 净利润
+    dcu.drop_unit(u'年报-企业资产状况信息', u'净利润'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 纳税总额
+    dcu.drop_unit(u'年报-企业资产状况信息', u'纳税总额'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 负债总额
+    dcu.drop_unit(u'年报-企业资产状况信息', u'负债总额'.encode('utf-8'), [u'万元', u' 万元'])
+
+    # 实际员工数量
+
+    # 年报年份
 
     return
 
