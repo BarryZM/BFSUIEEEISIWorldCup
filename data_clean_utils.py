@@ -164,7 +164,7 @@ def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_
     return
 
 
-def drop_invalid_data(file_name, column_name, operator, thresh_value, error_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_invalid_data(file_name, column_name, operator, thresh_value, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
 
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
@@ -238,11 +238,12 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
             data_frame.set_value(index, column_name, '-')
             continue
         if u'年' in content:
-            content = str(content).replace('-', '~').replace(u'年', '/').replace(u'月', '/').replace(u'日', '/')
+            content = str(content).replace('-', '~').replace(u'年', '/').replace(u'月', '/').replace(u'日', '')
         elif '~' in content:
             content = str(content).replace('-', '/')
         elif u'至' in content:
             content = str(content).replace(u'至', '~').replace('-', '/')
+        content = str(content).replace('/0', '/')
 
         data_frame.set_value(index, column_name, content)
 
