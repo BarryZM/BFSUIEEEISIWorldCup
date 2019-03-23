@@ -32,6 +32,8 @@ def raw_files_primary_analysis():
 
 def duplicate_handle():
     for name in category_annual_report_files:
+        if name == u'年报-对外投资信息':
+            continue
         dcu.merge_rows(name + '.xlsx')
 
 
@@ -315,8 +317,33 @@ def empty_value_handle_assets_info():
 
 def empty_value_handle_out_invest_info():
     """
-    empty_value handle for table 年报-对外投资信息.
-    Don't drop data in this table, just replace the empty with 0.
+    Dirty value handle for table 年报-对外投资信息.xlsx.
+    First we'll drop rows that empty value is too many.
+    This table has too many empty values, but they should be indicating the number is 0 or not published
+    instead of dirty value. We want the counted number of each company, so we don't drop rows here.
+    We don't drop data in this table, just replace them with 0.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    投资金额
+    ------
+    Empty values replaced with 0.
+
+    -----------------------------
+    投资占比
+    ------
+    Empty values replaced with 0.
+    There's some value are far greater than 100, and we think it's unreasonable, so we need to mark them -1.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty replaced with 0, indicating it's a 'Unknown' value.
+
+    -----------------------------
     :return:
     """
 
@@ -324,8 +351,10 @@ def empty_value_handle_out_invest_info():
     df = df.fillna(0)
     file_utils.write_file(df, clean_data_temp_file_url, u'年报-对外投资信息')
 
-    # panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
+                                        file_url=clean_data_temp_file_url)
+
+    dcu.mark_invalid_num_data(u'年报-对外投资信息', u'投资占比'.encode('utf-8'), '>', 100)
     return
 
 
