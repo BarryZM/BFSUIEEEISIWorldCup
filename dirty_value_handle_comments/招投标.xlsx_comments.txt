@@ -1,26 +1,46 @@
     Dirty value handle for table 招投标.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['公告类型','发布时间','中标或招标','省份']
+    # Once there are more than 1 empties in these 4 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+    to exploratory data analysis.
 
     -----------------------------
     公告类型
     ------
-
+    Empty percentage is 10.67%(8862 out of 83080).
+    20 status can be concluded in this part, they are ['中标','公开招标','其他','其它','单一','变更','合同','废标','成交',
+    '招标','拟建','流标','竞争性谈判','竞价','竞谈','结果变更','询价','违规','预告','验收']
+    We just add another status for the empty value:'Unknown'.
+    So we can map these total 21 status :{'中标':0,'公开招标':1,'其他':2,'其它':3,'单一':4,'变更':5,'合同':6,'废标':7,'成交':8,
+    '招标':9,'拟建':10,'流标':11,'竞争性谈判':12,'竞价':13,'竞谈':14,'结果变更':15,'询价':16,'违规':17,'预告':18,'验收':19,'Unknown':-1}.
     -----------------------------
     中标或招标
     ------
-
+    Empty percentage is 0%(0 out of 83080).
+    2 status can be concluded in this part, they are ['中标','招标']
+    All the information is good as there is no empty value here.  So we can map these total 2 status :
+    {'中标'：0,'招标'：1}.
     -----------------------------
     省份
     ------
-
+    Empty percentage is 0%(0 out of 83080).
+    37 status can be concluded in this part, they are ['上海','云南','全国','兵团','内蒙古','北京','南京','台湾','吉林','四川',
+    '天津','宁夏','安徽','山东','山西','广东','广西','新疆','江苏','江西','河北','河南','浙江','海南','湖北','湖南','澳门','甘肃',
+    '福建','西藏','贵州','辽宁','重庆','陕西','青海','香港','黑龙江']
+    Although there is no empty value here, some of the status should change due to the regulation.
+    '兵团' should be concluded into '新疆', and '南京' should be concluded into '江苏'.
+    Meanwhile, '全国' isn't the type of province, it seems similar to 'Unknown'. So we will use -1 to represent '全国'.
+    So we can map these total 35 status : ['上海':0,'云南':1,'内蒙古':2,'北京':3,'台湾':4,'吉林':5,'四川':6,'天津':7,'宁夏':8,
+    '安徽':9,'山东':10,'山西':11,'广东':12,'广西':13,'新疆':14,'江苏':15,'江西':16,'河北':17,'河南':18,'浙江':19,'海南':20,
+    '湖北':21,'湖南':22,'澳门':23,'甘肃':24,'福建':25,'西藏':26,'贵州':27,'辽宁':28,'重庆':29,'陕西':30,'青海':31,'香港':32,
+    '黑龙江':33,'全国':34]
     -----------------------------
     发布时间
     ------
-
-    -----------------------------
+    Empty percentage is 0%(0 out of 83080).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    But we can also find that the value '1970-01-01' is the default time of the computer system. So we need to drop them.
+    After modifying that we can use it.
