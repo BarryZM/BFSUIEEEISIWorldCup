@@ -1,7 +1,7 @@
     Dirty value handle for table 年报-的对外提供保证担保信息.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主债权数额','主债权种类','保证的方式']
-    # Once there are more than 3 empties in these 3 columns we will drop that row.
+    ['主债权数额','主债权种类','保证的方式']
+    Once there are more than 3 empties in these 3 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
@@ -10,29 +10,48 @@
     -----------------------------
     主债权数额
     ------
+    Empty percentage is 0%(0 out of 6893).
+    Other values are formatted with end '万元' or pure numbers, but there's some have blank between number and unit,
+    we just drop the unit and clear the blanks.
 
     -----------------------------
     保证担保的范围
     ------
+    Empty percentage is 0%(0 out of 6893). We need not to change this line at this point.
 
     -----------------------------
     保证的期间
     ------
+    Empty percentage is 0.0435%(3 out of 6893). We just make them the same with '企业选择不公示'.
+    Other values mainly '期限'(6348 out of 6893), and we merge '期间','期限','限期' into one('期限'), also there's a few
+    listed as time periods, we merge them into '期限' too.
 
     -----------------------------
     保证的方式
     ------
+    Empty percentage is 0%(0 out of 6893).
+    There are 6 values: ['0', '6', '一般保证', '企业选择不公示', '未约定', '连带保证'], cause '0','6','未约定' counts too
+    small(59,1,38 separately), we merge them into 'Others'.
 
     -----------------------------
     主债权种类
     ------
+    Empty percentage is 0%(0 out of 6893).
+    There are 3 values: ['企业选择不公示', '其他', '合同'].
 
     -----------------------------
     履行债务的期限
     ------
+    Empty percentage is 0.0145%(1 out of 6893).
+    Mainly time periods, but the format is not uniformed, some are like '2018年03月24日-2020年11月24日',
+    some '2018年03月24日-', some '2017年8月7日-2018年8月6日', some '2015-01-07至2016-01-07', some '2014-04-04~2016-04-04',
+    some '-2018年09月29日' and 6 '-'s, also some are '期限' or '企业选择不公示'. We first format all the time periods into
+    '2014/4/4~2016/4/4' so we can handle it properly later.
 
     -----------------------------
     年报年份
     ------
+    Empty percentage is 0%(0 out of 6893).
+    They are properly formatted.
 
     -----------------------------

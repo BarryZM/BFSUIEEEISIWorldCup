@@ -11,35 +11,35 @@
     资产总额
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11064 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     所有者权益合计
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11235 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     营业总收入
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11344 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     利润总额
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11304 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     主营业务收入
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11529 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
@@ -54,21 +54,21 @@
     净利润
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11292 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     纳税总额
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11292 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------
     负债总额
     ------
     Empty percentage is 0%(0 out of 14657). But there is 11160 is '企业选择不公示'.
-    Other values are well formatted with end '万元', but we there's some have blank between number and unit, we just
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
     drop the unit and clear the blanks.
 
     -----------------------------

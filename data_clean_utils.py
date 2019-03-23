@@ -7,6 +7,7 @@ import sys
 
 import file_utils
 from file_directions import working_file_url, clean_data_temp_file_url
+import pandas
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -74,6 +75,55 @@ def drop_rows_too_many_empty(file_name, columns, thresh=2, file_url=clean_data_t
     """
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     data_frame = data_frame.dropna(subset=columns, thresh=thresh)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def drop_columns(file_name, columns, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    data_frame = data_frame.drop(columns, axis=1)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def merge_status(file_name, column_name, status, status_names, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type status_names: list
+    :type status: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(status)):
+            if content in status[j]:
+                data_frame.set_value(index, column_name, status_names[j])
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type unit_strs: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(unit_strs)):
+            if str(content).endswith(unit_strs[j]):
+                data_frame.set_value(index, column_name, str(content).replace(unit_strs[j], ''))
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
