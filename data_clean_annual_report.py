@@ -29,25 +29,6 @@ def raw_files_primary_analysis():
     """
     panaly.list_category_columns_values(category_annual_report_files, u'年报类')
 
-#
-# def duplicate_handle_basic_info():
-#     """
-#     handle duplicate data
-#     :return:
-#     """
-#     dcu.merge_rows(u'年报-企业基本信息.xlsx', [u'企业编号', u'年报年份'])
-#
-#
-# def duplicate_handle_assets_info():
-#     """
-#     handle duplicate data
-#     :return:
-#     """
-#     dcu.merge_rows(u'年报-企业资产状况信息.xlsx', [u'企业编号', u'年报年份'])
-#
-#
-# # TODO handle all the duplicate data in all tables listed in '年报类'
-
 
 def duplicate_handle():
     for name in category_annual_report_files:
@@ -136,17 +117,17 @@ def empty_value_handle_basic_info():
     :return:
     """
     # EMPTY CHECK
-    # empty_check_list = [u'企业经营状态'.encode('utf-8'),
-    #                     u'从业人数'.encode('utf-8'),
-    #                     u'是否有网站或网点'.encode('utf-8'),
-    #                     u'企业是否有投资信息或购买其他公司股权'.encode('utf-8'),
-    #                     u'有限责任公司本年度是否发生股东股权转'.encode('utf-8'),
-    #                     u'是否提供对外担保'.encode('utf-8')]
-    # dcu.drop_rows_too_many_empty(u'年报-企业基本信息.xlsx', columns=empty_check_list, thresh=3)
+    empty_check_list = [u'企业经营状态'.encode('utf-8'),
+                        u'从业人数'.encode('utf-8'),
+                        u'是否有网站或网点'.encode('utf-8'),
+                        u'企业是否有投资信息或购买其他公司股权'.encode('utf-8'),
+                        u'有限责任公司本年度是否发生股东股权转'.encode('utf-8'),
+                        u'是否提供对外担保'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-企业基本信息.xlsx', columns=empty_check_list, thresh=3)
 
     # LIST OUT VALUES AFTER EMPTY ROWS HANDLED
-    # panaly.list_category_columns_values([u'年报-企业基本信息'], u'年报-企业基本信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    panaly.list_category_columns_values([u'年报-企业基本信息'], u'年报-企业基本信息_empty_handled',
+                                        file_url=clean_data_temp_file_url)
 
     # COLUMNS HANDLE
     # 注册资本
