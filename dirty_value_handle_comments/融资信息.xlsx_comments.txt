@@ -1,8 +1,7 @@
  Dirty value handle for table 融资信息.xlsx.
     First we'll drop rows that empty value is too many.
     # ['融资日期','轮次','投资金额']
-    # Once there are more than 1 empty in these 3 columns we will drop that row.
-    Then we check nulls column by column and decide how to process with it.
+    We check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
         to exploratory data analysis.
@@ -12,7 +11,7 @@
     ------
     Empty percentage is 0.22%(10 out of 4468).
     We consider each part as an independent status. and all of the values are showed by correct format of time.
-    As the empty values account for a small scale, we could drop all the empty values.
+    Empty values can be considered to 'Unknown'.
     -----------------------------
     轮次
     ------

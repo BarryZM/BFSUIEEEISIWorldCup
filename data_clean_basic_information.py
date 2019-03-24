@@ -18,6 +18,7 @@ import primary_analysis as panaly
 from file_directions import clean_data_temp_file_url
 from files_category_info import category_basic_information
 
+
 def raw_files_primary_analysis():
     """
     primary analysis for raw files without handled
@@ -34,7 +35,6 @@ def duplicate_handle():
     for name in category_basic_information:
         dcu.merge_rows(name + '.xlsx')
         return
-
 
 
 def primary_analysis_after_duplicate_handled():
@@ -236,39 +236,44 @@ def clean_basic_info():
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'经营期限自'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'经营期限自'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'经营期限至'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'经营期限至'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'登记机关区域代码'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'登记机关区域代码'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'发照日期'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'发照日期'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'员工人数'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'员工人数'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'注销原因'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'注销原因'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'注销时间'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
-
-
+    dcu.merge_status(u'工商基本信息表', u'注销时间'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
 
 """
@@ -325,7 +330,6 @@ def clean_basic_info():
 
 
 def empty_value_handle_custom_credit():
-
     """
     empty_value handle for table 基本信息.
     :return:
@@ -338,7 +342,6 @@ def empty_value_handle_custom_credit():
     dcu.drop_rows_too_many_empty(u'海关进出口信用.xlsx', columns=empty_check_list, thresh=2)
     # panaly.list_category_columns_values([u'海关进出口信用'], u'海关进出口信用_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
-
 
 
 def clean_custom_credit():
@@ -362,14 +365,14 @@ def clean_custom_credit():
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'海关进出口信用', u'海关注销标志'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'海关进出口信用', u'海关注销标志'.encode('utf-8'), status_list, status_after,
+                     empty_mask='Unknown')  # 空值改为Unknown
 
     # wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'海关进出口信用.xlsx',
     #                          sheet_name='sheet')
-    # wr1.fillna({u'信用等级': 'unknown'})  # 对空值进行处理以进行索引
+    # wr1 = wr1.fillna({u'信用等级': 'unknown'})  # 对空值进行处理以进行索引
     # fu.write_file(wr1, clean_data_temp_file_url, u'海关进出口信用', ext='.xlsx',
     #               sheet_name='Sheet', index=False)
-
 
     status_normal = [u'1']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -428,8 +431,8 @@ def clean_custom_credit():
     After modifying that we can use it.
 """
 
-def empty_value_handle_tenders():
 
+def empty_value_handle_tenders():
     """
     empty_value handle for table 基本信息.
     :return:
@@ -453,16 +456,14 @@ def clean_tender():
     status_normal = [u'兵团']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = [u'新疆']  # 改成这个
-    dcu.merge_status(u'招投标',u'省份'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'招投标', u'省份'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
     status_normal = [u'南京']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = [u'江苏']  # 改成这个
     dcu.merge_status(u'招投标', u'省份'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
 
-
     return
-
 
 
 """
@@ -569,6 +570,7 @@ def clean_tender():
     -----------------------------
 """
 
+
 # def empty_value_handle_bond():
 #
 #
@@ -595,7 +597,7 @@ def clean_bond():
     status_after = ['Unknown']  # 改成这个
     dcu.merge_status(u'债券信息', u'债券信用评级'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
-    dcu.drop_unit(u'债券信息', u'债券期限'.encode('utf-8'),[u'年'], empty_mask='Unknown')
+    dcu.drop_unit(u'债券信息', u'债券期限'.encode('utf-8'), [u'年'], empty_mask='Unknown')
 
     status_normal = [u'']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -607,15 +609,36 @@ def clean_bond():
     status_after = ['Unknown']  # 改成这个
     dcu.merge_status(u'债券信息', u'兑付日期'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'债券信息', u'实际发行总额（亿元）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'债券信息.xlsx',
+                             sheet_name='Sheet')
+    wr1 = wr1.fillna({u'纳税人资格'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
+    fu.write_file(wr1, clean_data_temp_file_url, u'债券信息', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
 
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'债券信息', u'票面利率'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+    dcu.drop_columns(u'债券信息', u'币种'.encode('utf-8'))
+    dcu.drop_columns(u'债券信息', u'流通场所'.encode('utf-8'))
+
+    wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'债券信息.xlsx',
+                             sheet_name='Sheet')
+    wr1 = wr1.fillna({u'实际发行总额（亿元）'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
+    fu.write_file(wr1, clean_data_temp_file_url, u'债券信息', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
+
+    # status_normal = [u'']  # 搜索满足这个条件的
+    # status_list = [status_normal]
+    # status_after = ['Unknown']  # 改成这个
+    # dcu.merge_status(u'债券信息', u'实际发行总额（亿元）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+
+    # status_normal = [ ]  # 搜索满足这个条件的
+    # status_list = [status_normal]
+    # status_after = ['Unknown']  # 改成这个
+    # dcu.merge_status(u'债券信息', u'票面利率（%）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
+
+    wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'债券信息.xlsx',
+                             sheet_name='Sheet')
+    wr1 = wr1.fillna({u'票面利率（%）'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
+    fu.write_file(wr1, clean_data_temp_file_url, u'债券信息', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
 
     status_normal = [u'-']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -664,5 +687,70 @@ def clean_bond():
     For values end with '万人民币', we just drop the unit and change them to pure number.
     -----------------------------
 """
+
+
+def empty_value_handle_financing():
+    """
+    empty_value handle for table 基本信息.
+    :return:
+    """
+    empty_check_list = [u'融资日期'.encode('utf-8'),
+                        u'轮次'.encode('utf-8'),
+                        u'投资金额'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'融资信息.xlsx', columns=empty_check_list, thresh=2)
+    # panaly.list_category_columns_values([u'债券信息'], u'债券信息_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
+def clean_financing():
+    column_name = u'投资金额'.encode('utf-8')
+    wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'融资信息.xlsx',
+                             sheet_name='Sheet')
+    wr1.fillna({column_name: 'Unknown'})  # 对空值进行处理以进行索引
+
+    for index in range(0, len(wr1)):
+        content = wr1.at[index, column_name]
+        if str(content).startswith(u'数'):
+            str1 = 'Unknown'
+            wr1.set_value(index, column_name, str1)
+        elif str(content).startswith(u'未披露'):
+            str1 = 'Unknown'
+            wr1.set_value(index, column_name, str1)
+    fu.write_file(wr1, clean_data_temp_file_url, u'融资信息', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
+
+    for index in range(0, len(wr1)):
+        content = wr1.at[index, column_name]
+        if str(content).endswith(u'万美元'):
+            # num = re.sub(u'万美元','', str(content))
+            num = str(content).replace(u'万美元', u'')  # 去除万美元并乘以美元汇率，从而换算成人民币
+            numb = float(num)
+            numc = numb * (10 ** 4) * 6.72  # 3月24日美元汇率
+            wr1.set_value(index, column_name, numc)
+
+        elif str(content).endswith(u'万港币'):
+            # num = re.sub(u'万港币','', str(content))
+            num = str(content).replace(u'万港币', '')  # 去除万美元并乘以港币汇率，从而换算成人民币
+            numb = float(num)
+            numc = numb * (10 ** 4) * 0.856  # 3月24日港币汇率
+            wr1.set_value(index, column_name, numc)
+
+        elif str(content).endswith(u'万人民币'):
+            num = str(content).replace(u'万人民币', '')  # 去除万人民币
+            numb = float(num)
+            numc = numb * (10 ** 4)
+            wr1.set_value(index, column_name, numc)
+
+        elif str(content).endswith(u'万'):
+            num = str(content).replace(u'万', '')  # 去除万人民币
+            numb = float(num)
+            numc = numb * (10 ** 4)
+            wr1.set_value(index, column_name, numc)
+    fu.write_file(wr1, clean_data_temp_file_url, u'融资信息', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
+
+    return
+
 
 

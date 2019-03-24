@@ -23,7 +23,10 @@ def read_file_to_df(file_dir, file_name, ext='.xlsx', sheet_name='Sheet'):
     file_name = fn_split[0]  # remove the extension
     if len(fn_split) > 1:
         ext = '.' + fn_split[1]
+
+    # print(file_dir + file_name + ext)
     return pandas.read_excel(file_dir + file_name + ext, sheet_name=sheet_name)
+
 
 
 def write_file_without_save(pf, writer, sheet_name='Sheet', index=False):
