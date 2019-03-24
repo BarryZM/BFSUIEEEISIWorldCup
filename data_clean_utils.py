@@ -151,6 +151,9 @@ def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_
             except AttributeError as ae:
                 print (ae)
                 continue
+            except ValueError as ve:
+                print (ve)
+                continue
 
         isvalid = True
         if operator == '<':
