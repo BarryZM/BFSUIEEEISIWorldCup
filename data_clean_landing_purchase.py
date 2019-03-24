@@ -30,10 +30,13 @@ def raw_files_primary_analysis():
 
 
 
-def duplicate_handle():
+def duplicate_handle(): # 该部分加入for循环进行了修改
     for name in category_landing_purchase:
+        if name == category_landing_purchase:
+            continue
         dcu.merge_rows(name + '.xlsx')
-        return
+
+    return
 
 
 
