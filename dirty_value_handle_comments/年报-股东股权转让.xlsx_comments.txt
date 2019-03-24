@@ -26,13 +26,15 @@
     -----------------------------
     股权变更日期
     ------
-    Empty percentage is 0.3939%(17 out of 4316). Also there are two is '1900-01-01' which seems unreasonable. So the
-    empty value are replaced to this invalid value('1900-01-01') so we can handle it later.
+    Empty percentage is 0.3939%(17 out of 4316). The empty value are replaced to the invalid value('1000-01-01')
+    so we can handle it later.
     Others are well formatted with format yyyy-mm-dd.
 
     -----------------------------
     年报年份
     ------
-    This is well formatted.
+    Empty percentage is 0.139%(6 out of 4316). The empty value are replaced to the invalid value('1000')
+    so we can handle it later.
+    Others are well formatted with format yyyy-mm-dd.
 
     -----------------------------

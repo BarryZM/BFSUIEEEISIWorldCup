@@ -724,29 +724,31 @@ def empty_value_handle_share_exchange_info():
     -----------------------------
     股权变更日期
     ------
-    Empty percentage is 0.3939%(17 out of 4316). Also there are two is '1900-01-01' which seems unreasonable. So the
-    empty value are replaced to this invalid value('1900-01-01') so we can handle it later.
+    Empty percentage is 0.3939%(17 out of 4316). The empty value are replaced to the invalid value('1000-01-01')
+    so we can handle it later.
     Others are well formatted with format yyyy-mm-dd.
 
     -----------------------------
     年报年份
     ------
-    This is well formatted.
+    Empty percentage is 0.139%(6 out of 4316). The empty value are replaced to the invalid value('1000')
+    so we can handle it later.
+    Others are well formatted with format yyyy-mm-dd.
 
     -----------------------------
     :return:
     """
-    empty_check_list = [u'变更前股权比例'.encode('utf-8'),
-                        u'变更后股权比例'.encode('utf-8'),
-                        u'年报年份'.encode('utf-8'),
-                        u'股权变更日期'.encode('utf-8')]
-    dcu.drop_rows_too_many_empty(u'年报-股东股权转让.xlsx', columns=empty_check_list, thresh=2)
-    panaly.list_category_columns_values([u'年报-股东股权转让'], u'年报-股东股权转让_empty_handled',
-                                        file_url=clean_data_temp_file_url)
+    # empty_check_list = [u'变更前股权比例'.encode('utf-8'),
+    #                     u'变更后股权比例'.encode('utf-8'),
+    #                     u'年报年份'.encode('utf-8'),
+    #                     u'股权变更日期'.encode('utf-8')]
+    # dcu.drop_rows_too_many_empty(u'年报-股东股权转让.xlsx', columns=empty_check_list, thresh=2)
+    # panaly.list_category_columns_values([u'年报-股东股权转让'], u'年报-股东股权转让_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
 
     df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-股东股权转让')
     values = {u'变更前股权比例'.encode('utf-8'): -1, u'变更后股权比例'.encode('utf-8'): -1,
-              u'股权变更日期'.encode('utf-8'): '1900-01-01', u'年报年份'.encode('utf-8'): '1900'}
+              u'股权变更日期'.encode('utf-8'): '1000-01-01', u'年报年份'.encode('utf-8'): '1000'}
     for index in range(0, len(df)):
         content = df.at[index, u'股权变更日期'.encode('utf-8')]
         content_b = df.at[index, u'变更后股权比例'.encode('utf-8')]
