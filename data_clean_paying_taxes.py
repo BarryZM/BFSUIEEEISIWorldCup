@@ -205,3 +205,12 @@ def drop_unimportant_cloumn():
     wr_drop = wr.drop([u'有效日期期起', u'有效截止日期',u'是否具有一般纳税人资格',u'扣缴义务',u'是否按季申报'], axis= 1)
     fu.write_file(wr_drop, clean_data_temp_file_url, u'一般纳税人_rearranged', ext='.xlsx',
                   sheet_name='Sheet', index=False)
+    return
+
+
+
+def clean_tax():
+    file_name = u'一般纳税人_rearranged'
+    dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+
+    return

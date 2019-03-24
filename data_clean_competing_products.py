@@ -113,10 +113,18 @@ def empty_value_handle_basic_info():
     return
 
 
-def numeric_handle_basic_info():
-    """
-    numeric data for table 竞品.
-    :return:
-    """
+def clean_competing_products():
+    file_name = u'竞品'
+    dcu.merge_status(file_name, u'竞品的行业'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品的标签'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品的标签'.encode('utf-8'), [u'未知轮次'], ['Unknown'], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品详细地址'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品运营状态'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品成立时间'.encode('utf-8'), [], [], empty_mask='Unknown')
 
-print(duplicate_handle())
+
+    return
+
+
+
+

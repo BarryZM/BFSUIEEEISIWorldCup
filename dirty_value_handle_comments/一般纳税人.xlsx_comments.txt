@@ -22,15 +22,11 @@
     ------
     Empty percentage is 49.63%(1348 out of 2716).
     We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'
-    As there are so many empty values and the information for this column isn't very important.
-    So we decide to drop this column.
     -----------------------------
     有效日期期起
     ------
     Empty percentage is 58.06%(1577 out of 2716).
     We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'
-    As there are so many empty values and the information for this column isn't very important.
-    So we decide to drop this column.
     -----------------------------
     有效截止日期
     ------

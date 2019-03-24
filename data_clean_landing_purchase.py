@@ -396,7 +396,7 @@ def clean_gdscjytddy():
 #     empty_check_list = [u'成交时间'.encode('utf-8'),
 #                         u'土地面积'.encode('utf-8'),
 #                         u'土地用途'.encode('utf-8')]
-#     dcu.drop_rows_too_many_empty(u'购地-市场交易-土地转让_test.xlsx', columns=empty_check_list, thresh=2)
+#     dcu.drop_rows_too_many_empty(u'购地-市场交易-土地转让.xlsx', columns=empty_check_list, thresh=2)
 #     # panaly.list_category_columns_values([u'购地-市场交易-土地转让'], u'购地-市场交易-土地转让_empty_handled',
 #     #                                     file_url=clean_data_temp_file_url)
 #     return
