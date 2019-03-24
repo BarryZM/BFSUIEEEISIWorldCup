@@ -770,36 +770,103 @@ def empty_value_handle_share_exchange_info():
 
 def empty_value_handle_share_holder_info():
     """
-    empty_value handle for table 年报-股东（发起人）及出资信息_rearranged.
+        Dirty value handle for table 年报-股东（发起人）及出资信息_rearranged.xlsx.
+    First we'll drop rows that empty value is too many.
+    ['实缴出资额（万元）','实缴出资方式','实缴出资日期','认缴出资方式', '认缴出资日期','认缴出资额（万元）']
+    Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    股东类型
+    ------
+    Empty percentage is 95.8587%(76547 out of 79854). We need to drop it.
+
+    -----------------------------
+    股东所占比例
+    ------
+    Empty percentage is 98.7815263%(78881 out of 79854). We need to drop it.
+
+    -----------------------------
+    认缴出资方式
+    ------
+    Empty percentage is 2.3418%(1870 out of 79854). We replace them with -1.
+    It's too complicate, we just count the item values here(may named as '认缴出资方式种类数'). So we just separate them
+    with [',', '、'], to do this, we should drop the ',' or '、' at the end first.
+
+    -----------------------------
+    认缴出资额（万元）
+    ------
+    Empty percentage is 0.0288%(23 out of 79854). We just replace them with -1.
+    We need to drop the unit ['万', '万元', '万元人民币', '万人民币'], and update ['万美元'] with the number multiplied
+    by 6.7.
+
+    -----------------------------
+    认缴出资日期
+    ------
+    Empty percentage is 1.7344%(1385 out of 79854). We replace them by '1000-01-01'
+    They are all formatted with format yyyy-mm-dd.
+    But there are some are greater than 2019-03-01, we think they are invalid, so replace them as the same as empty.
+
+    -----------------------------
+    实缴出资方式
+    ------
+    Empty percentage is 5.9484%(4750 out of 79854). We replace them with -1.
+    It's too complicate, we just count the item values here(may named as '认缴出资方式种类数'). So we just separate them
+    with [',', '、', '，'], to do this, we should drop the ',' or '、' or '，' at the end first.
+
+    -----------------------------
+    实缴出资额（万元）
+    ------
+    Empty percentage is 3.2284%(2578 out of 79854). We just replace them with -1.
+    We need to drop the unit ['万', '万元', '万元人民币', '万人民币'], and update ['万美元'] with the number multiplied
+    by 6.7.
+
+    -----------------------------
+    实缴出资日期
+    ------
+    Empty percentage is 5.2558%(4197 out of 79854). We replace them by '1000-01-01'
+    They are all formatted with format yyyy-mm-dd.
+    But there are some are greater than 2019-03-01, we think they are invalid, so replace them as the same as empty.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty percentage is 0.05009%(40 out of 79854). We replace them by '1000'
+
+    -----------------------------
     :return:
     """
-    # empty_check_list = [u'实缴出资方式'.encode('utf-8'),
-    #                     u'实缴出资日期'.encode('utf-8'),
-    #                     u'实缴出资额（万元）'.encode('utf-8'),
-    #                     u'认缴出资方式'.encode('utf-8'),
-    #                     u'认缴出资日期'.encode('utf-8'),
-    #                     u'认缴出资额（万元）'.encode('utf-8')]
-    # dcu.drop_rows_too_many_empty(u'年报-股东（发起人）及出资信息_rearranged.xlsx', columns=empty_check_list, thresh=2)
-    # panaly.list_category_columns_values([u'年报-股东（发起人）及出资信息_rearranged'], u'年报-股东（发起人）及出资信息_rearranged_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    empty_check_list = [u'实缴出资方式'.encode('utf-8'),
+                        u'实缴出资日期'.encode('utf-8'),
+                        u'实缴出资额（万元）'.encode('utf-8'),
+                        u'认缴出资方式'.encode('utf-8'),
+                        u'认缴出资日期'.encode('utf-8'),
+                        u'认缴出资额（万元）'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-股东（发起人）及出资信息_rearranged.xlsx', columns=empty_check_list, thresh=2)
+    panaly.list_category_columns_values([u'年报-股东（发起人）及出资信息_rearranged'], u'年报-股东（发起人）及出资信息_rearranged_empty_handled',
+                                        file_url=clean_data_temp_file_url)
 
-    # dcu.drop_columns(u'年报-股东（发起人）及出资信息_rearranged', [u'股东类型'.encode('utf-8'), u'股东所占比例'.encode('utf-8')])
+    dcu.drop_columns(u'年报-股东（发起人）及出资信息_rearranged', [u'股东类型'.encode('utf-8'), u'股东所占比例'.encode('utf-8')])
 
-    # df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
-    # values = {u'认缴出资方式'.encode('utf-8'): -1, u'实缴出资方式'.encode('utf-8'): -1,
-    #           u'认缴出资日期'.encode('utf-8'): '1000-01-01', u'实缴出资日期'.encode('utf-8'): '1000-01-01',
-    #           u'认缴出资额（万元）'.encode('utf-8'): -1, u'实缴出资额（万元）'.encode('utf-8'): -1,
-    #           u'年报年份'.encode('utf-8'): '1000'}
-    # df = df.fillna(values)
-    # file_utils.write_file(df, clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
+    df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
+    values = {u'认缴出资方式'.encode('utf-8'): -1, u'实缴出资方式'.encode('utf-8'): -1,
+              u'认缴出资日期'.encode('utf-8'): '1000-01-01', u'实缴出资日期'.encode('utf-8'): '1000-01-01',
+              u'认缴出资额（万元）'.encode('utf-8'): -1, u'实缴出资额（万元）'.encode('utf-8'): -1,
+              u'年报年份'.encode('utf-8'): '1000'}
+    df = df.fillna(values)
+    file_utils.write_file(df, clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
 
     # 认缴出资方式
     # 实缴出资方式
-    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
-    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+    splits = [',', u'、', u'，']
+    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), splits, empty_mask=-1)
+    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), splits, empty_mask=-1)
 
-    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
-    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), splits, empty_mask=-1)
+    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), splits, empty_mask=-1)
 
     # 认缴出资额（万元）
     # 实缴出资额（万元）

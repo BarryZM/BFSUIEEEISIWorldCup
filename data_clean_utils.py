@@ -347,10 +347,15 @@ def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_da
         content = data_frame.at[index, column_name]
         if pandas.isnull(content) or pandas.isna(content):
             data_frame.set_value(index, column_name, empty_mask)
+
+        is_counted = False
         for j in range(0, len(splits)):
             if splits[j] in str(content):
                 strs = str(content).split(splits[j])
                 data_frame.set_value(index, column_name, len(strs))
+                is_counted = True
+        if not is_counted:
+            data_frame.set_value(index, column_name, 1)
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
