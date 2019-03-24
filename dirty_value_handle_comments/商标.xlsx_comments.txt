@@ -10,21 +10,28 @@
     -----------------------------
     商标状态
     ------
+    Empty percentage is 0.2597%(367 out of 141312). We replace them as 'Unknown'.
 
     -----------------------------
     申请日期
     ------
+    Empty percentage is 0.3637%(514 out of 141312). We replace with '1000-01-01'.
+    Others are well formatted.
 
     -----------------------------
     专用权期限开始日期
     ------
+    All empty, drop it.
 
     -----------------------------
     专用权期限结束日期
     ------
-
+    Empty percentage is 21.4922%(30371 out of 141312). This column's value can be extract from '商标使用期限时间段', so we
+    drop it.
     -----------------------------
     商标使用期限时间段
     ------
+    Empty percentage is 1.5915%(2249 out of 141312). We map them to '1000-01-01至1000-01-01'.
+    Others are well formatted except some are '至', for these value we change to '1000-01-01至1000-01-01'.
 
     -----------------------------
