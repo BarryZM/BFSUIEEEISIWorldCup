@@ -146,7 +146,11 @@ def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
         if not (isinstance(content, float) or isinstance(content, int)):
-            continue
+            try:
+                content = float(str(content))
+            except AttributeError as ae:
+                print (ae)
+                continue
 
         isvalid = True
         if operator == '<':
@@ -227,6 +231,27 @@ def drop_unit_remove_minus(file_name, column_name, unit_strs, empty_mask='Unknow
             if str(content) == unit_strs[j]:
                 data_frame.set_value(index, column_name, empty_mask)
             elif str(content).endswith(unit_strs[j]):
+                data_frame.set_value(index, column_name, str(content).replace(unit_strs[j], ''))
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def drop_unit_with_float_format(file_name, column_name, unit_strs, empty_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type unit_strs: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        if str(content).startswith('.'):
+            content = str(content).replace('.', '0.')
+        for j in range(0, len(unit_strs)):
+            if str(content).endswith(unit_strs[j]):
                 data_frame.set_value(index, column_name, str(content).replace(unit_strs[j], ''))
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
