@@ -710,14 +710,16 @@ def empty_value_handle_share_exchange_info():
     ------
     Empty percentage is 0.3939%(17 out of 4316). We replace them as -1.
     The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
-    and make all format as '0.07'.
+    and make all format as '0.07'. For numbers greater than 1, we mark them as -1.
 
     -----------------------------
     变更后股权比例
     ------
     Empty percentage is 0.278%(12 out of 4316). We replace them as -1.
     The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
-    and make all format as '0.07'.
+    and make all format as '0.07'. For numbers greater than 1, we mark them as -1.
+    A more complicate problem is some value are actually belong to '股权变更日期', which we need to copy them to column
+    '股权变更日期'
 
     -----------------------------
     股权变更日期
@@ -729,7 +731,6 @@ def empty_value_handle_share_exchange_info():
     -----------------------------
     年报年份
     ------
-    Empty percentage is 0.139%(6 out of 4316), we replace them as '1900' to mark them as invalid.
     This is well formatted.
 
     -----------------------------
