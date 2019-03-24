@@ -1,6 +1,5 @@
     Dirty value handle for table 年报-股东股权转让.xlsx.
     First we'll drop rows that empty value is too many.
-    变更前股权比例	变更前股权比例_count	变更后股权比例	变更后股权比例_count	年报年份	年报年份_count	股权变更日期	股权变更日期_count
     ['变更前股权比例','变更后股权比例','年报年份','股权变更日期']
     Once there are more than 2 empties in these 4 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
@@ -11,17 +10,29 @@
     -----------------------------
     变更前股权比例
     ------
+    Empty percentage is 0.3939%(17 out of 4316). We replace them as -1.
+    The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
+    and make all format as '0.07'. For numbers greater than 1, we mark them as -1.
 
     -----------------------------
     变更后股权比例
     ------
+    Empty percentage is 0.278%(12 out of 4316). We replace them as -1.
+    The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
+    and make all format as '0.07'. For numbers greater than 1, we mark them as -1.
+    A more complicate problem is some value are actually belong to '股权变更日期', which we need to copy them to column
+    '股权变更日期'
 
     -----------------------------
     股权变更日期
     ------
+    Empty percentage is 0.3939%(17 out of 4316). Also there are two is '1900-01-01' which seems unreasonable. So the
+    empty value are replaced to this invalid value('1900-01-01') so we can handle it later.
+    Others are well formatted with format yyyy-mm-dd.
 
     -----------------------------
     年报年份
     ------
+    This is well formatted.
 
     -----------------------------

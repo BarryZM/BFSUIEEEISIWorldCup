@@ -20,6 +20,7 @@ import file_utils
 import primary_analysis as panaly
 from file_directions import clean_data_temp_file_url
 from files_category_info import category_annual_report_files
+import pandas
 
 
 def raw_files_primary_analysis():
@@ -684,7 +685,7 @@ def empty_value_handle_social_security_info():
 
     for column in file_people_list:
         dcu.merge_status(u'年报-社保信息', column, status_list, status_after)
-        dcu.drop_unit(u'年报-社保信息', column, [u'人', u' 人'])
+        dcu.drop_unit(u'年报-社保信息', column, [u'人', u' 人'], empty_mask=-1)
 
     for column in file_cash_list:
         dcu.merge_status(u'年报-社保信息', column, status_list, status_after)
@@ -695,16 +696,71 @@ def empty_value_handle_social_security_info():
 
 def empty_value_handle_share_exchange_info():
     """
-    empty_value handle for table 年报-股东股权转让.
+    Dirty value handle for table 年报-股东股权转让.xlsx.
+    First we'll drop rows that empty value is too many.
+    ['变更前股权比例','变更后股权比例','年报年份','股权变更日期']
+    Once there are more than 2 empties in these 4 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    变更前股权比例
+    ------
+    Empty percentage is 0.3939%(17 out of 4316). We replace them as -1.
+    The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
+    and make all format as '0.07'.
+
+    -----------------------------
+    变更后股权比例
+    ------
+    Empty percentage is 0.278%(12 out of 4316). We replace them as -1.
+    The format is not uniformed. Some are formatted as '.07%', some are '0.07%' and some are '0.07'. We need to drop '%'
+    and make all format as '0.07'.
+
+    -----------------------------
+    股权变更日期
+    ------
+    Empty percentage is 0.3939%(17 out of 4316). Also there are two is '1900-01-01' which seems unreasonable. So the
+    empty value are replaced to this invalid value('1900-01-01') so we can handle it later.
+    Others are well formatted with format yyyy-mm-dd.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty percentage is 0.139%(6 out of 4316), we replace them as '1900' to mark them as invalid.
+    This is well formatted.
+
+    -----------------------------
     :return:
     """
-    # empty_check_list = [u'变更前股权比例'.encode('utf-8'),
-    #                     u'变更后股权比例'.encode('utf-8'),
-    #                     u'年报年份'.encode('utf-8'),
-    #                     u'股权变更日期'.encode('utf-8')]
-    # dcu.drop_rows_too_many_empty(u'年报-股东股权转让.xlsx', columns=empty_check_list, thresh=2)
-    # panaly.list_category_columns_values([u'年报-股东股权转让'], u'年报-股东股权转让_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+    empty_check_list = [u'变更前股权比例'.encode('utf-8'),
+                        u'变更后股权比例'.encode('utf-8'),
+                        u'年报年份'.encode('utf-8'),
+                        u'股权变更日期'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'年报-股东股权转让.xlsx', columns=empty_check_list, thresh=2)
+    panaly.list_category_columns_values([u'年报-股东股权转让'], u'年报-股东股权转让_empty_handled',
+                                        file_url=clean_data_temp_file_url)
+
+    df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-股东股权转让')
+    values = {u'变更前股权比例'.encode('utf-8'): -1, u'变更后股权比例'.encode('utf-8'): -1,
+              u'股权变更日期'.encode('utf-8'): '1900-01-01', u'年报年份'.encode('utf-8'): '1900'}
+    for index in range(0, len(df)):
+        content = df.at[index, u'股权变更日期'.encode('utf-8')]
+        content_b = df.at[index, u'变更后股权比例'.encode('utf-8')]
+        if '-' in str(content_b) and (pandas.isnull(content) or pandas.isna(content)):
+            df.set_value(index, u'股权变更日期'.encode('utf-8'), content_b)
+            df.set_value(index, u'变更后股权比例'.encode('utf-8'), '')
+
+    df = df.fillna(values)
+    file_utils.write_file(df, clean_data_temp_file_url, u'年报-股东股权转让')
+
+    dcu.drop_unit_with_float_format(u'年报-股东股权转让', u'变更前股权比例'.encode('utf-8'), ['%'], empty_mask=-1)
+    dcu.drop_unit_with_float_format(u'年报-股东股权转让', u'变更后股权比例'.encode('utf-8'), ['%'], empty_mask=-1)
+
+    dcu.mark_invalid_num_data(u'年报-股东股权转让', u'变更前股权比例'.encode('utf-8'), '>', 100)
+    dcu.mark_invalid_num_data(u'年报-股东股权转让', u'变更后股权比例'.encode('utf-8'), '>', 100)
 
     return
 
@@ -737,6 +793,9 @@ def numeric_handle_basic_info():
 
 def work_():
     empty_value_handle_social_security_info()
+    print('empty_value_handle_social_security_info() done!')
     empty_value_handle_share_exchange_info()
+    print('empty_value_handle_share_exchange_info() done!')
     empty_value_handle_share_holder_info()
+    print('empty_value_handle_share_holder_info() done!')
     return
