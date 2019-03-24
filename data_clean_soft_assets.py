@@ -85,3 +85,63 @@ def empty_value_handle_work():
     status_after = [1, 2, 3, 4, 5, 6, 7, 9]
 
     dcu.merge_status(u'作品著作权', u'作品著作权类别'.encode('utf-8'), status_list, status_after, others=8)
+
+    # TODO Other columns
+    return
+
+
+def empty_value_handle_trademark():
+    """
+    Dirty value handle for table 商标.xlsx.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    商标状态
+    ------
+    Empty percentage is 0.2597%(367 out of 141312). We replace them as 'Unknown'.
+
+    -----------------------------
+    申请日期
+    ------
+    Empty percentage is 0.3637%(514 out of 141312). We replace with '1000-01-01'.
+    Others are well formatted.
+
+    -----------------------------
+    专用权期限开始日期
+    ------
+    All empty, drop it.
+
+    -----------------------------
+    专用权期限结束日期
+    ------
+    Empty percentage is 21.4922%(30371 out of 141312). This column's value can be extract from '商标使用期限时间段', so we
+    drop it.
+    -----------------------------
+    商标使用期限时间段
+    ------
+    Empty percentage is 1.5915%(2249 out of 141312). We map them to '1000-01-01至1000-01-01'.
+    Others are well formatted except some are '至', for these value we change to '1000-01-01至1000-01-01'.
+
+    -----------------------------
+    :return:
+    """
+    df = file_utils.read_file_to_df(clean_data_temp_file_url, u'商标')
+    values = {u'商标状态'.encode('utf-8'): 'Unknown', u'申请日期'.encode('utf-8'): '1000-01-01',
+              u'商标使用期限时间段'.encode('utf-8'): u'1000-01-01至1000-01-01'}
+    df = df.fillna(values)
+    file_utils.write_file(df, clean_data_temp_file_url, u'商标')
+
+    dcu.drop_columns(u'商标', [u'专用权期限开始日期'.encode('utf-8')])
+    dcu.drop_columns(u'商标', [u'专用权期限结束日期'.encode('utf-8')])
+
+    status_1 = [u'至']
+    status_list = [status_1]
+    status_after = [u'1000-01-01至1000-01-01']
+
+    dcu.merge_status(u'商标', u'商标使用期限时间段'.encode('utf-8'), status_list, status_after)
