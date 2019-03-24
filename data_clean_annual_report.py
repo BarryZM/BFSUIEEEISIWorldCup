@@ -452,21 +452,243 @@ def empty_value_handle_out_warrant_info():
 
 def empty_value_handle_social_security_info():
     """
-    empty_value handle for table 年报-社保信息.
+    Dirty value handle for table 年报-社保信息.xlsx.
+    First we'll drop rows that empty value is too many.
+    ['单位参加城镇职工基本养老保险累计欠缴金额','单位参加城镇职工基本养老保险缴费基数','单位参加失业保险累计欠缴金额',
+    '单位参加失业保险缴费基数', '单位参加工伤保险累计欠缴金额','单位参加工伤保险缴费基数','单位参加生育保险缴费基数',
+    '参加城镇职工基本养老保险本期实际缴费金额','工伤保险人数']
+    Once there are more than 3 empties in these 9 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    城镇职工基本养老保险人数
+    ------
+    Empty percentage is 0.1265%(7 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    失业保险人数
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    职工基本医疗保险人数
+    ------
+    Empty percentage is 0.1085%(6 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    工伤保险人数
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    生育保险人数
+    ------
+    Empty percentage is 0.1085%(6 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
+
+    -----------------------------
+    单位参加城镇职工基本养老保险缴费基数
+    ------
+    Empty percentage is 4.3745%(242 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    单位参加失业保险缴费基数
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    单位参加职工基本医疗保险缴费基数
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    单位参加工伤保险缴费基数
+    ------
+    Empty percentage is 96.9631%(5364 out of 5532). We need to drop this column.
+
+    -----------------------------
+    单位参加生育保险缴费基数
+    ------
+    Empty percentage is 0.0723%(4 out of 5532). We mark them as -1. There is 593 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    参加城镇职工基本养老保险本期实际缴费金额
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(239) and we think them as missing, so they
+    belong to -1.
+
+
+    -----------------------------
+    参加失业保险本期实际缴费金额
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(239) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    参加职工基本医疗保险本期实际缴费金额
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    参加工伤保险本期实际缴费金额
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(313) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    参加生育保险本期实际缴费金额
+    ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    单位参加城镇职工基本养老保险累计欠缴金额
+    ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'. Also there is one valued with minus number, we just remove the minus.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(240) and we think them as missing, so they
+    belong to -1.
+
+    -----------------------------
+    单位参加失业保险累计欠缴金额
+    ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
+
+    -----------------------------
+    单位参加职工基本医疗保险累计欠缴金额
+    ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
+
+    -----------------------------
+    单位参加工伤保险累计欠缴金额
+    ------
+    Empty percentage is 0%(0 out of 5532). There is 600 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'. Also there is one valued with minus number, we just remove the minus.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
+
+    -----------------------------
+    单位参加生育保险累计欠缴金额
+    ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
+
+    -----------------------------
+    年报年份
+    ------
+    Empty percentage is 0%(0 out of 5532).
+    This is well formatted.
+
+    -----------------------------
     :return:
     """
-    empty_check_list = [u'单位参加城镇职工基本养老保险累计欠缴金额'.encode('utf-8'),
-                        u'单位参加城镇职工基本养老保险缴费基数'.encode('utf-8'),
-                        u'单位参加失业保险累计欠缴金额'.encode('utf-8'),
-                        u'单位参加失业保险缴费基数'.encode('utf-8'),
-                        u'单位参加工伤保险累计欠缴金额'.encode('utf-8'),
-                        u'单位参加工伤保险缴费基数'.encode('utf-8'),
-                        u'单位参加生育保险缴费基数'.encode('utf-8'),
-                        u'参加城镇职工基本养老保险本期实际缴费金额'.encode('utf-8'),
-                        u'工伤保险人数'.encode('utf-8')]
-    dcu.drop_rows_too_many_empty(u'年报-社保信息.xlsx', columns=empty_check_list, thresh=3)
-    panaly.list_category_columns_values([u'年报-社保信息'], u'年报-社保信息_empty_handled',
-                                        file_url=clean_data_temp_file_url)
+    # empty_check_list = [u'单位参加城镇职工基本养老保险累计欠缴金额'.encode('utf-8'),
+    #                     u'单位参加城镇职工基本养老保险缴费基数'.encode('utf-8'),
+    #                     u'单位参加失业保险累计欠缴金额'.encode('utf-8'),
+    #                     u'单位参加失业保险缴费基数'.encode('utf-8'),
+    #                     u'单位参加工伤保险累计欠缴金额'.encode('utf-8'),
+    #                     u'单位参加工伤保险缴费基数'.encode('utf-8'),
+    #                     u'单位参加生育保险缴费基数'.encode('utf-8'),
+    #                     u'城镇职工基本养老保险人数'.encode('utf-8'),
+    #                     u'失业保险人数'.encode('utf-8'),
+    #                     u'参加失业保险本期实际缴费金额'.encode('utf-8'),
+    #                     u'参加工伤保险本期实际缴费金额'.encode('utf-8'),
+    #                     u'参加城镇职工基本养老保险本期实际缴费金额'.encode('utf-8'),
+    #                     u'工伤保险人数'.encode('utf-8')]
+    # dcu.drop_rows_too_many_empty(u'年报-社保信息.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'年报-社保信息'], u'年报-社保信息_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+
+    dcu.drop_columns(u'年报-社保信息', [u'单位参加工伤保险缴费基数'.encode('utf-8')])
+
+    status_np = [u'企业选择不公示', u'选择不公示']
+    status_list = [status_np]
+    status_after = ['NP']
+
+    file_people_list = [u'城镇职工基本养老保险人数'.encode('utf-8'),
+                        u'失业保险人数'.encode('utf-8'),
+                        u'职工基本医疗保险人数'.encode('utf-8'),
+                        u'工伤保险人数'.encode('utf-8'),
+                        u'生育保险人数'.encode('utf-8')]
+    file_cash_list = [u'单位参加城镇职工基本养老保险缴费基数'.encode('utf-8'),
+                      u'单位参加失业保险缴费基数'.encode('utf-8'),
+                      u'单位参加职工基本医疗保险缴费基数'.encode('utf-8'),
+                      u'单位参加生育保险缴费基数'.encode('utf-8'),
+                      u'参加城镇职工基本养老保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加失业保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加职工基本医疗保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加工伤保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加生育保险本期实际缴费金额'.encode('utf-8'),
+                      u'单位参加城镇职工基本养老保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加失业保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加职工基本医疗保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加工伤保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加生育保险累计欠缴金额'.encode('utf-8')]
+
+    for column in file_people_list:
+        dcu.merge_status(u'年报-社保信息', column, status_list, status_after)
+        dcu.drop_unit(u'年报-社保信息', column, [u'人', u' 人'])
+
+    for column in file_cash_list:
+        dcu.merge_status(u'年报-社保信息', column, status_list, status_after)
+        dcu.drop_unit_remove_minus(u'年报-社保信息', column, [u'万元', u' 万元'], empty_mask=-1)
 
     return
 

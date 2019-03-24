@@ -12,85 +12,174 @@
     -----------------------------
     城镇职工基本养老保险人数
     ------
+    Empty percentage is 0.1265%(7 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
 
     -----------------------------
     失业保险人数
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
 
     -----------------------------
     职工基本医疗保险人数
     ------
+    Empty percentage is 0.1085%(6 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
 
     -----------------------------
     工伤保险人数
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
 
     -----------------------------
     生育保险人数
     ------
+    Empty percentage is 0.1085%(6 out of 5532). We mark them as -1.
+    Other values are well formatted with end '人', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks.
 
     -----------------------------
     单位参加城镇职工基本养老保险缴费基数
     ------
+    Empty percentage is 4.3745%(242 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     单位参加失业保险缴费基数
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     单位参加职工基本医疗保险缴费基数
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 592 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     单位参加工伤保险缴费基数
     ------
+    Empty percentage is 96.9631%(5364 out of 5532). We need to drop this column.
 
     -----------------------------
     单位参加生育保险缴费基数
     ------
+    Empty percentage is 0.0723%(4 out of 5532). We mark them as -1. There is 593 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     参加城镇职工基本养老保险本期实际缴费金额
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(239) and we think them as missing, so they
+    belong to -1.
+
 
     -----------------------------
     参加失业保险本期实际缴费金额
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(239) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     参加职工基本医疗保险本期实际缴费金额
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     参加工伤保险本期实际缴费金额
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(313) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     参加生育保险本期实际缴费金额
     ------
+    Empty percentage is 0.0904%(5 out of 5532). We mark them as -1. There is 590 is '企业选择不公示', and 325 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     单位参加城镇职工基本养老保险累计欠缴金额
     ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'. Also there is one valued with minus number, we just remove the minus.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(240) and we think them as missing, so they
+    belong to -1.
 
     -----------------------------
     单位参加失业保险累计欠缴金额
     ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
 
     -----------------------------
     单位参加职工基本医疗保险累计欠缴金额
     ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
 
     -----------------------------
     单位参加工伤保险累计欠缴金额
     ------
+    Empty percentage is 0%(0 out of 5532). There is 600 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'. Also there is one valued with minus number, we just remove the minus.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
 
     -----------------------------
     单位参加生育保险累计欠缴金额
     ------
+    Empty percentage is 0%(0 out of 5532). There is 596 is '企业选择不公示', and 324 '选择不公示',
+    we merge them into 'NP'.
+    Other values are well formatted with end '万元', but there's some have blank between number and unit, we just
+    drop the unit and clear the blanks. Be care we have some valued '万元'(235) and we think them as missing, so they
+    belong to -1. Also there is one valued with minus number, we just remove the minus.
 
     -----------------------------
     年报年份
     ------
+    Empty percentage is 0%(0 out of 5532).
+    This is well formatted.
 
     -----------------------------
