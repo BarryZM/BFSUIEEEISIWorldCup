@@ -785,6 +785,29 @@ def empty_value_handle_share_holder_info():
 
     # dcu.drop_columns(u'年报-股东（发起人）及出资信息_rearranged', [u'股东类型'.encode('utf-8'), u'股东所占比例'.encode('utf-8')])
 
+    # df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
+    # values = {u'认缴出资方式'.encode('utf-8'): -1, u'实缴出资方式'.encode('utf-8'): -1,
+    #           u'认缴出资日期'.encode('utf-8'): '1000-01-01', u'实缴出资日期'.encode('utf-8'): '1000-01-01',
+    #           u'认缴出资额（万元）'.encode('utf-8'): -1, u'实缴出资额（万元）'.encode('utf-8'): -1,
+    #           u'年报年份'.encode('utf-8'): '1000'}
+    # df = df.fillna(values)
+    # file_utils.write_file(df, clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
+
+    # 认缴出资方式
+    # 实缴出资方式
+    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+    dcu.drop_unit(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+
+    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+    dcu.count_split(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资方式'.encode('utf-8'), [',', '、'], empty_mask=-1)
+
+    # 认缴出资额（万元）
+    # 实缴出资额（万元）
+    dcu.drop_unit_with_transfer(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资额（万元）'.encode('utf-8'),
+                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7}, empty_mask=-1)
+    dcu.drop_unit_with_transfer(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资额（万元）'.encode('utf-8'),
+                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7}, empty_mask=-1)
+
     return
 
 

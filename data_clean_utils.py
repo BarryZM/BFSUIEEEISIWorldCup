@@ -218,6 +218,42 @@ def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=
     return
 
 
+def drop_unit_with_transfer(file_name, column_name, unit_strs, transfer_map, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type transfer_map: dict
+    :type unit_strs: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(unit_strs)):
+            if str(content).endswith(unit_strs[j]):
+                data_frame.set_value(index, column_name, str(content).replace(unit_strs[j], ''))
+
+        for key in transfer_map.keys():
+            if str(content).endswith(key):
+                content = str(content).replace(key, '')
+                if not (isinstance(content, float) or isinstance(content, int)):
+                    try:
+                        content = float(str(content))
+                    except AttributeError as ae:
+                        print (ae)
+                        continue
+                    except ValueError as ve:
+                        print (ve)
+                        continue
+
+                content = content * transfer_map.get(key)
+                data_frame.set_value(index, column_name, content)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
 def drop_unit_remove_minus(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
 
@@ -302,3 +338,20 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
+
+
+def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(splits)):
+            if splits[j] in str(content):
+                strs = str(content).split(splits[j])
+                data_frame.set_value(index, column_name, len(strs))
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
