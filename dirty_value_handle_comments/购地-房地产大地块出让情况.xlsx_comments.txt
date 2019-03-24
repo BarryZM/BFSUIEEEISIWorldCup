@@ -10,37 +10,37 @@
     -----------------------------
     签订日期
     ------
-
+    turn into integer
     -----------------------------
     供地总面积
     ------
-
+    turn null into 'Unknown'
     -----------------------------
     约定动工时间
     ------
-
+    97% null, turn null into 'Unknown'
     -----------------------------
     土地用途
     ------
-
+    turn into several integers
     -----------------------------
     供应方式
     ------
-
+    97% null, turn null into 'Unknown',turn into several integers
     -----------------------------
     容积率下限
     ------
-
+    98% null, turn null into 'Unknown'
     -----------------------------
     容积率上限
     ------
-
+    98% null, turn null into 'Unknown'
     -----------------------------
     成交价款（万元）
     ------
-
+    86% null, turn null into 'Unknown'
     -----------------------------
     约定竣工时间
     ------
-
+    99% null, turn null into 'Unknown'
     -----------------------------

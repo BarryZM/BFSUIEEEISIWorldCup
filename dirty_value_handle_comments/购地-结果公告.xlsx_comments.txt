@@ -10,69 +10,70 @@
     -----------------------------
     总面积
     ------
-
+    turn null into 'Unknown'
     -----------------------------
     土地用途
     ------
-
+    turn into several integers
     -----------------------------
     供应方式
     ------
-
+    97% null,  turn null into 'Unknown',turn into several integers
     -----------------------------
     签订日期
     ------
-
+    turn into integers
     -----------------------------
     土地来源
     ------
-
+    99% null,drop
     -----------------------------
     土地使用年限
     ------
-
+    96% null, turn null into 'Unknown', clean wrong numbers
     -----------------------------
     行业分类
     ------
-
+    99% null, turn null into 'Unknown', integers
     -----------------------------
     土地级别
     ------
-
+    the smaller the number, the more expensive the land, 96% null
     -----------------------------
     成交价格（万元）
     ------
+    86% null, turn null into 'Unknown'
 
     -----------------------------
     约定容积率上限
     ------
-
+    99% null, turn null into 'Unknown'
     -----------------------------
     约定容积率下限
     ------
-
+    99% null, turn null into 'Unknown'
     -----------------------------
     约定交地时间
     ------
-
+    99% null, turn into integers
     -----------------------------
     约定开工时间
     ------
-
+    97% null, turn into integers
     -----------------------------
     约定竣工时间
     ------
-
+    99% null, turn into integers
     -----------------------------
     实际开工时间
     ------
-
+    100% null, drop
     -----------------------------
     实际竣工时间
     ------
-
+    100% null, drop
     -----------------------------
     批准单位
     ------
-
+    99% null, drop
     -----------------------------
