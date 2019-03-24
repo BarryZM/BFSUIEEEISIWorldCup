@@ -111,63 +111,31 @@ def primary_analysis_after_duplicate_handled():
 '''
 
 
-def empty_value_handle_basic_info():
-    """
-    empty_value handle for table 年报-企业基本信息.
-    :return:
-    """
-    empty_check_list = [u'行政区',
-                        u'土地用途',
-                        u'成交价（万元）']
-    dcu.drop_rows_too_many_empty(u'一般纳税人.xlsx', columns=empty_check_list, thresh=2)
-    # panaly.list_category_columns_values([u'一般纳税人'], u'一般纳税人_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+# def empty_value_handle_basic_info():
+#     """
+#     empty_value handle for table 年报-企业基本信息.
+#     :return:
+#     """
+#     empty_check_list = [u'行政区',
+#                         u'土地用途',
+#                         u'成交价（万元）']
+#     dcu.drop_rows_too_many_empty(u'购地-地块公示', columns=empty_check_list, thresh=2)
+#     # panaly.list_category_columns_values([u'购地-地块公示'], u'购地-地块公示_empty_handled',
+#     #                                     file_url=clean_data_temp_file_url)
+#     return
+
+
+def time_rearranged(file_name, column_name):
+
+    # 用split分开时间， 注意：之后数据分析所要用时间表头为0（数字格式）
+    table = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
+    wr1 = pd.concat([table, table[column_name].str.split(r' ', expand=True)], axis=1, names=['times', 'min'])
+    fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',sheet_name='Sheet', index=False)
+
+    dcu.drop_columns(file_name, 1 )
     return
 
 
-def time_rearranged():
-    file_name = u'购地-地块公示_test'
-
-    wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
-                             sheet_name='Sheet')
-    wr1 = wr1.fillna({u'时间'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
-
-    # wr2 = wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = True ) # 使用split删除部分时间的精确时间
-    wr2 = pd.merge(wr1, pd.DataFrame(wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = True )),
-                   how='left', left_index= True , right_index = True)
-    wr3 = wr2.rename(columns={u'时间'.encode('utf-8'): 'time', '0': u'时间'.encode('utf-8')}, inplace=True)
-    wr4 = wr3.rename(column = {'0': u'时间'.encode('utf-8')})
-    fu.write_file(wr4, clean_data_temp_file_url, u'购地-地块公示_test', ext='.xlsx',
-                  sheet_name='Sheet', index=False)
-
-    dcu.drop_columns(file_name, 'time')
-    dcu.drop_columns(file_name, '1')
-
-    return
-
-
-
-def clean_announcement_of_land():
-    file_name = u'购地-地块公示_test'
-    dcu.drop_columns(file_name, u'行政区'.encode('utf-8'))
-
-    wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
-                             sheet_name='Sheet')
-    wr1 = wr1.fillna({u'纳税人资格': 'unknown'})  # 对空值进行处理以进行索引
-
-    wr2 = wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = False ) # 使用split删除部分时间的精确时间
-    fu.write_file(wr2, clean_data_temp_file_url, u'购地-地块公示_test', ext='.xlsx',
-                  sheet_name='Sheet', index=False)
-    return
-
-    # AB =1 CD =2
-    # status_1 = [u'A', u'B']
-    # status_2 = [u'C', u'D']
-    # status_list = [status_1,status_2]
-    # status_after = [1,2]
-    # dcu.merge_status('temp', 'a',status_list, status_after)
-
-#把土地用途转换为数字
 def land_usage(file_name, column_name):
     status_5 = ['05','051','052','053','054', u'批发零售用地', u'住宿餐饮用地', u'商务金融用地',u'其他商服用地',u'商服用地',u'05、07']
     status_6 = [u'06', u'061', u'062', u'063', u'工业用地', u'采矿用地', u'仓储用地', u'工矿仓储用地']
@@ -190,8 +158,275 @@ def land_usage(file_name, column_name):
     dcu.merge_status(file_name, column_name, status_list, status_after)
     return
 
-import data_clean_landing_purchase
-reload(data_clean_landing_purchase)
+
+
+
+def clean_gddkgs():
+    time_rearranged(u'购地-地块公示', u'时间')
+
+    file_name = u'购地-地块公示'
+    dcu.drop_columns(file_name, u'行政区')
+    dcu.drop_columns(file_name, u'出让年限')
+    dcu.drop_columns(file_name, u'土地使用条件')
+
+    dcu.merge_status(file_name, u'公示日期', [], [], empty_mask='-65535')
+
+
+    # wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
+    # # wr1 = wr1.fillna({u'纳税人资格'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
+    #
+    # fu.write_file(wr1, clean_data_temp_file_url,file_name, ext='.xlsx', sheet_name='Sheet', index=False)
+
+    land_usage(u'购地-地块公示', u'土地用途')
+
+    return
+
+    # AB =1 CD =2
+    # status_1 = [u'A', u'B']
+    # status_2 = [u'C', u'D']
+    # status_list = [status_1,status_2]
+    # status_after = [1,2]
+    # dcu.merge_status('temp', 'a',status_list, status_after)
+
+#把土地用途转换为数字
+
+
+
+'''
+    Dirty value handle for table 购地-市场交易-土地抵押.xlsx.
+    First we'll drop rows that empty value is too many.
+    # ['抵押面积(公顷)','土地用途','抵押土地用途','抵押土地权属性质与使用权类型', '评估金额(万元)','抵押金额(万元)','土地抵押登记结束时间']
+    # Once there are more than 3 empties in these 7 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    土地抵押人性质
+    ------
+    Empty percentage is 26.0%(8268 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    As the values have many different types and and disturb us a lot. We decide to drop this column.
+    -----------------------------
+    抵押面积(公顷)
+    ------
+    Empty percentage is 19.7%(6253 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    We consider each part as an independent status. and all of the values are showed by correct format, so we can use them directly.
+    -----------------------------
+    土地用途
+    ------
+    Empty percentage is 0.02%(7 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    62 status in this value has, but some of them are the code of the status, and some values is the small type of the
+    huge status. So we conclude them by using '土地分类代码表'. So we can map them in to 13 status:
+    {'商服用地':5,'工矿仓储用地':6,'住宅用地':7,'公共管理与公共服务用地':8,'特殊用地':9,'交通运输用地':10,'水域及水利设施用地':11,'其它土地':12,'Unknown':-1}
+    -----------------------------
+    抵押土地用途
+    ------
+    Empty percentage is 19.7%(6260 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    62 status in this value has, but some of them are the code of the status, and some values is the small type of the
+    huge status. So we conclude them by using '土地分类代码表'. So we can map them in to 13 status:
+    {'商服用地':5,'工矿仓储用地':6,'住宅用地':7,'公共管理与公共服务用地':8,'特殊用地':9,'交通运输用地':10,'水域及水利设施用地':11,'其它土地':12,'Unknown':-1}
+    -----------------------------
+    抵押土地权属性质与使用权类型
+    ------
+    Empty percentage is 21.43%(6816 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    When we analyze these data, we focus on the ownership of the land, so we use the key point['国有','集体'], others include in 'others'
+    So we conclude them by using {'国有':1,'集体':2,'其他':3,'Unknown':-1}
+    -----------------------------
+    土地面积
+    ------
+    Empty percentage is 0.00%(1 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    The empty value accounts for a small scale, so we can drop that empty value.
+    -----------------------------
+    评估金额(万元)
+    ------
+    Empty percentage is 22.5%(7154 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    We consider each part as an independent status. and all of the values are showed by correct format, so we can use them directly.
+    -----------------------------
+    抵押金额(万元)
+    ------
+    Empty percentage is 19.7%(6276 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    We consider each part as an independent status. and all of the values are showed by correct format, so we can use them directly.
+    -----------------------------
+    土地抵押登记起始时间
+    ------
+    Empty percentage is 0%(0 out of 31799)..
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    However, some time data has the exact time value that are not needed. So we just delete the exact time.
+    -----------------------------
+    土地抵押登记结束时间
+    ------
+    Empty percentage is 19.7%(6258 out of 31799).
+    Empty values can be considered to 'Unknown'.
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    However, some time data has the exact time value that are not needed. So we just delete the exact time.
+    -----------------------------
+
+
+'''
+
+def empty_value_handle_gdscjytddy():
+    """
+    empty_value handle for table
+    :return:
+    """
+    empty_check_list = [u'抵押面积(公顷)'.encode('utf-8'),
+                        u'土地用途'.encode('utf-8'),
+                        u'抵押土地用途'.encode('utf-8'),
+                        u'抵押土地权属性质与使用权类型'.encode('utf-8'),
+                        u'评估金额(万元)'.encode('utf-8'),
+                        u'抵押金额(万元)'.encode('utf-8'),
+                        u'土地抵押登记结束时间'.encode('utf-8')]
+    dcu.drop_rows_too_many_empty(u'购地-市场交易-土地抵押.xlsx', columns=empty_check_list, thresh=3)
+    # panaly.list_category_columns_values([u'购地-市场交易-土地抵押'], u'购地-市场交易-土地抵押_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+    return
+
+
+
+def clean_gdscjytddy():
+    file_name = u'购地-市场交易-土地抵押'
+
+    time_rearranged(file_name, u'土地抵押登记起始时间')  # 两种时间会被分割为0和0.1的表头
+    time_rearranged(file_name, u'土地抵押登记结束时间')
+
+    dcu.drop_columns(file_name, u'土地抵押人性质')
+
+    dcu.merge_status(file_name, u'抵押面积(公顷)', [], [], empty_mask='-65535')
+    dcu.merge_status(file_name, u'土地面积', [], [], empty_mask='-65535')
+    dcu.merge_status(file_name, u'评估金额(万元)', [], [], empty_mask='-65535')
+    dcu.merge_status(file_name, u'抵押金额(万元)', [], [], empty_mask='-65535')
+
+    land_usage(file_name, u'土地用途')
+    land_usage(file_name, u'抵押土地用途')
+
+    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', u'国有', empty_mask='Unknown', others_mask='Others')
+    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', u'集体', empty_mask='Unknown', others_mask='Others')
+
+    return
+
+# import data_clean_utils as dcu
+# file_name = u'购地-市场交易-土地抵押_test'
+# dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', u'国有',u'集体',empty_mask='Unknown', others_mask='Others')
+
+
+
+'''
+    Dirty value handle for table 购地-市场交易-土地转让.xlsx.
+    First we'll drop rows that empty value is too many.
+    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
+    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    Then we check nulls column by column and decide how to process with it.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis. 
+
+    -----------------------------
+    成交时间
+    ------
+    Empty percentage is 0%(0 out of 31554).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    However, some time data has the exact time value that are not needed. So we just delete the exact time.
+    -----------------------------
+    土地面积(公顷)
+    ------
+    Empty percentage is 0.00%(1 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    The empty value accounts for a small scale, so we can drop that empty value.
+    -----------------------------
+    土地用途
+    ------
+    Empty percentage is 0.02%(7 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    62 status in this value has, but some of them are the code of the status, and some values is the small type of the
+    huge status. So we conclude them by using '土地分类代码表'. So we can map them in to 13 status:
+    {'商服用地':5,'工矿仓储用地':6,'住宅用地':7,'公共管理与公共服务用地':8,'特殊用地':9,'交通运输用地':10,'水域及水利设施用地':11,'其它土地':12,'Unknown':-1}
+    -----------------------------
+    土地使用年限
+    ------
+    Empty percentage is 96.5%(7 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+    土地级别
+    ------
+    Empty percentage is 95.9%(30263 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+    土地使用权类型
+    ------
+    Empty percentage is 97.4%(30720 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+    土地利用状况
+    ------
+    Empty percentage is 94.0%(29668 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+    转让方式
+    ------
+    Empty percentage is 97.3%(30697 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+    转让价格(万元)
+    ------
+    Empty percentage is 97.3%(30697 out of 31554).
+    Empty values can be considered to 'Unknown'.
+    Since the empty value accounts for a large scale, we decide to drop this column.
+    -----------------------------
+'''
+
+# def empty_value_handle_gdscjytdzr():
+#     """
+#     empty_value handle for table
+#     :return:
+#     """
+#     empty_check_list = [u'成交时间'.encode('utf-8'),
+#                         u'土地面积'.encode('utf-8'),
+#                         u'土地用途'.encode('utf-8')]
+#     dcu.drop_rows_too_many_empty(u'购地-市场交易-土地转让_test.xlsx', columns=empty_check_list, thresh=2)
+#     # panaly.list_category_columns_values([u'购地-市场交易-土地转让'], u'购地-市场交易-土地转让_empty_handled',
+#     #                                     file_url=clean_data_temp_file_url)
+#     return
+
+
+def clean_gdscjytdzr():
+    file_name = u'购地-市场交易-土地转让'
+    time_rearranged(file_name, u'成交时间'.encode('utf-8'))
+
+    # 时间会被分割为0的表头
+
+    dcu.drop_columns(file_name, u'土地使用年限')
+    dcu.drop_columns(file_name, u'土地级别')
+    dcu.drop_columns(file_name, u'土地使用权类型')
+    dcu.drop_columns(file_name, u'土地利用状况')
+    dcu.drop_columns(file_name, u'转让方式')
+    dcu.drop_columns(file_name, u'转让价格(万元)')
+
+    dcu.merge_status(file_name, u'土地面积(公顷)', [], [], empty_mask='-65535')
+
+    land_usage(file_name, u'土地用途')
+
+    return
+
+
+# file_name = u'购地-市场交易-土地转让_test'
+# dclp.time_rearranged(u'购地-市场交易-土地转让_test', u'成交时间'.encode('utf-8'))  # 时间会被分割为0的表头
+
+
+# reload(data_clean_landing_purchase)
 
 
 def data_clean_landing_purchase_fdcdqygdqk():
@@ -243,14 +478,14 @@ def data_clean_landing_purchase_fdcdqygdqk():
         98% null, turn null into 'Unknown'
         -----------------------------
         """
-    dcu.drop_columns(u'购地-房地产大企业购地情况', u'行政区')
+    dcu.drop_columns(u'购地-房地产大企业购地情况', u'行政区')  # 删除行政区
     # 日期：需要去掉小数部分
 
-    data_clean_landing_purchase.land_usage(u'购地-房地产大企业购地情况', u'土地用途')
+    land_usage(u'购地-房地产大企业购地情况', u'土地用途')  # 土地用途分类
 
     dcu.merge_status(u'购地-房地产大企业购地情况', u'供地总面积（公顷）', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')  # 空值处理
     dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
@@ -303,9 +538,18 @@ def data_clean_landing_purchase_fdcddkcrqk():
         99% null, turn null into 'Unknown'
         -----------------------------
         """
-    # 签订日期：需要去掉小数部分
+    dcu.drop_columns(u'购地-房地产大地块出让情况', u'行政区')
+    # 日期：需要去掉小数部分
 
-    data_clean_landing_purchase.land_usage(u'购地-房地产大地块出让情况', u'土地用途')
+    land_usage(u'购地-房地产大地块出让情况', u'土地用途')
+
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [])
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])   # 其他空值unknown
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')   # 其他空值unknown
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535') # 数值型空值-665535
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
 
     dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大地块出让情况', u'约定动工时间',[],[])
@@ -316,6 +560,7 @@ def data_clean_landing_purchase_fdcddkcrqk():
     dcu.merge_status(u'购地-房地产大地块出让情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
     return
 
+    land_usage(u'购地-房地产大地块出让情况',u'土地用途')
 def data_clean_landing_purchase_jggg():
     """
                 Dirty value handle for table 购地-结果公告.xlsx.
@@ -404,7 +649,7 @@ def data_clean_landing_purchase_jggg():
 
     # 签订日期：需要去掉小数部分
 
-    data_clean_landing_purchase.land_usage(u'购地-结果公告', u'土地用途')
+    land_usage(u'购地-结果公告', u'土地用途')
 
     dcu.merge_status(u'购地-结果公告', u'总面积', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-结果公告', u'成交价格（万元）', [], [], empty_mask='-65535')
@@ -421,7 +666,8 @@ def data_clean_landing_purchase_jggg():
 
 
     # dcu.drop_columns(file_name, u'出让年限'.encode('utf-8'))
-
+    #
+    # return
 
 
 

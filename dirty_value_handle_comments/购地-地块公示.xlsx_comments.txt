@@ -50,8 +50,7 @@
     ------
     Empty percentage is 76.1%(13840 out of 18192).
     Empty values can be considered to 'Unknown'.
-    The existing values have the correct format of pure number, however, some values shows that the purchase price is 0.
-    It's useless to use 0 to analyze the value of the company. so we conclude the value = 0 as 'Error'
+    The existing values have the correct format of pure number,.
     -----------------------------
     土地使用条件
     ------
