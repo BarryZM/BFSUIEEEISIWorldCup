@@ -10,17 +10,22 @@
     -----------------------------
     证书名称
     ------
+    No empty, we will not change this column.
 
     -----------------------------
     有效期起止日期
     ------
+    Empty percentage is 3.5241%(3208 out of 91031). And one '-', one '/', all these we mark them as '1000-01-01'.
 
     -----------------------------
     有效期截至日期
     ------
+    Empty percentage is 18.7354%(17055 out of 91031). And one '-', one '/', all these we mark them as '1000-01-01'.
+    Some values '2016-08-28-28', or '2017', or '2017-08-09 00:00:00', '2014.09.18'.
 
     -----------------------------
     状态
     ------
+    Empty percentage is 10.6052%(9654 out of 91031).
 
     -----------------------------
