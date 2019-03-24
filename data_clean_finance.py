@@ -166,9 +166,11 @@ def data_clean_finance_cwfxzb():
     unit_strs = [u'%']
     dcu.drop_unit(u'上市信息财务信息-财务风险指标', u'资产负债率(%)', unit_strs)
     dcu.drop_unit(u'上市信息财务信息-财务风险指标', u'流动负债/总负债(%)', unit_strs)
-
     return
 
+# import data_clean_finance
+# dcu.merge_rows(u'上市信息财务信息-财务风险指标' + '.xlsx')
+# data_clean_finance.data_clean_finance_cwfxzb()
 
 def data_clean_finance_cznlzb():
     """
@@ -176,6 +178,7 @@ def data_clean_finance_cznlzb():
     ['企业总评分','标题','日期','营业总收入(元)','毛利润(元)','归属净利润(元)',
     '扣非净利润(元)','营业总收入同比增长(元)','归属净利润同比增长(元)','扣非净利润同比增长(元)',
     '营业总收入滚动环比增长(元)','归属净利润滚动环比增长(元)','扣非净利润滚动环比增长(元)']
+    后面六个变量单位是%
 
     After these are done, it's time to work out features we can use in this table which belongs
         to exploratory data analysis. 
@@ -267,6 +270,8 @@ def data_clean_finance_cznlzb():
     -----------------------------
     dcu.change_number(u'temp',u'a',empty_mask='Unknown')
     """
+    dcu.drop_columns(u'上市信息财务信息-成长能力指标', u'标题')
+
     status_normal = [u'--', u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
@@ -439,6 +444,8 @@ def data_clean_finance_lrb():
 
     -----------------------------
     """
+    dcu.drop_columns(u'上市信息财务信息-利润表', u'标题')
+
     status_normal = [u'--', u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
@@ -774,10 +781,13 @@ def data_clean_finance_xjllb():
     
         -----------------------------
     """
+    dcu.drop_columns(u'上市信息财务信息-现金流量表', u'标题')
+
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
 
+    # 循环的写法
     # data_frame = file_utils.read_file_to_df(clean_data_temp_file_url,u'上市信息财务信息-现金流量表')
     #
     # for column in data_frame.columns:
@@ -883,6 +893,8 @@ def data_clean_finance_ylnlzb():
             turn into 'ERROR'
         -----------------------------
     """
+    dcu.drop_columns(u'上市信息财务信息盈利能力指标', u'标题')
+
     status_normal = [ u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
@@ -903,9 +915,12 @@ def data_clean_finance_ylnlzb():
     dcu.drop_unit(u'上市信息财务信息盈利能力指标', u'实际税率(%)', unit_strs)
 
 # 标记不合理的数据
+#    dcu.mark_invalid_num_data(u'temp', u'a', '>', 100, error_mask='-65535')
+    dcu.mark_invalid_num_data(u'上市信息财务信息盈利能力指标', u'毛利率(%)', '>', 100, error_mask='-65535')
+    dcu.mark_invalid_num_data(u'上市信息财务信息盈利能力指标', u'净利率(%)', '>', 100, error_mask='-65535')
+    dcu.mark_invalid_num_data(u'上市信息财务信息盈利能力指标', u'实际税率(%)', '>', 100, error_mask='-65535')
 
     return
-
 
 def data_clean_finance_yynlzb():
     """
@@ -942,15 +957,19 @@ def data_clean_finance_yynlzb():
             turn into 'ERROR'
         -----------------------------
         """
+    dcu.drop_columns(u'上市信息财务信息运营能力指标', u'标题')
+
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
 
-    dcu.merge_status(u'上市信息财务信息运营能力指标', u'总资产周转率(次)', status_list, status_after)
+    # 第一行本来是数值型的，只能重新赋值成数值型的
+    dcu.merge_status(u'上市信息财务信息运营能力指标', u'总资产周转率(次)', status_list, status_after, empty_mask='-65535')
     dcu.merge_status(u'上市信息财务信息运营能力指标', u'应收账款周转天数(天)', status_list, status_after)
     dcu.merge_status(u'上市信息财务信息运营能力指标', u'存货周转天数(天)', status_list, status_after)
 
-# dcu
+    dcu.mark_invalid_num_data(u'上市信息财务信息运营能力指标', u'应收账款周转天数(天)', '<', 0, error_mask=-65535)
+    dcu.mark_invalid_num_data(u'上市信息财务信息运营能力指标', u'存货周转天数(天)', '<', 0, error_mask=-65535)
 
     return
 
@@ -1128,6 +1147,7 @@ def data_clean_finance_zcfzb():
         turn '--' into 'NA'
         -----------------------------
     """
+    dcu.drop_columns(u'上市信息财务信息资产负债表', u'标题')
 
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -1155,7 +1175,27 @@ def data_clean_finance_zcfzb():
     dcu.merge_status(u'上市信息财务信息资产负债表', u'权益:股东权益合计(元)', status_list, status_after)
     dcu.merge_status(u'上市信息财务信息资产负债表', u'流动比率', status_list, status_after)
 
+    dcu.change_number(u'上市信息财务信息资产负债表', u'资产:累计折旧(元)')
     dcu.change_number(u'上市信息财务信息资产负债表', u'负债:存货跌价准备(元)')
+
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:货币资金(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:应收账款(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:其它应收款(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:存货(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:流动资产合计(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:长期股权投资(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:固定资产(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:无形资产(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'资产:资产总计(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'负债:应付账款(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'负债:预收账款(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'负债:流动负债合计(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'负债:长期负债合计(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'负债:负债合计(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'权益:实收资本(或股本)(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'权益:资本公积金(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'权益:盈余公积金(元)')
+    dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'权益:股东权益合计(元)')
 
     return
 
@@ -1177,43 +1217,8 @@ def empty_value_handle_basic_info():
     return
 
 
-def empty_value_handle_assets_info():
-    """
-    empty_value handle for table 年报-企业资产状况信息.
-    :return:
-    """
-    empty_check_list = [u'主营业务收入'.encode('utf-8'),
-                        u'净利润'.encode('utf-8'),
-                        u'利润总额'.encode('utf-8'),
-                        u'所有者权益合计'.encode('utf-8'),
-                        u'纳税总额'.encode('utf-8'),
-                        u'营业总收入'.encode('utf-8'),
-                        u'负债总额'.encode('utf-8'),
-                        u'资产总额'.encode('utf-8')]
-    dcu.drop_rows_too_many_empty(u'年报-企业资产状况信息.xlsx', columns=empty_check_list, thresh=3)
-    # panaly.list_category_columns_values([u'年报-企业资产状况信息'], u'年报-企业资产状况信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
-    return
 
 
-def empty_value_handle_out_invest_info():
-    """
-    empty_value handle for table 年报-对外投资信息.
-    Don't drop data in this table, just replace the empty with 0.
-    :return:
-    """
-
-    df = file_utils.read_file_to_df(clean_data_temp_file_url, u'年报-对外投资信息')
-    df = df.fillna(0)
-    file_utils.write_file(df, clean_data_temp_file_url, u'年报-对外投资信息')
-
-    # panaly.list_category_columns_values([u'年报-对外投资信息'], u'年报-对外投资信息_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
-    return
 
 
-def numeric_handle_basic_info():
-    """
-    numeric data for table 年报-企业基本信息.
-    :return:
-    """
+

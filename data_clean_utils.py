@@ -302,3 +302,22 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
+
+
+# 把以万，亿结尾的数据标为Unknown
+def merge_number_with_c(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type status_names: list
+    :type status: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if str(content).endswith(u'万'):
+            data_frame.set_value(index, column_name, 'Unknown')
+        elif str(content).endswith(u'亿'):
+            data_frame.set_value(index, column_name, 'Unknown')
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                            sheet_name='Sheet', index=False)
