@@ -773,15 +773,17 @@ def empty_value_handle_share_holder_info():
     empty_value handle for table 年报-股东（发起人）及出资信息_rearranged.
     :return:
     """
-    empty_check_list = [u'实缴出资方式'.encode('utf-8'),
-                        u'实缴出资日期'.encode('utf-8'),
-                        u'实缴出资额（万元）'.encode('utf-8'),
-                        u'认缴出资方式'.encode('utf-8'),
-                        u'认缴出资日期'.encode('utf-8'),
-                        u'认缴出资额（万元）'.encode('utf-8')]
-    dcu.drop_rows_too_many_empty(u'年报-股东（发起人）及出资信息_rearranged.xlsx', columns=empty_check_list, thresh=2)
-    panaly.list_category_columns_values([u'年报-股东（发起人）及出资信息_rearranged'], u'年报-股东（发起人）及出资信息_rearranged_empty_handled',
-                                        file_url=clean_data_temp_file_url)
+    # empty_check_list = [u'实缴出资方式'.encode('utf-8'),
+    #                     u'实缴出资日期'.encode('utf-8'),
+    #                     u'实缴出资额（万元）'.encode('utf-8'),
+    #                     u'认缴出资方式'.encode('utf-8'),
+    #                     u'认缴出资日期'.encode('utf-8'),
+    #                     u'认缴出资额（万元）'.encode('utf-8')]
+    # dcu.drop_rows_too_many_empty(u'年报-股东（发起人）及出资信息_rearranged.xlsx', columns=empty_check_list, thresh=2)
+    # panaly.list_category_columns_values([u'年报-股东（发起人）及出资信息_rearranged'], u'年报-股东（发起人）及出资信息_rearranged_empty_handled',
+    #                                     file_url=clean_data_temp_file_url)
+
+    # dcu.drop_columns(u'年报-股东（发起人）及出资信息_rearranged', [u'股东类型'.encode('utf-8'), u'股东所占比例'.encode('utf-8')])
 
     return
 
