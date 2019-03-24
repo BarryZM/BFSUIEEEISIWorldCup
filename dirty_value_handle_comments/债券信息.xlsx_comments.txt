@@ -1,62 +1,101 @@
-    Dirty value handle for table 债券信息.xlsx.
+ Dirty value handle for table 债券信息.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['债券期限','债券品种','发行日期', '兑付日期','计划发行总额','票面利率','付息方式']
+    # Once there are more than 2 empties in these 7 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+    to exploratory data analysis.
 
     -----------------------------
     债券信用评级
     ------
-
+    Empty percentage is 83.94%(1996 out of 2378).
+    7 status can be concluded in this part, they are ['AA','AA+','AA-','AAA','B','C','CC']
+    In China, not all companies have the rights to issue the bonds. So we just add another status for the empty value:'Unknown'.
+    So we can map these total 8 status :{'AA:0,'AA+':1,'AA-':2,'AAA':3,'B':4,'C':5,'CC':6,'Unknown':-1}.
     -----------------------------
     债券期限
     ------
-
+    Empty percentage is 3.62%(86 out of 2378). Some value end with '年' while some are pure number.
+    Considering that all the unit in this value is '年', so we could drop the '年' and just remain the pure number.
+    As the empty values account for a small scale, we could drop all the empty values.
     -----------------------------
     债券品种
     ------
-
+    Empty percentage is 0%(0 out of 2378).
+    7 status can be concluded in this part, they are ['中央企业债','企业债券','公司'、企业债','地方企业债','沪企债','深企债',
+    '银行间企债']
+    All the information is good as there is no empty value here. So we can map these total 7 status :
+    {'中央企业债':1,'企业债券':2,'公司'、企业债':3,'地方企业债':4,'沪企债':5,'深企债':6,'银行间企债':7}.
     -----------------------------
     发行日期
     ------
-
+    Empty percentage is 0%(0 out of 2378).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    So we can use them without change.
     -----------------------------
     付息日期
     ------
-
+    Empty percentage is 15.31%(364 out of 2378).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    So we just add another status for the empty value:'Unknown' and representing with the number -1.
     -----------------------------
     兑付日期
     ------
-
+    Empty percentage is 3.66%(87 out of 2378).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    So we just add another status for the empty value:'Unknown' and representing with the number -1.
     -----------------------------
     计划发行总额（亿元）
     ------
-
+    Empty percentage is 0%(0 out of 2378).
+    We consider each part as an independent status. and all of the values are showed by pure number.
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     实际发行总额（亿元）
     ------
-
+    Empty percentage is 98.53%(2343 out of 2378).
+    We consider each part as an independent status. and all of the values are showed by pure number.
+    We just add another status for the empty value:'Unknown' and representing with the number -1.
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without change.
     -----------------------------
     币种
     ------
-
+    Empty percentage is 0%(0 out of 2378).
+    As there is just one status '人民币', so we can drop this column.
     -----------------------------
     流通场所
     ------
-
+    Empty percentage is 99.24%(2360 out of 2378).
+    6 status can be concluded in this part, they are ['null','上交所','其他'、'银行间债券市场','银行间债券市场 柜台',
+    '银行间债券市场 深交所']
+    As there are too many empty values and the column isn't important for the value of the company. So we can drop it.
     -----------------------------
     票面利率（%）
     ------
-
+    Empty percentage is 0.17%(4 out of 2378).
+    As the empty values account for a small scale, so we can drop them.
+    Now we consider each part as an independent status. and all of the values are showed by pure number.
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     主体信用评级
     ------
-
+    Empty percentage is 84.10%(2000 out of 2378).
+    6 status can be concluded in this part, they are ['-','A','AA','AA+','AA-','AAA']
+    In China, not all companies have the rights to issue the bonds. So we just add another status for the empty value:
+    'Unknown' and use -1 to represent it.
+    And we can consider '-' is similar to 'Unknown'.
+    So we can map these total 8 status :{'-':0,'A':1,'AA':2,'AA+':3,'AA-':4,'AAA':5,'Unknown':-1}.
     -----------------------------
     付息方式
     ------
-
+    Empty percentage is 0%(0 out of 2378).
+    6 status can be concluded in this part, they are ['到期一次还本付息','半年付息','按季付息','按年付息','附息式固定利率',
+    '附息式浮动利率']
+    All the information is good as there is no empty value here.  So we can map these total 2 status : {'到期一次还本付息':0,
+    '半年付息':1,'按季付息':2,'按年付息':3,'附息式固定利率':4,'附息式浮动利率':5}.
     -----------------------------

@@ -379,7 +379,7 @@ def empty_value_handle_out_warrant_info():
     -----------------------------
     保证担保的范围
     ------
-    Empty percentage is 0%(0 out of 6893). We need not to change this line at this point.
+    Empty percentage is 91.47%(6305 out of 6893). We need to drop it.
 
     -----------------------------
     保证的期间
@@ -425,6 +425,9 @@ def empty_value_handle_out_warrant_info():
     # dcu.drop_rows_too_many_empty(u'年报-的对外提供保证担保信息.xlsx', columns=empty_check_list, thresh=3)
     # panaly.list_category_columns_values([u'年报-的对外提供保证担保信息'], u'年报-的对外提供保证担保信息_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
+
+    # 保证担保的范围
+    dcu.drop_columns(u'年报-的对外提供保证担保信息', [u'保证担保的范围'.encode('utf-8')])
 
     # 主债权数额
     dcu.drop_unit(u'年报-的对外提供保证担保信息', u'主债权数额'.encode('utf-8'), [u'万元', u' 万元'])

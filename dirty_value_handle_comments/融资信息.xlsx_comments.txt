@@ -1,22 +1,37 @@
-    Dirty value handle for table 融资信息.xlsx.
+ Dirty value handle for table 融资信息.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['融资日期','轮次','投资金额']
+    # Once there are more than 1 empty in these 3 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+        to exploratory data analysis.
 
     -----------------------------
     融资日期
     ------
-
+    Empty percentage is 0.22%(10 out of 4468).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    As the empty values account for a small scale, we could drop all the empty values.
     -----------------------------
     轮次
     ------
-
+    Empty percentage is 0%(0 out of 4468).
+    29 status this value has, they are ['A+轮','A轮','B+轮','B轮','C+轮','C轮','D轮','E轮','E轮及以后','F轮','IPO','IPO后',
+    'Pre-A轮','Pre-IPO','上市','上市后','主板定向增发','债权融资','后期阶段','天使轮','并购','战略合并','战略投资','新三板',
+    '新三板定增','私有化','种子轮','股权转让','被收购']
+    Since there is no empty value. So we can map it with 29 status:
+    {'A+轮':0,'A轮':1,'B+轮':2,'B轮':3,'C+轮':4,'C轮':5,'D轮':6,'E轮':7,'E轮及以后':8,'F轮':9,'IPO':10,'IPO后':11,'Pre-A轮':12,
+    'Pre-IPO':13,'上市':14,'上市后':15,'主板定向增发':16,'债权融资':17,'后期阶段':18,'天使轮':19,'并购':20,'战略合并':21,
+    '战略投资':22,'新三板':23,'新三板定增':24,'私有化':25,'种子轮':26,'股权转让':27,'被收购':28}
     -----------------------------
     投资金额
     ------
-
+    Empty percentage is 0.98%(44 out of 4468).
+    Some values end with '万人民币' and some values end with '万美元' and '万港币'， while  Some values end only with '万'.
+    But also there are lots of values valued '未披露'(3309) and a few valued '数......' without number.
+    Now for empty value and value valued '未披露', we conclude them into 'unknown' and use -1 to represent them.
+    For values end with '万美元' and '万港币', we use the exchange to calculate their value in RMB and drop the unit.
+    For values end only with '万', we consider both of them as the value that counted in RMB.
+    For values end with '万人民币', we just drop the unit and change them to pure number.
     -----------------------------

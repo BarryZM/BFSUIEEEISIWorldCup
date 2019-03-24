@@ -1,30 +1,49 @@
-    Dirty value handle for table 海关进出口信用.xlsx.
+Dirty value handle for table 海关进出口信用.xlsx.
     First we'll drop rows that empty value is too many.
     # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
     # Once there are more than 3 empties in these 8 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+        to exploratory data analysis.
 
     -----------------------------
     经济区划
     ------
-
+    Empty percentage is 0.04%(1 out of 2605).
+    8 status this value has, they are ['一般经济区域','保税区','保税港区'、'综合保税区','保税物流园区','经济技术开发全区',
+    '经济技术开发区','经济特区','高新技术产业开发区'].
+    Cause there is only 1 empty values here so we just drop the empty value and do not add another type about empty.
+    So we can map these total 8 status: {'一般经济区域':0,'保税区':1,'保税港区、综合保税区':2,'保税物流园区':3,'经济技术开发全区':4,
+    '经济技术开发区':5,'经济特区':6,'高新技术产业开发区':7}.
     -----------------------------
     经营类别
     ------
-
+    Empty percentage is 0.08%(2 out of 2605).
+    7 status this value has, they are ['1','临时注册企业','保税仓库'、'加工生产企业','报关企业','进出口收发货人','进出口运输工具负责人'].
+    Cause there is only 2 empty values here so we just drop the empty value and do not add another type about empty.
+    We look up the regulation about customs and find the code about different type of the enterprise.
+    So we find that '1' is similar to '进出口收发货人', according to that, we can map these total 7 status to 6:
+    {'临时注册企业':0,'保税仓库':1、'加工生产企业':2,'报关企业':3,'进出口收发货人':4,'进出口运输工具负责人':5 }.
     -----------------------------
     海关注销标志
     ------
-
+    Empty percentage is 32.05%(835 out of 2605).
+    2 status this value has, they are ['正常','注销'].
+    As this column is important for the value of a company. So we just add another status for the empty value:'Unknown'.
+    So we can map these total 3 status : {‘正常’:0，‘注销’:1,'Unknown':-1}.
     -----------------------------
     年报情况
     ------
-
+    Empty percentage is 0%(0 out of 2605).
+    5 status can be concluded in this part, they are [‘不需要’，‘已报送’,'未报送','超期报送','超期未报送']
+    All the information is good as there is no empty value here.  So we can map these total 2 status :
+    {‘不需要’:0，‘已报送’:1,'未报送':2,'超期报送':3,'超期未报送':4  }.
     -----------------------------
     信用等级
     ------
-
+    Empty percentage is 48.06%(1252 out of 2605).
+    4 status can be concluded in this part, they are ['一般信用企业','一般认证企业','失信企业','高级认证企业']
+    As this column is important for the value of a company. So we just add another status for the empty value:'Unknown'.
+    So we can map these total 5 status : {'一般信用企业','一般认证企业','失信企业','高级认证企业','Unknown':-1}.
     -----------------------------
