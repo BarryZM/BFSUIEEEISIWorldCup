@@ -10,17 +10,39 @@
     -----------------------------
     作品著作权类别
     ------
+    Empty percentage is 0.42%(47 out of 11190). They will be marked as 'Unknown'.
+    we extract the values into 9 categories:
+    1: ['A 文字', '文字', '文字作品']
+    2: ['B 音乐', '音乐', '音乐作品']
+    3: ['F 美术', '美术', '美术作品']
+    4: ['G 摄影', '摄影', '摄影作品']
+    5: ['H 电影', '电影', '电影作品和类似摄制电影的方法创造的作品', '电影和类似摄制电影方法创作的作品', 'I 类似摄制电影方法创作作品', '类似摄制电影方法创作的作品']
+    6: ['J 工程设计图、产品设计图', '工程设计图、产品设计图', '工程设计图、产品设计图作品', '建筑']
+    7: ['K 地图、示意图', '地图、示意图', '图形']
+    8: ['L 其他作品']
+    9: ['Unknown']
 
     -----------------------------
     作品著作权登记日期
     ------
+    Empty percentage is 0.7239%(81 out of 11190). They will be replaced with '1000-01-01'.
+    Mostly well formatted with format yyyy-mm-dd, but some are like '国作登字-2014-F-00135223', we need to extract the
+    year, and make them like 'yyyy-01-01'.
 
     -----------------------------
     作品著作权创作完成日期
     ------
+    Empty percentage is 1.5996%(179 out of 11190). They will be replaced with '1000-01-01'
+    Mostly formatted with format yyyy-mm-dd, but also some other formats like '2010-1-1' '2010' '2010-10'.
+    And some invalid values like '214-5-20' '张建明', we will make them the same as empty to '1000-01-01'.
 
     -----------------------------
     作品著作权首次发布日期
     ------
+    Empty percentage is 1.5996%(179 out of 11190). They will be replaced with '1000-01-01'.
+    Mostly formatted with format yyyy-mm-dd, but also some other formats like '2010-1-1' '2010' '2010-10'.
+    Some are like '鄂作登字-2014- --S--20141604' or '国作登字-2014-F-00135223' or '京作登字-2014-S-00156610'.
+    We need to extract the year from '京作登字-2014-S-00156610' then make them 'yyyy-01-01'.
+    And some invalid values like '214-5-20' '42285', we will make them the same as empty to '1000-01-01'.
 
     -----------------------------

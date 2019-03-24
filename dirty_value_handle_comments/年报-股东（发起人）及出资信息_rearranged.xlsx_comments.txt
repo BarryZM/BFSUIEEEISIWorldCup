@@ -43,7 +43,7 @@
     ------
     Empty percentage is 5.9484%(4750 out of 79854). We replace them with -1.
     It's too complicate, we just count the item values here(may named as '认缴出资方式种类数'). So we just separate them
-    with [',', '、'], to do this, we should drop the ',' or '、' at the end first.
+    with [',', '、', '，'], to do this, we should drop the ',' or '、' or '，' at the end first.
 
     -----------------------------
     实缴出资额（万元）

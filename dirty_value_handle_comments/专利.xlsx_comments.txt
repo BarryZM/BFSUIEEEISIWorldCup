@@ -10,13 +10,18 @@
     -----------------------------
     专利类型
     ------
+    Empty percentage is 0%(0 out of 531724). No need to change.
 
     -----------------------------
     授权公告日
     ------
+    Empty percentage is 0%(0 out of 531724). Mostly well formatted with format yyyy-mm-dd, but also some appended with
+    '同一申请的已公布的文献号' or '-', which we need to drop.
 
     -----------------------------
     申请日
     ------
+    Empty percentage is 0%(0 out of 531724). Mostly well formatted with format yyyy-mm-dd, but also some with prefix
+    '公告日：', some with suffix '-', which we need to drop.
 
     -----------------------------
