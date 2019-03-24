@@ -16,7 +16,6 @@ from files_category_info import category_landing_purchase
 import pandas as pd
 
 
-
 def raw_files_primary_analysis():
     """
     primary analysis for raw files without handled
@@ -51,8 +50,8 @@ def primary_analysis_after_duplicate_handled():
 '''
     Dirty value handle for table 购地-地块公示.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['行政区',,'利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['行政区','土地用途','成交价（万元）']
+    # Once there are more than 2 empties in these 3 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
@@ -118,29 +117,46 @@ def empty_value_handle_basic_info():
     empty_value handle for table 年报-企业基本信息.
     :return:
     """
-    empty_check_list = [u'纳税人资格',
-                        u'有效截止日期',
-                        u'纳税人状态',
-                        u'是否具有一般纳税人资格',
-                        u'登记注册类型',
-                        u'出口状态备案状态']
-    dcu.drop_rows_too_many_empty(u'一般纳税人.xlsx', columns=empty_check_list, thresh=4)
+    empty_check_list = [u'行政区',
+                        u'土地用途',
+                        u'成交价（万元）']
+    dcu.drop_rows_too_many_empty(u'一般纳税人.xlsx', columns=empty_check_list, thresh=2)
     # panaly.list_category_columns_values([u'一般纳税人'], u'一般纳税人_empty_handled',
     #                                     file_url=clean_data_temp_file_url)
     return
 
 
+def time_rearranged():
+    file_name = u'购地-地块公示_test'
+
+    wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
+                             sheet_name='Sheet')
+    wr1 = wr1.fillna({u'时间'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
+
+    # wr2 = wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = True ) # 使用split删除部分时间的精确时间
+    wr2 = pd.merge(wr1, pd.DataFrame(wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = True )),
+                   how='left', left_index= True , right_index = True)
+    wr3 = wr2.rename(columns={u'时间'.encode('utf-8'): 'time', '0': u'时间'.encode('utf-8')}, inplace=True)
+    wr4 = wr3.rename(column = {'0': u'时间'.encode('utf-8')})
+    fu.write_file(wr4, clean_data_temp_file_url, u'购地-地块公示_test', ext='.xlsx',
+                  sheet_name='Sheet', index=False)
+
+    dcu.drop_columns(file_name, 'time')
+    dcu.drop_columns(file_name, '1')
+
+    return
 
 
 
 def clean_announcement_of_land():
     file_name = u'购地-地块公示_test'
-    dcu.drop_columns(file_name,u'行政区'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'行政区'.encode('utf-8'))
 
     wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
                              sheet_name='Sheet')
-    wr1 = wr1.fillna({u'纳税人资格'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
-    wr2 = wr1([u'时间'.encode('utf-8')].str.split('',n = 1, expand = False )) # 使用split删除部分时间的精确时间
+    wr1 = wr1.fillna({u'纳税人资格': 'unknown'})  # 对空值进行处理以进行索引
+
+    wr2 = wr1[u'时间'.encode('utf-8')].str.split(' ',n = 1, expand = False ) # 使用split删除部分时间的精确时间
     fu.write_file(wr2, clean_data_temp_file_url, u'购地-地块公示_test', ext='.xlsx',
                   sheet_name='Sheet', index=False)
 
