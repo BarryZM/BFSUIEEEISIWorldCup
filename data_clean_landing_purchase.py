@@ -248,14 +248,13 @@ def data_clean_landing_purchase_fdcdqygdqk():
 
     data_clean_landing_purchase.land_usage(u'购地-房地产大企业购地情况', u'土地用途')
 
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'供地总面积（公顷）', [], [])
+    dcu.merge_status(u'购地-房地产大企业购地情况', u'供地总面积（公顷）', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])
     dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535')
     dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
     dcu.merge_status(u'购地-房地产大企业购地情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
-
     return
 
 
@@ -304,27 +303,125 @@ def data_clean_landing_purchase_fdcddkcrqk():
         99% null, turn null into 'Unknown'
         -----------------------------
         """
-    dcu.drop_columns(u'购地-房地产大地块出让情况', u'行政区')
-    # 日期：需要去掉小数部分
+    # 签订日期：需要去掉小数部分
 
     data_clean_landing_purchase.land_usage(u'购地-房地产大地块出让情况', u'土地用途')
 
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
-
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'约定动工时间',[],[])
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'容积率下限', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'容积率上限', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'成交价款（万元）', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'约定竣工时间', [], [])
+    dcu.merge_status(u'购地-房地产大地块出让情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
     return
 
-data_clean_landing_purchase.land_usage(u'购地-房地产大地块出让情况',u'土地用途')
+def data_clean_landing_purchase_jggg():
+    """
+                Dirty value handle for table 购地-结果公告.xlsx.
+        First we'll drop rows that empty value is too many.
+        ['总面积','土地用途','供应方式','签订日期','土地来源','土地使用年限','行业分类','土地级别','成交价格（万元）',
+        '约定容积率上限','约定容积率下限','约定交地时间','约定开工时间','约定竣工时间','实际开工时间','实际竣工时间','批准单位']
+
+        -----------------------------
+        总面积
+        ------
+        turn null into 'Unknown'
+        -----------------------------
+        土地用途
+        ------
+        turn into several integers
+        -----------------------------
+        供应方式
+        ------
+        97% null,  turn null into 'Unknown',turn into several integers
+        -----------------------------
+        签订日期
+        ------
+        turn into integers
+        -----------------------------
+        土地来源
+        ------
+        99% null,drop
+        -----------------------------
+        土地使用年限
+        ------
+        96% null, turn null into 'Unknown', clean wrong numbers
+        -----------------------------
+        行业分类
+        ------
+        99% null, drop
+        -----------------------------
+        土地级别
+        ------
+        the smaller the number, the more expensive the land, 96% null
+        -----------------------------
+        成交价格（万元）
+        ------
+        86% null, turn null into 'Unknown'
+
+        -----------------------------
+        约定容积率上限
+        ------
+        99% null, turn null into 'Unknown'
+        -----------------------------
+        约定容积率下限
+        ------
+        99% null, turn null into 'Unknown'
+        -----------------------------
+        约定交地时间
+        ------
+        99% null, turn into integers
+        -----------------------------
+        约定开工时间
+        ------
+        97% null, turn into integers
+        -----------------------------
+        约定竣工时间
+        ------
+        99% null, turn into integers
+        -----------------------------
+        实际开工时间
+        ------
+        100% null, drop
+        -----------------------------
+        实际竣工时间
+        ------
+        100% null, drop
+        -----------------------------
+        批准单位
+        ------
+        99% null, drop
+        -----------------------------
+        """
+    dcu.drop_columns(u'购地-结果公告', u'土地来源')
+    dcu.drop_columns(u'购地-结果公告', u'土地使用年限')
+    dcu.drop_columns(u'购地-结果公告', u'行业分类')
+    dcu.drop_columns(u'购地-结果公告', u'土地级别')
+    dcu.drop_columns(u'购地-结果公告', u'实际开工时间')
+    dcu.drop_columns(u'购地-结果公告', u'实际竣工时间')
+    dcu.drop_columns(u'购地-结果公告', u'批准单位')
+
+    # 签订日期：需要去掉小数部分
+
+    data_clean_landing_purchase.land_usage(u'购地-结果公告', u'土地用途')
+
+    dcu.merge_status(u'购地-结果公告', u'总面积', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-结果公告', u'成交价格（万元）', [], [], empty_mask='-65535')
+    dcu.merge_status(u'购地-结果公告', u'约定容积率上限', [], [],empty_mask='-65535')
+    dcu.merge_status(u'购地-结果公告', u'约定容积率下限', [], [],empty_mask='-65535')
+
+    dcu.merge_status(u'购地-结果公告', u'约定交地时间', [], [])
+    dcu.merge_status(u'购地-结果公告', u'约定开工时间', [], [])
+    dcu.merge_status(u'购地-结果公告', u'约定竣工时间', [], [])
+    dcu.merge_status(u'购地-结果公告', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
+    return
+
+# data_clean_landing_purchase.data_clean_landing_purchase_fdcddkcrqk()
 
 
     # dcu.drop_columns(file_name, u'出让年限'.encode('utf-8'))
-    #
-    # return
+
 
 
 
