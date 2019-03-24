@@ -93,7 +93,7 @@ def drop_columns(file_name, columns, file_url=clean_data_temp_file_url, dst_file
     return
 
 
-def merge_status(file_name, column_name, status, status_names, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def merge_status(file_name, column_name, status, status_names, others='', empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
 
     :type status_names: list
@@ -104,13 +104,18 @@ def merge_status(file_name, column_name, status, status_names, empty_mask='Unkno
         content = data_frame.at[index, column_name]
         if pandas.isnull(content):
             data_frame.set_value(index, column_name, empty_mask)
+        is_categorized = False
         for j in range(0, len(status)):
             if content in status[j]:
                 data_frame.set_value(index, column_name, status_names[j])
+                is_categorized = True
+        if (not is_categorized) and (not others == ''):
+            data_frame.set_value(index, column_name, others)
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
     return
+
 
 # 把万，亿，万亿结尾的金额改为数字
 def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
@@ -193,6 +198,25 @@ def drop_invalid_data(file_name, column_name, operator, thresh_value, file_url=c
 
         if not isvalid:
             data_frame = data_frame.drop(index=index)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
+def drop_prefix_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type unit_strs: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        for j in range(0, len(unit_strs)):
+            if str(content).startswith(unit_strs[j]):
+                data_frame.set_value(index, column_name, str(content).replace(unit_strs[j], ''))
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
                           sheet_name='Sheet', index=False)
