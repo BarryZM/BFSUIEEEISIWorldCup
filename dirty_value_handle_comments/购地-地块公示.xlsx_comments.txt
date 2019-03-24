@@ -1,7 +1,7 @@
     Dirty value handle for table 购地-地块公示.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['行政区',' 土地用途','成交价（万元）']
+    # Once there are more than 2 empties in these 3 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
@@ -10,33 +10,51 @@
     -----------------------------
     行政区
     ------
-
+    Empty percentage is 0.2%(37 out of 18192).
+    Empty values can be considered to 'Unknown'.
+    As the values have many different types and and disturb us a lot. We decide to drop this column.
     -----------------------------
     时间
     ------
-
+    Empty percentage is 0%(0 out of 18192).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    However, some time data has the exact time value that are not needed. So we just delete the exact time.
     -----------------------------
     公示日期
     ------
-
+    Empty percentage is 75.3%(13694 out of 18192).
+    Empty values can be considered to 'Unknown'.
+    We consider each part as an independent status. and all values with number are showed by correct format of time. So
+    we can not change them anymore
     -----------------------------
     土地用途
     ------
-
+    Empty percentage is 3%(6 out of 18192).
+    Empty values can be considered to 'Unknown'.
+    62 status in this value has, but some of them are the code of the status, and some values is the small type of the
+    huge status. So we conclude them by using '土地分类代码表'. So we can map them in to 13 status:
+    {'商服用地':5,'工矿仓储用地':6,'住宅用地':7,'公共管理与公共服务用地':8,'特殊用地':9,'交通运输用地':10,'水域及水利设施用地':11,'其它土地':12,'Unknown':-1}
     -----------------------------
     土地面积（公顷）
     ------
-
+    Empty percentage is 0%(0 out of 18192).
+    We consider each part as an independent status. and all of the values are showed by correct format, so we can use them directly.
     -----------------------------
     出让年限
     ------
-
+    Empty percentage is 80.0%(14556 out of 18192).
+    Empty values can be considered to 'Unknown'.
+    As it have many empty values and the values exist have complicated format, so we choose to drop them.
     -----------------------------
     成交价（万元）
     ------
-
+    Empty percentage is 76.1%(13840 out of 18192).
+    Empty values can be considered to 'Unknown'.
+    The existing values have the correct format of pure number, however, some values shows that the purchase price is 0.
+    It's useless to use 0 to analyze the value of the company. so we conclude the value = 0 as 'Error'
     -----------------------------
     土地使用条件
     ------
-
+    Empty percentage is 90.1%(16400 out of 18192).
+    As it have many empty values and the values exist have complicated format, so we choose to drop them.
     -----------------------------
