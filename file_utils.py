@@ -11,6 +11,7 @@ import pandas
 
 
 def read_file_to_df(file_dir, file_name, ext='.xlsx', sheet_name='Sheet'):
+    # type: (object, object, object, object) -> object
     """
     read file from the file_dir, currently we read excel. Once the data type changed, we are convenient to change here.
     :param file_dir:

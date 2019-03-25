@@ -1,82 +1,138 @@
-    Dirty value handle for table 工商基本信息表.xlsx.
+ Dirty value handle for table 工商基本信息表.xlsx.
     First we'll drop rows that empty value is too many.
-    # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
-    # Once there are more than 3 empties in these 8 columns we will drop that row.
+    # ['发照日期','员工人数','地区代码','城市代码', '成立日期','是否上市',' 注册资本币种(正则)','注册资本（万元）','登记机关区域代码','省份代码',
+    '类型','经营期限自','经营期限至','经营状态','行业大类（代码）','行业小类（代码）']
+    # Once there are more than 1 empties in these 16 columns we will drop that row.
     Then we check nulls column by column and decide how to process with it.
     Next we should numeric all the value for future process.
     After these are done, it's time to work out features we can use in this table which belongs
-        to exploratory data analysis. 
+        to exploratory data analysis.
 
     -----------------------------
     注册资本（万元）
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    All the information is good as there is no empty value here and all the values here are above 0 and with just numbers
+    in it. So we can use it without any change.
     -----------------------------
     注册资本币种(正则)
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    2 status can be concluded in this part, they are [‘人民币’,‘美元’,'-']
+    480 values are '-', and the '-' can be considered as 'unknown'. As it didn't account for a large scale, we can drop the unknown value.
+    So we can map these total 2 status : {'人民币':0,'美元':1}.
     -----------------------------
     成立日期
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    All the information is good as there is no empty value here and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     经营状态
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    7 status this value has, they are ['在业','在营','存续','存续(在营、开业、在册)','存续(在营、开业、在册)','开业','迁出'].
+    Cause there is no empty values here so we will not add another type about empty.
+    According to the classification from the accounting, we can conclude ['在营','存续','存续(在营、开业、在册)','存续(在营、开业、在册)','开业']
+    as one group of '存续', so we can map these total 7 status to 3: {'存续':0,'在业':1,'迁出':2}.
+    -----------------------------
     -----------------------------
     行业大类（代码）
     ------
-
+    Empty percentage is 0.03%(1 out of 3000).
+    18 status this value has, they are ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R']
+    Empty values can be concluded to 'Unknown'
+    So we can map it with 19 status:
+    {'A':0,'B':1,'C':2,'D':3,'E':4,'F':5,'G':6,'H':7,'I':8,'J':9,'K':10,'L':11,'M':12,'N':13,'O':14,'P':15,'Q':16,'R':17, 'Unknown':-1}.
     -----------------------------
     行业小类（代码）
     ------
-
+    Empty percentage is 0.03%(1 out of 3000).
+    82 status are in this column and most of the values are showed by the pure number. However, we can still find that
+    there are two values aren't showed by the pure number. So we need to drop the character and change them to pure number
+    Empty values can be concluded to 'Unknown'
+    So we can finally map it with 80 status:
     -----------------------------
     类型
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    2 status can be concluded in this part, they are [‘外企’，‘民营’]
+    All the information is good as there is no empty value here.  So we can map these total 2 status :
+    {'外企':0,'民营':1}.
     -----------------------------
     省份代码
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    32 status can be concluded in this part. and all of the values are showed by the pure number
+    All the information is good as there is no empty value here and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     城市代码
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    252 status can be concluded in this part. and all of the values are showed by the pure number
+    All the information is good as there is no empty value here and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     地区代码
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    425 status can be concluded in this part. and all of the values are showed by the pure number
+    All the information is good as there is no empty value here and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     是否上市
     ------
-
+    Empty percentage is 0%(0 out of 3000).
+    2 status can be concluded in this part, they are [‘N’，‘Y’]
+    All the information is good as there is no empty value here.  So we can map these total 2 status : {'N':0,'Y':1}.
     -----------------------------
     经营期限自
     ------
-
+    Empty percentage is 0.43%(13 out of 3000).  Empty values can be concluded to 'Unknown'
+    Now all the information is good as there is no empty value here and there isn't any values that break the logic. So we
+    can use it.
     -----------------------------
     经营期限至
     ------
-
+    Empty percentage is 82.63%(2479 out of 3000).
+    We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'.
     -----------------------------
     登记机关区域代码
     ------
-
+    Empty percentage is 0.27%(8 out of 3000).
+    Empty values can be concluded to 'Unknown'
+    Now 276 status can be concluded in this part. and all of the values are showed by the pure number
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     发照日期
     ------
-
+    Empty percentage is 0.7%(21 out of 3000).
+    Empty values can be concluded to 'Unknown'
+    Now we consider each part as an independent status. and all of the values are showed by correct format of time.
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     员工人数
     ------
-
+    Empty percentage is 0.47%(14 out of 3000).
+    Empty values can be concluded to 'Unknown'
+    Now we consider each part as an independent status. and all of the values are showed by pure number.
+    All the information is good as there is no empty value here now and there isn't any values that break the logic. So we
+    can use it without any change.
     -----------------------------
     注销原因
     ------
-
+    Empty percentage is 92.43%(2773 out of 3000).
+    5 status can be concluded in this part, they are [‘其他原因’，‘决议解散’,'因公司合并或分立','宣告破产','章程规定的解散事由出现']
+    As this column is important for the value of a company. So we just add another status for the empty value:'Unknown'.
+    So we can map these total 6 status : {‘其他原因’:0，‘决议解散’:1,'因公司合并或分立':2,'宣告破产':3,'章程规定的解散事由出现':4,'Unknown':-1}.
     -----------------------------
     注销时间
     ------
-
+    Empty percentage is 99.97%(2999 out of 3000).
+    We consider each part as an independent status. and all of the values are showed by correct format of time.
+    As this column is important for the value of a company. So we just add another status for the empty value:'Unknown'.
     -----------------------------
+"""

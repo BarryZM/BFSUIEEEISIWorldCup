@@ -220,60 +220,18 @@ def clean_basic_info():
     status_after = [u'存续']  # 改成这个
     dcu.merge_status(u'工商基本信息表', u'经营状态'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'行业大类（代码）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
+    dcu.drop_prefix_unit(u'工商基本信息表', u'行业小类（代码）'.encode('utf-8'), 'C')
+    dcu.drop_prefix_unit(u'工商基本信息表', u'行业小类（代码）'.encode('utf-8'), 'J')
 
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'行业小类（代码）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
-
-    dcu.drop_prefix(u'工商基本信息表', u'行业小类（代码）'.encode('utf-8'), 'C')
-    dcu.drop_prefix(u'工商基本信息表', u'行业小类（代码）'.encode('utf-8'), 'J')
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'经营期限自'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'经营期限至'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'登记机关区域代码'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'发照日期'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'员工人数'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'注销原因'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'工商基本信息表', u'注销时间'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'工商基本信息表', u'行业大类（代码）'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表',  u'行业小类（代码）'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'经营期限自'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'经营期限至'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'登记机关区域代码'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'发照日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'员工人数'.encode('utf-8'), [], [], empty_mask='-65535')
+    dcu.merge_status(u'工商基本信息表', u'注销原因'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'工商基本信息表', u'注销时间'.encode('utf-8'), [], [], empty_mask='Unknown')
 
 
 """
@@ -345,11 +303,7 @@ def empty_value_handle_custom_credit():
 
 
 def clean_custom_credit():
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'海关进出口信用', u'经济区划'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
-
+    dcu.merge_status(u'海关进出口信用', u'经济区划'.encode('utf-8'), [], [], empty_mask='Unknown')
     # wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'海关进出口信用.xlsx',
     #                          sheet_name='sheet')
     # wr1.fillna({u'经营类别': 'unknown'})  # 对空值进行处理以进行索引
@@ -362,11 +316,14 @@ def clean_custom_credit():
     status_after = [u'进出口收发货人']  # 改成这个
     dcu.merge_status(u'海关进出口信用', u'经营类别'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
-    status_normal = [u'']  # 搜索满足这个条件的
+    status_normal = [u'1']  # 搜索满足这个条件的
     status_list = [status_normal]
     status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'海关进出口信用', u'海关注销标志'.encode('utf-8'), status_list, status_after,
-                     empty_mask='Unknown')  # 空值改为Unknown
+    dcu.merge_status(u'海关进出口信用', u'信用等级'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
+
+    dcu.merge_status(u'海关进出口信用', u'经济区划'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'海关进出口信用', u'海关注销标志'.encode('utf-8'), [], [], empty_mask='Unknown')
+
 
     # wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'海关进出口信用.xlsx',
     #                          sheet_name='sheet')
@@ -374,10 +331,6 @@ def clean_custom_credit():
     # fu.write_file(wr1, clean_data_temp_file_url, u'海关进出口信用', ext='.xlsx',
     #               sheet_name='Sheet', index=False)
 
-    status_normal = [u'1']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'海关进出口信用', u'信用等级'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
     return
 
@@ -448,10 +401,8 @@ def empty_value_handle_tenders():
 
 
 def clean_tender():
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'招投标', u'公告类型'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'招投标', u'公告类型'.encode('utf-8'), [], [], empty_mask='Unknown')
+
 
     status_normal = [u'兵团']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -592,22 +543,11 @@ def clean_tender():
 
 
 def clean_bond():
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'债券信息', u'债券信用评级'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
+    dcu.merge_status(u'债券信息', u'债券信用评级'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'债券信息', u'付息日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(u'债券信息', u'兑付日期'.encode('utf-8'), [], [], empty_mask='Unknown')
 
     dcu.drop_unit(u'债券信息', u'债券期限'.encode('utf-8'), [u'年'], empty_mask='Unknown')
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'债券信息', u'付息日期'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
-
-    status_normal = [u'']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
-    dcu.merge_status(u'债券信息', u'兑付日期'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')
 
     wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'债券信息.xlsx',
                              sheet_name='Sheet')
