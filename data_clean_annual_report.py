@@ -894,3 +894,13 @@ def work_():
     empty_value_handle_share_holder_info()
     print('empty_value_handle_share_holder_info() done!')
     return
+
+
+def primary_analysis_after_empty_handled():
+    """
+    primary analysis after empty data handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_annual_report_files, u'年报类_empty_handled',
+                                        file_url=clean_data_temp_file_url)
+    return
