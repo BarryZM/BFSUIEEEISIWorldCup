@@ -145,3 +145,14 @@ def empty_value_handle_trademark():
     status_after = [u'1000-01-01至1000-01-01']
 
     dcu.merge_status(u'商标', u'商标使用期限时间段'.encode('utf-8'), status_list, status_after)
+    return
+
+
+def primary_analysis_after_empty_handled():
+    """
+    primary analysis after empty data handled
+    :return:
+    """
+    panaly.list_category_columns_values(category_soft_assets_files, u'软资产类_empty_handled',
+                                        file_url=clean_data_temp_file_url)
+    return
