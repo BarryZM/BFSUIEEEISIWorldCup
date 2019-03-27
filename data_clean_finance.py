@@ -19,7 +19,7 @@ import primary_analysis as panaly
 from files_category_info import category_finance_files
 from file_directions import clean_data_temp_file_url
 import file_utils
-
+import pandas
 
 def raw_files_primary_analysis():
     """
@@ -43,6 +43,10 @@ def primary_analysis_after_duplicate_handled():
                                         file_url=clean_data_temp_file_url)
     return
 
+
+import dcu
+reload(dcu)
+dcu.adjust_time('temp','a')
 
 def data_clean_finance_mgzb():
     """
@@ -99,6 +103,7 @@ def data_clean_finance_mgzb():
         -----------------------------
     """
     dcu.drop_columns(u'上市公司财务信息-每股指标', u'标题')
+    dcu.adjust_time(u'上市公司财务信息-每股指标', u'日期')
 
     # dcu.drop_columns(u'temp', u'c')
     # dcu.change_number('temp','a')
@@ -151,6 +156,7 @@ def data_clean_finance_cwfxzb():
         -----------------------------
     """
     dcu.drop_columns(u'上市信息财务信息-财务风险指标', u'标题')
+    dcu.adjust_time(u'上市信息财务信息-财务风险指标', u'日期')
 
     status_normal = [u'--', u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -271,6 +277,7 @@ def data_clean_finance_cznlzb():
     dcu.change_number(u'temp',u'a',empty_mask='Unknown')
     """
     dcu.drop_columns(u'上市信息财务信息-成长能力指标', u'标题')
+    dcu.adjust_time(u'上市信息财务信息-成长能力指标', u'日期')
 
     status_normal = [u'--', u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -445,6 +452,7 @@ def data_clean_finance_lrb():
     -----------------------------
     """
     dcu.drop_columns(u'上市信息财务信息-利润表', u'标题')
+    dcu.adjust_time(u'上市信息财务信息-利润表', u'日期')
 
     status_normal = [u'--', u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
