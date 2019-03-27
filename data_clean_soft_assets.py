@@ -148,6 +148,34 @@ def empty_value_handle_trademark():
     return
 
 
+def empty_value_handle_copyright():
+    """
+    Dirty value handle for table 软著著作权.xlsx.
+    Next we should numeric all the value for future process.
+    After these are done, it's time to work out features we can use in this table which belongs
+        to exploratory data analysis.
+
+    -----------------------------
+    软件全称
+    ------
+    Nothing to do with it.
+
+    -----------------------------
+    软件著作权版本号
+    ------
+    Nothing to do with it.
+
+    -----------------------------
+    软件著作权登记批准日期
+    ------
+    Make time well formatted.
+
+    -----------------------------
+    :return:
+    """
+    dcu.time_unicode_format(u'软著著作权', u'软件著作权登记批准日期'.encode('utf-8'))
+
+
 def primary_analysis_after_empty_handled():
     """
     primary analysis after empty data handled

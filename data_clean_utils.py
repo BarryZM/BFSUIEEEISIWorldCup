@@ -61,6 +61,51 @@ def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=cle
 
     return
 
+def merge_rows_by_columns(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+    merge a table's rows with the same unique keys.
+    :param file_name:
+    :param keys:
+    :param file_url:
+    :param dst_file_url: which file folder should store the result
+    :return:
+    """
+    origin_df = file_utils.read_file_to_df(file_url, file_name)
+    data_frame = origin_df
+    data_frames = [data_frame]
+
+    str_keys = []
+    for index in range(1, len(origin_df)):
+        anchor_row = origin_df[index - 1:index]
+
+        temp_df = origin_df[index:]
+        for key in keys:
+            if index == 1:
+                str_keys.append(key.encode('utf-8'))
+            temp_df = temp_df.loc[temp_df[key.encode('utf-8')] == anchor_row.loc[index-1, key.encode('utf-8')]]
+
+        duplicated_num = len(temp_df)
+        for j in range(0, duplicated_num):
+            data_frames[0] = data_frames[0].drop(index=index)
+
+        for frame_nums in range(1, duplicated_num + 1):
+            if len(data_frames) > frame_nums:
+                data_frames[frame_nums] = data_frames[frame_nums].append(temp_df[frame_nums - 1: frame_nums])
+            else:
+                new_df = temp_df[frame_nums - 1: frame_nums]
+                data_frames.append(new_df)
+
+        index += duplicated_num
+
+    data_frame = data_frames[0]
+    for df in data_frames:
+        data_frame = pandas.merge(data_frame, df, how='left', on=origin_df.columns.tolist())
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+
+    return
+
 
 def drop_rows_too_many_empty(file_name, columns, thresh=2, file_url=clean_data_temp_file_url,
                              dst_file_url=clean_data_temp_file_url):
@@ -358,6 +403,21 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
             content = str(content).replace(u'至', '~').replace('-', '/')
         content = str(content).replace('/0', '/')
 
+        data_frame.set_value(index, column_name, content)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+
+
+def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, '-')
+            continue
+        if u'年' in content:
+            content = str(content).replace(u'年', '-').replace(u'月', '-').replace(u'日', '')
         data_frame.set_value(index, column_name, content)
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
