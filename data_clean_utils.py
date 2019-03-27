@@ -372,7 +372,7 @@ def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_ur
             data_frame.set_value(index, column_name, '-')
             continue
         if u'年' in content:
-            content = str(content).replace(u'年', '/').replace(u'月', '/').replace(u'日', '')
+            content = str(content).replace(u'年', '-').replace(u'月', '-').replace(u'日', '')
         data_frame.set_value(index, column_name, content)
 
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
