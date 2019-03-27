@@ -364,6 +364,21 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
                           sheet_name='Sheet', index=False)
 
 
+def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content) or pandas.isna(content):
+            data_frame.set_value(index, column_name, '-')
+            continue
+        if u'年' in content:
+            content = str(content).replace(u'年', '/').replace(u'月', '/').replace(u'日', '')
+        data_frame.set_value(index, column_name, content)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+
+
 def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
 
     data_frame = file_utils.read_file_to_df(file_url, file_name)
