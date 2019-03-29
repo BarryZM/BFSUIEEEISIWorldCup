@@ -76,7 +76,7 @@ def generate_index_basic_info(corporate_start, corporate_end):
                               u'是否有网站或网点'.encode('utf-8'),
                               u'有限责任公司本年度是否发生股东股权转'.encode('utf-8')]
             inline_map = {'Yes': 0, 'No': 1, 'Unknown': -1, u'正常经营': 0, u'非正常经营': 1}
-            row_list += edu.category_num_counts(df_temp, inline_columns, inline_map)
+            row_list += edu.category_mapping(df_temp, inline_columns, inline_map)
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
@@ -161,7 +161,7 @@ def generate_index_assets_info(corporate_start, corporate_end):
                               u'负债总额'.encode('utf-8'),
                               u'资产总额'.encode('utf-8')]
             inline_map = {u'企业选择不公示': 1}
-            row_list += edu.category_num_counts(df_temp, inline_columns, inline_map, unknown=1, others=0)
+            row_list += edu.category_mapping(df_temp, inline_columns, inline_map, unknown=1, others=0)
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
@@ -171,5 +171,88 @@ def generate_index_assets_info(corporate_start, corporate_end):
 
 
 def generate_index_assets_info_work():
+    generate_index_assets_info(1001, 4000)
+    return
+
+
+def generate_index_out_invest_info(corporate_start, corporate_end):
+    """
+    ***年报-对外投资信息***
+
+    指标1：投资笔数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标1.1：总投资笔数，共1个，int
+    指标2：最大投资占比，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标2.1：超过50%投资占比，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标3：投资金额总数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标4：最大笔投资金额，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+
+    共计26个指标
+    :param corporate_start:
+    :param corporate_end:
+    :return:
+    """
+    columns = ['is_pub_main_in_2014',
+               'is_pub_main_in_2015',
+               'is_pub_main_in_2016',
+               'is_pub_main_in_2017',
+               'is_pub_net_in_2014',
+               'is_pub_net_in_2015',
+               'is_pub_net_in_2016',
+               'is_pub_net_in_2017',
+               'is_pub_total_in_2014',
+               'is_pub_total_in_2015',
+               'is_pub_total_in_2016',
+               'is_pub_total_in_2017',
+               'is_pub_holder_in_2014',
+               'is_pub_holder_in_2015',
+               'is_pub_holder_in_2016',
+               'is_pub_holder_in_2017',
+               'is_pub_tax_2014',
+               'is_pub_tax_2015',
+               'is_pub_tax_2016',
+               'is_pub_tax_2017',
+               'is_pub_total_in_2014',
+               'is_pub_total_in_2015',
+               'is_pub_total_in_2016',
+               'is_pub_total_in_2017',
+               'is_pub_debt_2014',
+               'is_pub_debt_2015',
+               'is_pub_debt_2016',
+               'is_pub_debt_2017',
+               'is_pub_asset_2014',
+               'is_pub_asset_2015',
+               'is_pub_asset_2016',
+               'is_pub_asset_2017'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-企业资产状况信息')
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        for year in range(2014, 2018):
+            df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
+                data_frame[u'年报年份'.encode('utf-8')] == year]
+
+            inline_columns = [u'主营业务收入'.encode('utf-8'),
+                              u'净利润'.encode('utf-8'),
+                              u'利润总额'.encode('utf-8'),
+                              u'所有者权益合计'.encode('utf-8'),
+                              u'纳税总额'.encode('utf-8'),
+                              u'营业总收入'.encode('utf-8'),
+                              u'负债总额'.encode('utf-8'),
+                              u'资产总额'.encode('utf-8')]
+            inline_map = {u'企业选择不公示': 1}
+            row_list += edu.category_mapping(df_temp, inline_columns, inline_map, unknown=1, others=0)
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-企业资产状况信息_index', index=True)
+    return
+
+
+def generate_index_out_invest_info_work():
     generate_index_assets_info(1001, 4000)
     return

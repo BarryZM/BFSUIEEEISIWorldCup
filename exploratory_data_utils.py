@@ -9,9 +9,9 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def category_num_counts(df_temp, columns, map, unknown=-1, others=-1):
+def category_mapping(df_temp, columns, map, unknown=-1, others=-1):
     """
-
+    map categories into numbers
     :type map: dict
     """
     row_list = []
