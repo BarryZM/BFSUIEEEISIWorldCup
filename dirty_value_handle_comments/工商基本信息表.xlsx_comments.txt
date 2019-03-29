@@ -34,7 +34,7 @@
     7 status this value has, they are ['在业','在营','存续','存续(在营、开业、在册)','存续(在营、开业、在册)','开业','迁出'].
     Cause there is no empty values here so we will not add another type about empty.
     According to the classification from the accounting, we can conclude ['在营','存续','存续(在营、开业、在册)','存续(在营、开业、在册)','开业']
-    as one group of '存续', so we can map these total 7 status to 3: {'存续':0,'在业':1,'迁出':2}.
+    as one group of '存续', so we can map these total 7 status to 3: {'存续':1,'在业':2,'迁出':3}.
     -----------------------------
     -----------------------------
     行业大类（代码）
@@ -58,7 +58,7 @@
     Empty percentage is 0%(0 out of 3000).
     2 status can be concluded in this part, they are [‘外企’，‘民营’]
     All the information is good as there is no empty value here.  So we can map these total 2 status :
-    {'外企':0,'民营':1}.
+    {'外企':1,'民营':2}.
     -----------------------------
     省份代码
     ------

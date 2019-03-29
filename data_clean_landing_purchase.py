@@ -308,8 +308,7 @@ def clean_gdscjytddy():
     land_usage(file_name, u'土地用途')
     land_usage(file_name, u'抵押土地用途')
 
-    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', u'国有', empty_mask='Unknown', others_mask='Others')
-    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', u'集体', empty_mask='Unknown', others_mask='Others')
+    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', [u'国有', u'集体'], empty_mask='Unknown', others_mask='Others')
 
     return
 
