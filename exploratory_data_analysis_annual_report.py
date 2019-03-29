@@ -16,6 +16,7 @@ import file_utils as fu
 from file_directions import clean_data_temp_file_url, corporation_index_file_url
 import pandas as pd
 import exploratory_data_utils as edu
+import data_clean_utils as dcu
 
 
 def generate_index_basic_info(corporate_start, corporate_end):
@@ -37,24 +38,24 @@ def generate_index_basic_info(corporate_start, corporate_end):
     :return:
     """
     columns = ['is_inv_or_buy_share_2014',
-               'is_inv_or_buy_share_2015',
-               'is_inv_or_buy_share_2016',
-               'is_inv_or_buy_share_2017',
                'man_form_2014',
-               'man_form_2015',
-               'man_form_2016',
-               'man_form_2017',
                'is_out_ensure_2014',
-               'is_out_ensure_2015',
-               'is_out_ensure_2016',
-               'is_out_ensure_2017',
                'is_website_2014',
-               'is_website_2015',
-               'is_website_2016',
-               'is_website_2017',
                'is_share_changed_2014',
+               'is_inv_or_buy_share_2015',
+               'man_form_2015',
+               'is_out_ensure_2015',
+               'is_website_2015',
                'is_share_changed_2015',
+               'is_inv_or_buy_share_2016',
+               'man_form_2016',
+               'is_out_ensure_2016',
+               'is_website_2016',
                'is_share_changed_2016',
+               'is_inv_or_buy_share_2017',
+               'man_form_2017',
+               'is_out_ensure_2017',
+               'is_website_2017',
                'is_share_changed_2017'
                ]
     dis_df = pd.DataFrame(columns=columns)
@@ -109,36 +110,36 @@ def generate_index_assets_info(corporate_start, corporate_end):
     :return:
     """
     columns = ['is_pub_main_in_2014',
-               'is_pub_main_in_2015',
-               'is_pub_main_in_2016',
-               'is_pub_main_in_2017',
                'is_pub_net_in_2014',
-               'is_pub_net_in_2015',
-               'is_pub_net_in_2016',
-               'is_pub_net_in_2017',
                'is_pub_total_in_2014',
-               'is_pub_total_in_2015',
-               'is_pub_total_in_2016',
-               'is_pub_total_in_2017',
                'is_pub_holder_in_2014',
-               'is_pub_holder_in_2015',
-               'is_pub_holder_in_2016',
-               'is_pub_holder_in_2017',
                'is_pub_tax_2014',
-               'is_pub_tax_2015',
-               'is_pub_tax_2016',
-               'is_pub_tax_2017',
                'is_pub_total_in_2014',
-               'is_pub_total_in_2015',
-               'is_pub_total_in_2016',
-               'is_pub_total_in_2017',
                'is_pub_debt_2014',
-               'is_pub_debt_2015',
-               'is_pub_debt_2016',
-               'is_pub_debt_2017',
                'is_pub_asset_2014',
+               'is_pub_main_in_2015',
+               'is_pub_net_in_2015',
+               'is_pub_total_in_2015',
+               'is_pub_holder_in_2015',
+               'is_pub_tax_2015',
+               'is_pub_total_in_2015',
+               'is_pub_debt_2015',
                'is_pub_asset_2015',
+               'is_pub_main_in_2016',
+               'is_pub_net_in_2016',
+               'is_pub_total_in_2016',
+               'is_pub_holder_in_2016',
+               'is_pub_tax_2016',
+               'is_pub_total_in_2016',
+               'is_pub_debt_2016',
                'is_pub_asset_2016',
+               'is_pub_main_in_2017',
+               'is_pub_net_in_2017',
+               'is_pub_total_in_2017',
+               'is_pub_holder_in_2017',
+               'is_pub_tax_2017',
+               'is_pub_total_in_2017',
+               'is_pub_debt_2017',
                'is_pub_asset_2017'
                ]
     dis_df = pd.DataFrame(columns=columns)
@@ -196,33 +197,33 @@ def generate_index_out_invest_info(corporate_start, corporate_end):
     :return:
     """
     columns = ['inv_count_2013',
+               'max_inv_ratio_2013',
+               'inv_over_50_count_2013',
+               'inv_amount_2013',
+               'max_inv_amount_2013',
                'inv_count_2014',
+               'max_inv_ratio_2014',
+               'inv_over_50_count_2014',
+               'inv_amount_2014',
+               'max_inv_amount_2014',
                'inv_count_2015',
+               'max_inv_ratio_2015',
+               'inv_over_50_count_2015',
+               'inv_amount_2015',
+               'max_inv_amount_2015',
                'inv_count_2016',
+               'max_inv_ratio_2016',
+               'inv_over_50_count_2016',
+               'inv_amount_2016',
+               'max_inv_amount_2016',
                'inv_count_2017',
                'inv_count_total',
-               'max_inv_ratio_2013',
-               'max_inv_ratio_2014',
-               'max_inv_ratio_2015',
-               'max_inv_ratio_2016',
                'max_inv_ratio_2017',
                'max_inv_ratio_total',
-               'inv_over_50_count_2013',
-               'inv_over_50_count_2014',
-               'inv_over_50_count_2015',
-               'inv_over_50_count_2016',
                'inv_over_50_count_2017',
                'inv_over_50_count_total',
-               'inv_amount_2013',
-               'inv_amount_2014',
-               'inv_amount_2015',
-               'inv_amount_2016',
                'inv_amount_2017',
                'inv_amount_total',
-               'max_inv_amount_2013',
-               'max_inv_amount_2014',
-               'max_inv_amount_2015',
-               'max_inv_amount_2016',
                'max_inv_amount_2017',
                'max_inv_amount_total'
                ]
@@ -233,64 +234,67 @@ def generate_index_out_invest_info(corporate_start, corporate_end):
         row_dict = {}
         row_list = []
 
-        total_num = 0
+        total_num1 = 0
+        total_num2 = 0
+        total_num3 = 0
+        total_num4 = 0
+        total_num5 = 0
         for year in range(2013, 2018):
             df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
                 data_frame[u'年报年份'.encode('utf-8')] == year]
 
             # 投资笔数
             row_list.append(len(df_temp))
-            total_num += len(df_temp)
+            total_num1 += len(df_temp)
 
             if year == 2017:
-                row_list.append(total_num)
-                total_num = 0
+                row_list.append(total_num1)
+                total_num1 = 0
 
             # 投资占比
             y_df = df_temp.loc[df_temp[u'投资占比'.encode('utf-8')] >= 0, u'投资占比'.encode('utf-8')]
 
             # 最大投资占比
             y_max = y_df.max()
-            if y_max > total_num:
-                total_num = y_max
+            if y_max > total_num2:
+                total_num2 = y_max
             row_list.append(y_max)
             if year == 2017:
-                row_list.append(total_num)
-                total_num = 0
+                row_list.append(total_num2)
+                total_num2 = 0
 
             # 超过50%投资占比笔数
             y_df = df_temp.loc[df_temp[u'投资占比'.encode('utf-8')] > 50, u'投资占比'.encode('utf-8')]
             row_list.append(len(y_df))
-            total_num += len(df_temp)
+            total_num3 += len(df_temp)
 
             if year == 2017:
-                row_list.append(total_num)
-                total_num = 0
+                row_list.append(total_num3)
+                total_num3 = 0
 
             # 投资金额总数
             df_temp.loc['Row_sum'] = df_temp.apply(lambda x: x.sum())
             amount = df_temp.at['Row_sum', u'投资金额'.encode('utf-8')]
             row_list.append(amount)
-            total_num += amount
+            total_num4 += amount
 
             if year == 2017:
-                row_list.append(total_num)
-                total_num = 0
+                row_list.append(total_num4)
+                total_num4 = 0
 
             # 最大笔投资金额
             df_temp.loc['Row_max'] = df_temp.apply(lambda x: x.max())
             max_amount = df_temp.at['Row_max', u'投资金额'.encode('utf-8')]
             row_list.append(max_amount)
-            if max_amount > total_num:
-                total_num = max_amount
+            if max_amount > total_num5:
+                total_num5 = max_amount
 
             if year == 2017:
-                row_list.append(total_num)
-                total_num = 0
+                row_list.append(total_num5)
+                total_num5 = 0
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
-        dis_df.fillna(0)
 
     fu.write_file(dis_df, corporation_index_file_url, u'年报-对外投资信息_index', index=True)
     return
@@ -298,4 +302,114 @@ def generate_index_out_invest_info(corporate_start, corporate_end):
 
 def generate_index_out_invest_info_work():
     generate_index_out_invest_info(1001, 4000)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-对外投资信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-对外投资信息_index')
+    return
+
+
+def generate_index_out_warrant_info(corporate_start, corporate_end):
+    """
+    ***年报-的对外提供保证担保信息***
+
+    指标0：主债权笔数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标0.1：主债权笔数，总计1个，float
+    指标1：主债权总数额，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标1.1：主债权总数额，总计1个，float
+    指标2：连带保证主债权数额，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标2.1：连带保证主债权数额，总计1个，float
+
+    共计18个指标
+    :param corporate_start:
+    :param corporate_end:
+    :return:
+    """
+
+    status_period = [u'企业选择不公示']
+    status_list = [status_period]
+    status_after = [0]
+    dcu.merge_status(u'年报-的对外提供保证担保信息', u'主债权数额'.encode('utf-8'), status_list, status_after)
+
+    columns = ['pri_cred_right_count_2013',
+               'pri_cred_right_2013',
+               'gar_pri_cred_right_2013',
+               'pri_cred_right_count_2014',
+               'pri_cred_right_2014',
+               'gar_pri_cred_right_2014',
+               'pri_cred_right_count_2015',
+               'pri_cred_right_2015',
+               'gar_pri_cred_right_2015',
+               'pri_cred_right_count_2016',
+               'pri_cred_right_2016',
+               'gar_pri_cred_right_2016',
+               'pri_cred_right_count_2017',
+               'pri_cred_right_count_total',
+               'pri_cred_right_2017',
+               'pri_cred_right_total',
+               'gar_pri_cred_right_2017',
+               'gar_pri_cred_right_total'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-的对外提供保证担保信息')
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        total_num1 = 0
+        total_num2 = 0
+        total_num3 = 0
+        for year in range(2013, 2018):
+            df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
+                data_frame[u'年报年份'.encode('utf-8')] == year]
+
+            # 主债权笔数
+            row_list.append(len(df_temp))
+            total_num1 += len(df_temp)
+
+            if year == 2017:
+                row_list.append(total_num1)
+                total_num1 = 0
+
+            # 主债权总数额
+            df_temp.loc['Row_sum'] = df_temp.apply(lambda x: x.sum())
+            amount = df_temp.at['Row_sum', u'主债权数额'.encode('utf-8')]
+            if not pd.isna(amount):
+                amount = long(amount)
+            else:
+                amount = 0
+            row_list.append(amount)
+            total_num2 += amount
+
+            if year == 2017:
+                row_list.append(total_num2)
+                total_num2 = 0
+
+            # 连带保证主债权数额
+            df_temp = df_temp[df_temp[u'保证的方式'.encode('utf-8')] == u'连带保证']
+            df_temp.loc['Row_sum'] = df_temp.apply(lambda x: x.sum())
+            amount = df_temp.at['Row_sum', u'主债权数额'.encode('utf-8')]
+            if not pd.isna(amount):
+                amount = long(amount)
+            else:
+                amount = 0
+            row_list.append(amount)
+            total_num3 += amount
+
+            if year == 2017:
+                row_list.append(total_num3)
+                total_num3 = 0
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-的对外提供保证担保信息_index', index=True)
+    return
+
+
+def generate_index_out_warrant_info_work():
+    generate_index_out_warrant_info(1001, 4000)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
     return
