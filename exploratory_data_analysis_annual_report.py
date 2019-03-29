@@ -182,77 +182,120 @@ def generate_index_out_invest_info(corporate_start, corporate_end):
     指标1：投资笔数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，int
     指标1.1：总投资笔数，共1个，int
     指标2：最大投资占比，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
-    指标2.1：超过50%投资占比，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标2.1：总最大投资占比，总计1个，float
+    指标2.2：超过50%投资占比笔数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标2.3：总超过50%投资占比笔数，总计1个，int
     指标3：投资金额总数，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标3.1：总投资金额总数，总计1个，float
     指标4：最大笔投资金额，按年份：[2013, 2014, 2015, 2016, 2017]，总计5个，float
+    指标4.1：总最大笔投资金额，总计1个，float
 
-    共计26个指标
+    共计30个指标
     :param corporate_start:
     :param corporate_end:
     :return:
     """
-    columns = ['is_pub_main_in_2014',
-               'is_pub_main_in_2015',
-               'is_pub_main_in_2016',
-               'is_pub_main_in_2017',
-               'is_pub_net_in_2014',
-               'is_pub_net_in_2015',
-               'is_pub_net_in_2016',
-               'is_pub_net_in_2017',
-               'is_pub_total_in_2014',
-               'is_pub_total_in_2015',
-               'is_pub_total_in_2016',
-               'is_pub_total_in_2017',
-               'is_pub_holder_in_2014',
-               'is_pub_holder_in_2015',
-               'is_pub_holder_in_2016',
-               'is_pub_holder_in_2017',
-               'is_pub_tax_2014',
-               'is_pub_tax_2015',
-               'is_pub_tax_2016',
-               'is_pub_tax_2017',
-               'is_pub_total_in_2014',
-               'is_pub_total_in_2015',
-               'is_pub_total_in_2016',
-               'is_pub_total_in_2017',
-               'is_pub_debt_2014',
-               'is_pub_debt_2015',
-               'is_pub_debt_2016',
-               'is_pub_debt_2017',
-               'is_pub_asset_2014',
-               'is_pub_asset_2015',
-               'is_pub_asset_2016',
-               'is_pub_asset_2017'
+    columns = ['inv_count_2013',
+               'inv_count_2014',
+               'inv_count_2015',
+               'inv_count_2016',
+               'inv_count_2017',
+               'inv_count_total',
+               'max_inv_ratio_2013',
+               'max_inv_ratio_2014',
+               'max_inv_ratio_2015',
+               'max_inv_ratio_2016',
+               'max_inv_ratio_2017',
+               'max_inv_ratio_total',
+               'inv_over_50_count_2013',
+               'inv_over_50_count_2014',
+               'inv_over_50_count_2015',
+               'inv_over_50_count_2016',
+               'inv_over_50_count_2017',
+               'inv_over_50_count_total',
+               'inv_amount_2013',
+               'inv_amount_2014',
+               'inv_amount_2015',
+               'inv_amount_2016',
+               'inv_amount_2017',
+               'inv_amount_total',
+               'max_inv_amount_2013',
+               'max_inv_amount_2014',
+               'max_inv_amount_2015',
+               'max_inv_amount_2016',
+               'max_inv_amount_2017',
+               'max_inv_amount_total'
                ]
     dis_df = pd.DataFrame(columns=columns)
 
-    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-企业资产状况信息')
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-对外投资信息')
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
 
-        for year in range(2014, 2018):
+        total_num = 0
+        for year in range(2013, 2018):
             df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
                 data_frame[u'年报年份'.encode('utf-8')] == year]
 
-            inline_columns = [u'主营业务收入'.encode('utf-8'),
-                              u'净利润'.encode('utf-8'),
-                              u'利润总额'.encode('utf-8'),
-                              u'所有者权益合计'.encode('utf-8'),
-                              u'纳税总额'.encode('utf-8'),
-                              u'营业总收入'.encode('utf-8'),
-                              u'负债总额'.encode('utf-8'),
-                              u'资产总额'.encode('utf-8')]
-            inline_map = {u'企业选择不公示': 1}
-            row_list += edu.category_mapping(df_temp, inline_columns, inline_map, unknown=1, others=0)
+            # 投资笔数
+            row_list.append(len(df_temp))
+            total_num += len(df_temp)
+
+            if year == 2017:
+                row_list.append(total_num)
+                total_num = 0
+
+            # 投资占比
+            y_df = df_temp.loc[df_temp[u'投资占比'.encode('utf-8')] >= 0, u'投资占比'.encode('utf-8')]
+
+            # 最大投资占比
+            y_max = y_df.max()
+            if y_max > total_num:
+                total_num = y_max
+            row_list.append(y_max)
+            if year == 2017:
+                row_list.append(total_num)
+                total_num = 0
+
+            # 超过50%投资占比笔数
+            y_df = df_temp.loc[df_temp[u'投资占比'.encode('utf-8')] > 50, u'投资占比'.encode('utf-8')]
+            row_list.append(len(y_df))
+            total_num += len(df_temp)
+
+            if year == 2017:
+                row_list.append(total_num)
+                total_num = 0
+
+            # 投资金额总数
+            df_temp.loc['Row_sum'] = df_temp.apply(lambda x: x.sum())
+            amount = df_temp.at['Row_sum', u'投资金额'.encode('utf-8')]
+            row_list.append(amount)
+            total_num += amount
+
+            if year == 2017:
+                row_list.append(total_num)
+                total_num = 0
+
+            # 最大笔投资金额
+            df_temp.loc['Row_max'] = df_temp.apply(lambda x: x.max())
+            max_amount = df_temp.at['Row_max', u'投资金额'.encode('utf-8')]
+            row_list.append(max_amount)
+            if max_amount > total_num:
+                total_num = max_amount
+
+            if year == 2017:
+                row_list.append(total_num)
+                total_num = 0
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+        dis_df.fillna(0)
 
-    fu.write_file(dis_df, corporation_index_file_url, u'年报-企业资产状况信息_index', index=True)
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-对外投资信息_index', index=True)
     return
 
 
 def generate_index_out_invest_info_work():
-    generate_index_assets_info(1001, 4000)
+    generate_index_out_invest_info(1001, 4000)
     return
