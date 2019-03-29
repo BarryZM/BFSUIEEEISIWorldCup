@@ -62,7 +62,7 @@ def generate_index_basic_info(corporate_start, corporate_end):
     data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-企业基本信息')
 
     # for corporate in range(corporate_start, corporate_end + 1):columns
-    for corporate in range(corporate_start, corporate_end):
+    for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
 
@@ -86,5 +86,90 @@ def generate_index_basic_info(corporate_start, corporate_end):
 
 
 def generate_index_basic_info_work():
-    generate_index_basic_info(1001, 4001)
+    generate_index_basic_info(1001, 4000)
+    return
+
+
+def generate_index_assets_info(corporate_start, corporate_end):
+    """
+    ***年报-企业资产状况信息***
+
+    指标1：主营业务收入是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标2：净利润是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标3：利润总额是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标4：所有者权益合计是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标5：纳税总额是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标6：营业总收入是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标7：负债总额是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+    指标8：资产总额是否公布，按年份：[2014, 2015, 2016, 2017]，总计4个，bool--（0：公布，1：不公布）
+
+    共计32个指标
+    :param corporate_start:
+    :param corporate_end:
+    :return:
+    """
+    columns = ['is_pub_main_in_2014',
+               'is_pub_main_in_2015',
+               'is_pub_main_in_2016',
+               'is_pub_main_in_2017',
+               'is_pub_net_in_2014',
+               'is_pub_net_in_2015',
+               'is_pub_net_in_2016',
+               'is_pub_net_in_2017',
+               'is_pub_total_in_2014',
+               'is_pub_total_in_2015',
+               'is_pub_total_in_2016',
+               'is_pub_total_in_2017',
+               'is_pub_holder_in_2014',
+               'is_pub_holder_in_2015',
+               'is_pub_holder_in_2016',
+               'is_pub_holder_in_2017',
+               'is_pub_tax_2014',
+               'is_pub_tax_2015',
+               'is_pub_tax_2016',
+               'is_pub_tax_2017',
+               'is_pub_total_in_2014',
+               'is_pub_total_in_2015',
+               'is_pub_total_in_2016',
+               'is_pub_total_in_2017',
+               'is_pub_debt_2014',
+               'is_pub_debt_2015',
+               'is_pub_debt_2016',
+               'is_pub_debt_2017',
+               'is_pub_asset_2014',
+               'is_pub_asset_2015',
+               'is_pub_asset_2016',
+               'is_pub_asset_2017'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-企业资产状况信息')
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        for year in range(2014, 2018):
+            df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
+                data_frame[u'年报年份'.encode('utf-8')] == year]
+
+            inline_columns = [u'主营业务收入'.encode('utf-8'),
+                              u'净利润'.encode('utf-8'),
+                              u'利润总额'.encode('utf-8'),
+                              u'所有者权益合计'.encode('utf-8'),
+                              u'纳税总额'.encode('utf-8'),
+                              u'营业总收入'.encode('utf-8'),
+                              u'负债总额'.encode('utf-8'),
+                              u'资产总额'.encode('utf-8')]
+            inline_map = {u'企业选择不公示': 1}
+            row_list += edu.category_num_counts(df_temp, inline_columns, inline_map, unknown=1, others=0)
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-企业资产状况信息_index', index=True)
+    return
+
+
+def generate_index_assets_info_work():
+    generate_index_assets_info(1001, 4000)
     return

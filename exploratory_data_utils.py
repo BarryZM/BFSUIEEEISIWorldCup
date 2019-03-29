@@ -9,7 +9,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-def category_num_counts(df_temp, columns, map, unknown=-1):
+def category_num_counts(df_temp, columns, map, unknown=-1, others=-1):
     """
 
     :type map: dict
@@ -19,10 +19,13 @@ def category_num_counts(df_temp, columns, map, unknown=-1):
     for column in columns:
         if len(df_temp[column]) > 0:
             item_temp = df_temp[column].reset_index().at[0, column]
-            for key in map.keys():
-                if item_temp == key:
-                    row_list.append(map.get(key))
-                    break
+            if item_temp in map.keys():
+                for key in map.keys():
+                    if item_temp == key:
+                        row_list.append(map.get(key))
+                        break
+            else:
+                row_list.append(others)
         else:
             row_list.append(unknown)
 
