@@ -63,7 +63,6 @@ def generate_index_basic_info(corporate_start, corporate_end):
 
     data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-企业基本信息')
 
-    # for corporate in range(corporate_start, corporate_end + 1):columns
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
