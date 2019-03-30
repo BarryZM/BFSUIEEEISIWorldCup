@@ -325,6 +325,7 @@ def generate_index_out_warrant_info(corporate_start, corporate_end):
     :return:
     """
 
+    # numeric first
     status_period = [u'企业选择不公示']
     status_list = [status_period]
     status_after = [0]
@@ -412,4 +413,141 @@ def generate_index_out_warrant_info_work():
     df = fu.read_file_to_df(corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
     df = df.fillna(0)
     fu.write_file(df, corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
+    return
+
+
+def generate_index_social_security_info(corporate_start, corporate_end):
+    """
+    ***年报-社保信息***
+
+    指标1：城镇职工基本养老保险人数，按年份：[2016, 2017]，总计2个，int
+    指标2：失业保险人数，按年份：[2016, 2017]，总计2个，int
+    指标3：职工基本医疗保险人数，按年份：[2016, 2017]，总计2个，int
+    指标4：工伤保险人数，按年份：[2016, 2017]，总计2个，int
+    指标5：生育保险人数，按年份：[2016, 2017]，总计2个，int
+    指标6：单位参加城镇职工基本养老保险缴费基数，按年份：[2016, 2017]，总计2个，float
+    指标7：单位参加失业保险缴费基数，按年份：[2016, 2017]，总计2个，float
+    指标8：单位参加职工基本医疗保险缴费基数，按年份：[2016, 2017]，总计2个，float
+    ** 指标9：单位参加工伤保险缴费基数，按年份：[2016, 2017]，总计2个，float --- dropped
+    指标10：单位参加生育保险缴费基数，按年份：[2016, 2017]，总计2个，float
+    指标11：参加城镇职工基本养老保险本期实际缴费金额，按年份：[2016, 2017]，总计2个，float
+    指标12：参加失业保险本期实际缴费金额，按年份：[2016, 2017]，总计2个，float
+    指标13：参加职工基本医疗保险本期实际缴费金额，按年份：[2016, 2017]，总计2个，float
+    指标14：参加工伤保险本期实际缴费金额，按年份：[2016, 2017]，总计2个，float
+    指标15：参加生育保险本期实际缴费金额，按年份：[2016, 2017]，总计2个，float
+    指标16：单位参加城镇职工基本养老保险累计欠缴金额，按年份：[2016, 2017]，总计2个，float
+    指标17：单位参加失业保险累计欠缴金额，按年份：[2016, 2017]，总计2个，float
+    指标18：单位参加职工基本医疗保险累计欠缴金额，按年份：[2016, 2017]，总计2个，float
+    指标19：单位参加工伤保险累计欠缴金额，按年份：[2016, 2017]，总计2个，float
+    指标20：单位参加生育保险累计欠缴金额，按年份：[2016, 2017]，总计2个，float
+
+    共计38个
+    :param corporate_start:
+    :param corporate_end:
+    :return:
+    """
+
+    # numeric first
+    status_period = ['Unknown', 'NP']
+    status_list = [status_period]
+    status_after = [-1, -2]
+    file_people_list = [u'城镇职工基本养老保险人数'.encode('utf-8'),
+                        u'失业保险人数'.encode('utf-8'),
+                        u'职工基本医疗保险人数'.encode('utf-8'),
+                        u'工伤保险人数'.encode('utf-8'),
+                        u'生育保险人数'.encode('utf-8')]
+    file_cash_list = [u'单位参加城镇职工基本养老保险缴费基数'.encode('utf-8'),
+                      u'单位参加失业保险缴费基数'.encode('utf-8'),
+                      u'单位参加职工基本医疗保险缴费基数'.encode('utf-8'),
+                      u'单位参加生育保险缴费基数'.encode('utf-8'),
+                      u'参加城镇职工基本养老保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加失业保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加职工基本医疗保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加工伤保险本期实际缴费金额'.encode('utf-8'),
+                      u'参加生育保险本期实际缴费金额'.encode('utf-8'),
+                      u'单位参加城镇职工基本养老保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加失业保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加职工基本医疗保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加工伤保险累计欠缴金额'.encode('utf-8'),
+                      u'单位参加生育保险累计欠缴金额'.encode('utf-8')]
+    for column in (file_people_list + file_cash_list):
+        dcu.merge_status(u'年报-社保信息', column, status_list, status_after)
+
+    columns = ['peo_endow_insure_2016',
+               'peo_unemp_insure_2016',
+               'peo_medic_insure_2016',
+               'peo_injur_insure_2016',
+               'peo_mater_insure_2016',
+               'pay_base_endow_insure_2016',
+               'pay_base_unemp_insure_2016',
+               'pay_base_medic_insure_2016',
+               'pay_base_mater_insure_2016',
+               'real_pay_endow_insure_2016',
+               'real_pay_unemp_insure_2016',
+               'real_pay_medic_insure_2016',
+               'real_pay_injur_insure_2016',
+               'real_pay_mater_insure_2016',
+               'integ_pay_endow_insure_2016',
+               'integ_pay_unemp_insure_2016',
+               'integ_pay_medic_insure_2016',
+               'integ_pay_injur_insure_2016',
+               'integ_pay_mater_insure_2016',
+               'peo_endow_insure_2017',
+               'peo_unemp_insure_2017',
+               'peo_medic_insure_2017',
+               'peo_injur_insure_2017',
+               'peo_mater_insure_2017',
+               'pay_base_endow_insure_2017',
+               'pay_base_unemp_insure_2017',
+               'pay_base_medic_insure_2017',
+               'pay_base_mater_insure_2017',
+               'real_pay_endow_insure_2017',
+               'real_pay_unemp_insure_2017',
+               'real_pay_medic_insure_2017',
+               'real_pay_injur_insure_2017',
+               'real_pay_mater_insure_2017',
+               'integ_unpay_endow_insure_2017',
+               'integ_unpay_unemp_insure_2017',
+               'integ_unpay_medic_insure_2017',
+               'integ_unpay_injur_insure_2017',
+               'integ_unpay_mater_insure_2017'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-社保信息')
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        for year in range(2016, 2018):
+            df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
+                data_frame[u'年报年份'.encode('utf-8')] == year]
+            df_temp = df_temp.reset_index()
+
+            # 人数
+            for column in file_people_list:
+                if len(df_temp) > 0:
+                    row_list.append(df_temp.at[0, column])
+                else:
+                    row_list.append(0)
+
+            # 金额
+            for column in file_cash_list:
+                if len(df_temp) > 0:
+                    row_list.append(df_temp.at[0, column])
+                else:
+                    row_list.append(0)
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-社保信息_index', index=True)
+    return
+
+
+def generate_index_social_security_info_work():
+    generate_index_social_security_info(1001, 4000)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-社保信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
     return
