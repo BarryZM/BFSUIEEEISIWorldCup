@@ -630,7 +630,7 @@ def generate_index_share_exchange_info(corporate_start, corporate_end):
                     data_frame['year'] <= year]
             else:
                 df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
-                    data_frame['year'] <= year]
+                    data_frame['year'] == year]
 
             # 变更次数
             row_list.append(len(df_temp))
@@ -684,127 +684,79 @@ def generate_index_share_exchange_info_work():
 
 def generate_index_share_holder_info(corporate_start, corporate_end):
     """
-    ***年报-股东股权转让***
+    ***年报-股东（发起人）及出资信息_rearranged***
 
-    指标1：变更次数，按年份，[before 2013, 2013, 2014, 2015, 2016, 2017]，总计6个，int （通过'股权变更日期'筛选而非'年报年份'）
-    指标1.1：变更总次数，总计1个，int
-    指标2：变更股权比例超过3%（？）的次数，[before 2013, 2013, 2014, 2015, 2016, 2017]，总计6个，int （通过'股权变更日期'筛选而非'年报年份'）
-    指标2.2：变更股权比例超过3%（？）的总次数，总计1个，int
-    指标3：变更股权比例超过30%（？）的次数，[before 2013, 2013, 2014, 2015, 2016, 2017]，总计6个，int （通过'股权变更日期'筛选而非'年报年份'）
-    指标3.2：变更股权比例超过30%（？）的总次数，总计1个，int
-    指标4：变更股权比例超过50%（？）的次数，[before 2013, 2013, 2014, 2015, 2016, 2017]，总计6个，int （通过'股权变更日期'筛选而非'年报年份'）
-    指标4.2：变更股权比例超过50%（？）的总次数，总计1个，int
-    指标5：变更股权比例超过80%（？）的次数，[before 2013, 2013, 2014, 2015, 2016, 2017]，总计6个，int （通过'股权变更日期'筛选而非'年报年份'）
-    指标5.2：变更股权比例超过80%（？）的总次数，总计1个，int
+    指标1：股东认缴次数，按年份，[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标2：当年股东认缴出资额最大值，按年份，[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标3：当年各种方式认缴次数，按年份*认缴出资方式，[2013, 2014, 2015, 2016, 2017]*[1,2,3,4,5,6,7,8,9]，总计45个，int
+    指标4：股东实缴次数，按年份，[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标5：当年股东实缴出资额最大值，按年份，[2013, 2014, 2015, 2016, 2017]，总计5个，int
+    指标6：当年各种方式实缴次数，按年份*实缴出资方式，[2013, 2014, 2015, 2016, 2017]*[1,2,3,4,5,6,7,8,9]，总计45个，int
+    指标7：当年认缴不等于实缴次数，按年份，[2013, 2014, 2015, 2016, 2017]，总计5个，int
 
-    共计35个
+    共计115个
     :param corporate_start:
     :param corporate_end:
     :return:
     """
+    columns = []
+    for year in range(2013, 2018):
+        columns.append('sha_hol_subsc_' + str(year))
+        columns.append('sha_hol_subsc_max_' + str(year))
+        for category in range(1, 10):
+            columns.append('sha_hol_subsc_ca' + str(category) + '_' + str(year))
+        columns.append('sha_hol_confirm_' + str(year))
+        columns.append('sha_hol_confirm_max_' + str(year))
+        for category in range(1, 10):
+            columns.append('sha_hol_confirm_ca' + str(category) + '_' + str(year))
+        columns.append('sha_sub_conf_neq_' + str(year))
+    print (len(columns))
 
-    columns = ['sha_ex_count_pre_2013',
-               'sha_ex_over3_count_pre_2013',
-               'sha_ex_over30_count_pre_2013',
-               'sha_ex_over50_count_pre_2013',
-               'sha_ex_over80_count_pre_2013',
-               'sha_ex_count_2013',
-               'sha_ex_over3_count_2013',
-               'sha_ex_over30_count_2013',
-               'sha_ex_over50_count_2013',
-               'sha_ex_over80_count_2013',
-               'sha_ex_count_2014',
-               'sha_ex_over3_count_2014',
-               'sha_ex_over30_count_2014',
-               'sha_ex_over50_count_2014',
-               'sha_ex_over80_count_2014',
-               'sha_ex_count_2015',
-               'sha_ex_over3_count_2015',
-               'sha_ex_over30_count_2015',
-               'sha_ex_over50_count_2015',
-               'sha_ex_over80_count_2015',
-               'sha_ex_count_2016',
-               'sha_ex_over3_count_2016',
-               'sha_ex_over30_count_2016',
-               'sha_ex_over50_count_2016',
-               'sha_ex_over80_count_2016',
-               'sha_ex_count_2017',
-               'sha_ex_count_total',
-               'sha_ex_over3_count_2017',
-               'sha_ex_over3_count_total',
-               'sha_ex_over30_count_2017',
-               'sha_ex_over30_count_total',
-               'sha_ex_over50_count_2017',
-               'sha_ex_over50_count_total',
-               'sha_ex_over80_count_2017',
-               'sha_ex_over80_count_total'
-               ]
     dis_df = pd.DataFrame(columns=columns)
 
-    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-股东股权转让')
-    data_frame['year'] = data_frame[u'股权变更日期'.encode('utf-8')].apply(lambda x: parser.parse(x).year)
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'年报-股东（发起人）及出资信息_rearranged')
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
 
-        total_num1 = 0
-        total_num2 = 0
-        total_num3 = 0
-        total_num4 = 0
-        total_num5 = 0
-        for year in range(2012, 2018):
-            if year == 2012:
-                df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
-                    data_frame['year'] <= year]
-            else:
-                df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
-                    data_frame['year'] <= year]
+        for year in range(2013, 2018):
+            df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate][
+                data_frame[u'年报年份'.encode('utf-8')] == year]
+            df_temp.loc['row_max'] = df_temp.apply(lambda x: x.max())
 
-            # 变更次数
+            # 股东认缴
+            row_list.append(len(df_temp) - 1)
+            row_list.append(df_temp.at['row_max', u'认缴出资额（万元）'.encode('utf-8')])
+            for category in range(1, 10):
+                df_cat_temp = df_temp[df_temp[u'认缴出资方式'.encode('utf-8')] == category]
+                if category == 10:
+                    row_list.append(len(df_cat_temp) - 1)
+                else:
+                    row_list.append(len(df_cat_temp))
+
+            # 股东实缴
+            row_list.append(len(df_temp) - 1)
+            row_list.append(df_temp.at['row_max', u'实缴出资额（万元）'.encode('utf-8')])
+            for category in range(1, 10):
+                df_cat_temp = df_temp[df_temp[u'实缴出资方式'.encode('utf-8')] == category]
+                if category == 10:
+                    row_list.append(len(df_cat_temp) - 1)
+                else:
+                    row_list.append(len(df_cat_temp))
+
+            df_temp = df_temp[df_temp[u'实缴出资额（万元）'.encode('utf-8')] != df_temp[u'认缴出资额（万元）'.encode('utf-8')]]
             row_list.append(len(df_temp))
-            total_num1 += len(df_temp)
-
-            if year == 2017:
-                row_list.append(total_num1)
-                total_num1 = 0
-
-            # 变更股权比例超过3\30\50\80%的次数
-            for ratio in [3, 30, 50, 80]:
-                df_temp = df_temp[(df_temp[u'变更后股权比例'.encode('utf-8')] - df_temp[u'变更前股权比例'.encode('utf-8')]) > ratio]
-                row_list.append(len(df_temp))
-                if ratio == 3:
-                    total_num2 += len(df_temp)
-                elif ratio == 30:
-                    total_num3 += len(df_temp)
-                elif ratio == 50:
-                    total_num4 += len(df_temp)
-                elif ratio == 80:
-                    total_num5 += len(df_temp)
-
-                if year == 2017:
-                    if ratio == 3:
-                        row_list.append(total_num2)
-                        total_num2 = 0
-                    elif ratio == 30:
-                        row_list.append(total_num3)
-                        total_num3 = 0
-                    elif ratio == 50:
-                        row_list.append(total_num4)
-                        total_num4 = 0
-                    elif ratio == 80:
-                        row_list.append(total_num5)
-                        total_num5 = 0
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
 
-    fu.write_file(dis_df, corporation_index_file_url, u'年报-股东股权转让_index', index=True)
+    fu.write_file(dis_df, corporation_index_file_url, u'年报-股东（发起人）及出资信息_index', index=True)
     return
 
 
 def generate_index_share_holder_info_work():
     generate_index_share_holder_info(1001, 4000)
-    df = fu.read_file_to_df(corporation_index_file_url, u'年报-股东股权转让_index')
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-股东（发起人）及出资信息_index')
     df = df.fillna(0)
-    fu.write_file(df, corporation_index_file_url, u'年报-股东股权转让_index')
+    fu.write_file(df, corporation_index_file_url, u'年报-股东（发起人）及出资信息_index')
     return
