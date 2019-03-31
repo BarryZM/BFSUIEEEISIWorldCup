@@ -478,19 +478,27 @@ def generate_index_program(corporate_start, corporate_end):
     ***项目信息***
     指标1：项目个数，总计1个，int
     指标2：2010-01-01（含）后项目个数，总计1个，int
+    指标3：项目行业数，总计1个，int
+    指标4：项目行业，总计5个（如果项目行业只有1个，则co_industry_1为其行业，其余为0），int
 
     总计2个
     :return:
     """
-    columns = ['copyright_total',
-               'copyright_after_2017',
-               'copyright_before_2013',
-               'copyright_before_2006'
+    columns = ['program_total',
+               'program_industries',
+               'program_after_2010',
+               'co_industry_1',
+               'co_industry_2',
+               'co_industry_3',
+               'co_industry_4',
+               'co_industry_5'
                ]
     dis_df = pd.DataFrame(columns=columns)
 
-    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'软著著作权')
-    data_frame['year'] = data_frame[u'软件著作权登记批准日期'.encode('utf-8')].apply(
+    industry_frame = fu.read_file_to_df(clean_data_temp_file_url, 'industry')
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'项目信息')
+    data_frame['year'] = data_frame[u'项目成立时间'.encode('utf-8')].apply(
         lambda x: edu.cal_year_in_common(x))
 
     for corporate in range(corporate_start, corporate_end + 1):
@@ -498,26 +506,39 @@ def generate_index_program(corporate_start, corporate_end):
         row_list = []
 
         df_temp = data_frame[data_frame[corporate_index_false] == corporate]
+        df_temp = df_temp.reset_index()
 
-        # 软件著作权个数
+        # 项目个数
         row_list.append(len(df_temp))
 
-        # 软件著作权登记批准日期在2017-01-01（含）之后的个数
-        df_y_temp = df_temp[df_temp['year'] >= 2017]
+        industry_count = df_temp.nunique().get('industry')
+        if not isinstance(industry_count, int):
+            industry_count = 0
+        row_list.append(industry_count)
+        if industry_count > 1:
+            print df_temp
+            print '--------------------'
+
+        # 2010-01-01（含）后项目个数
+        df_y_temp = df_temp[df_temp['year'] >= 2010]
         row_list.append(len(df_y_temp))
 
-        # 软件著作权登记批准日期在2013-01-01（不含）之前的个数
-        df_y_temp = df_temp[df_temp['year'] < 2013][df_temp['year'] > 1000]
-        row_list.append(len(df_y_temp))
-
-        # 软件著作权登记批准日期在2006-01-01（不含）之前的个数
-        df_y_temp = df_y_temp[df_y_temp['year'] < 2006]
-        row_list.append(len(df_y_temp))
+        # 项目行业
+        for i in range(1, 6):
+            isadded = False
+            if len(df_temp) >= i:
+                for j in range(1, industry_frame.shape[1] + 1):
+                    if df_temp.at[i - 1, 'industry'] in industry_frame[j].to_list():
+                        row_list.append(j)
+                        isadded = True
+                        break
+            if not isadded:
+                row_list.append(0)
 
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
 
-    fu.write_file(dis_df, corporation_index_file_url, u'软著著作权_index', index=True)
+    fu.write_file(dis_df, corporation_index_file_url, u'项目信息_index', index=True)
     return
 
 

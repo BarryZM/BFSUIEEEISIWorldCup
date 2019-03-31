@@ -388,3 +388,13 @@ def numeric_certificate():
     status_after = [0, 1, 2, 3, 4, 5, 6]
     dcu.merge_status_new_column(u'资质认证', u'证书名称'.encode('utf-8'), 'categories', status_list, status_after, others=7)
     return
+
+
+def numeric_program():
+    # data_frame = file_utils.read_file_to_df(clean_data_temp_file_url, u'项目信息')
+    # data_frame['industry'] = data_frame[u'标签'.encode('utf-8')].apply(
+    #     lambda x: dcu.cal_industry(x))
+    # file_utils.write_file(data_frame, clean_data_temp_file_url, u'项目信息', index=True)
+
+    panaly.list_category_columns_values([u'项目信息'], u'项目信息_empty_handled',
+                                        file_url=clean_data_temp_file_url)
