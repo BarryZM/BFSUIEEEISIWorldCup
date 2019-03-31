@@ -12,7 +12,7 @@
     项目信息
 """
 import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false, corporate_index_true
 import pandas as pd
 import exploratory_data_utils as edu
 import data_clean_utils as dcu
@@ -88,4 +88,60 @@ def generate_index_patent(corporate_start, corporate_end):
     # dis_df['growth_rate_2016'] = dis_df.apply(lambda x: x['patent_count_2016'] / x['patent_count_2015'] - 1, axis=1)
 
     fu.write_file(dis_df, corporation_index_file_url, u'专利_index', index=True)
+    return
+
+
+def generate_index_patent_work():
+    generate_index_patent(1001, 4000)
+    return
+
+
+def generate_index_products(corporate_start, corporate_end):
+    """
+    ***产品***
+    指标1：拥有产品数，总计1个，int
+    指标2：拥有产品类别数，总计1个，int
+    指标3：分产品类型产品数，总计6个，int
+
+    总计8个
+    :return:
+    """
+    columns = ['products_total',
+               'products_categories_count',
+               'android_count',
+               'ios_count',
+               'miniapp_count',
+               'website_count',
+               'wechat_count',
+               'weibo_count'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'产品')
+
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        df_temp = data_frame[data_frame[corporate_index_true] == corporate]
+
+        row_list.append(len(df_temp))
+        value = df_temp.nunique().get(u'产品类型'.encode('utf-8'))
+        if not isinstance(value, int):
+            value = 0
+        row_list.append(value)
+
+        for category in ['android', 'ios', 'miniapp', 'website', 'wechat', 'weibo']:
+            df_c_temp = df_temp[df_temp[u'产品类型'.encode('utf-8')] == category]
+            row_list.append(len(df_c_temp))
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'产品_index', index=True)
+    return
+
+
+def generate_index_products_work():
+    generate_index_products(1001, 4000)
     return

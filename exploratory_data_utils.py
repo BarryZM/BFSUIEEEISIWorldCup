@@ -50,3 +50,17 @@ def category_count(df_temp, column, map):
     #         row_list.append(others)
 
     return row_list
+
+
+def cal_growth_rate(x, column1, column2, default):
+    """
+    calculate the growth rate in a data frame using (column1 / column2 - 1), if column2 == 0, use the default value.
+    :param x: lambda index
+    :param column1: the later year column
+    :param column2: the prior year column
+    :param default: if column2 == 0, use the default value.
+    :return:
+    """
+    if x[column2] == 0:
+        return default
+    return column1 / column2 - 1
