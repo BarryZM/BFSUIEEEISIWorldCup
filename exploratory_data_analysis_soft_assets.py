@@ -16,7 +16,6 @@ from file_directions import clean_data_temp_file_url, corporation_index_file_url
     corporate_index_true
 import pandas as pd
 import exploratory_data_utils as edu
-import data_clean_utils as dcu
 from dateutil import parser
 
 
@@ -351,9 +350,9 @@ def generate_index_certificate(corporate_start, corporate_end):
 
     data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'资质认证')
     data_frame['start_year'] = data_frame[u'有效期起止日期'.encode('utf-8')].apply(
-        lambda x: edu.cal_year_in_certificate(x))
+        lambda x: edu.cal_year_in_common(x))
     data_frame['end_year'] = data_frame[u'有效期截至日期'.encode('utf-8')].apply(
-        lambda x: edu.cal_year_in_certificate(x))
+        lambda x: edu.cal_year_in_common(x))
 
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
@@ -416,4 +415,112 @@ def generate_index_certificate(corporate_start, corporate_end):
 
 def generate_index_certificate_work():
     generate_index_certificate(1001, 4000)
+    return
+
+
+def generate_index_copyright(corporate_start, corporate_end):
+    """
+    ***软著著作权***
+    指标1：软件著作权个数，总计1个，int
+    指标2：软件著作权登记批准日期在2017-01-01（含）之后的个数，总计1个，int
+    指标3：软件著作权登记批准日期在2013-01-01（不含）之前的个数，总计1个，int
+    指标4：软件著作权登记批准日期在2006-01-01（不含）之前的个数，总计1个，int
+
+    总计4个
+    :return:
+    """
+    columns = ['copyright_total',
+               'copyright_after_2017',
+               'copyright_before_2013',
+               'copyright_before_2006'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'软著著作权')
+    data_frame['year'] = data_frame[u'软件著作权登记批准日期'.encode('utf-8')].apply(
+        lambda x: edu.cal_year_in_common(x))
+
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        df_temp = data_frame[data_frame[corporate_index_false] == corporate]
+
+        # 软件著作权个数
+        row_list.append(len(df_temp))
+
+        # 软件著作权登记批准日期在2017-01-01（含）之后的个数
+        df_y_temp = df_temp[df_temp['year'] >= 2017]
+        row_list.append(len(df_y_temp))
+
+        # 软件著作权登记批准日期在2013-01-01（不含）之前的个数
+        df_y_temp = df_temp[df_temp['year'] < 2013][df_temp['year'] > 1000]
+        row_list.append(len(df_y_temp))
+
+        # 软件著作权登记批准日期在2006-01-01（不含）之前的个数
+        df_y_temp = df_y_temp[df_y_temp['year'] < 2006]
+        row_list.append(len(df_y_temp))
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'软著著作权_index', index=True)
+    return
+
+
+def generate_index_copyright_work():
+    generate_index_copyright(1001, 4000)
+    return
+
+
+def generate_index_program(corporate_start, corporate_end):
+    """
+    ***项目信息***
+    指标1：项目个数，总计1个，int
+    指标2：2010-01-01（含）后项目个数，总计1个，int
+
+    总计2个
+    :return:
+    """
+    columns = ['copyright_total',
+               'copyright_after_2017',
+               'copyright_before_2013',
+               'copyright_before_2006'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'软著著作权')
+    data_frame['year'] = data_frame[u'软件著作权登记批准日期'.encode('utf-8')].apply(
+        lambda x: edu.cal_year_in_common(x))
+
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        df_temp = data_frame[data_frame[corporate_index_false] == corporate]
+
+        # 软件著作权个数
+        row_list.append(len(df_temp))
+
+        # 软件著作权登记批准日期在2017-01-01（含）之后的个数
+        df_y_temp = df_temp[df_temp['year'] >= 2017]
+        row_list.append(len(df_y_temp))
+
+        # 软件著作权登记批准日期在2013-01-01（不含）之前的个数
+        df_y_temp = df_temp[df_temp['year'] < 2013][df_temp['year'] > 1000]
+        row_list.append(len(df_y_temp))
+
+        # 软件著作权登记批准日期在2006-01-01（不含）之前的个数
+        df_y_temp = df_y_temp[df_y_temp['year'] < 2006]
+        row_list.append(len(df_y_temp))
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'软著著作权_index', index=True)
+    return
+
+
+def generate_index_program_work():
+    generate_index_program(1001, 4000)
     return

@@ -90,7 +90,7 @@ def cal_year_in_trademark(x):
     return parser.parse(x_str).year
 
 
-def cal_year_in_certificate(x):
+def cal_year_in_common(x):
     try:
         return parser.parse(str(x)).year
     except ValueError as ve:
