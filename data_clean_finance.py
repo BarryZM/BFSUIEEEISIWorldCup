@@ -121,7 +121,6 @@ def data_clean_finance_mgzb():
     dcu.merge_status(u'上市公司财务信息-每股指标', u'每股经营现金流(元)', status_list, status_after, empty_mask='Unknown')
     return
 
-
 def data_clean_finance_cwfxzb():
     """
         Dirty value handle for table 上市信息财务信息-财务风险指标.xlsx.
@@ -175,9 +174,10 @@ def data_clean_finance_cwfxzb():
     dcu.drop_unit(u'上市信息财务信息-财务风险指标', u'流动负债/总负债(%)', unit_strs)
     return
 
-# import data_clean_finance
-# dcu.merge_rows(u'上市信息财务信息-财务风险指标' + '.xlsx')
-# data_clean_finance.data_clean_finance_cwfxzb()
+"""
+import data_clean_finance
+data_clean_finance.data_clean_finance_cwfxzb()
+"""
 
 def data_clean_finance_cznlzb():
     """
@@ -308,7 +308,6 @@ def data_clean_finance_cznlzb():
     dcu.drop_unit(u'上市信息财务信息-成长能力指标', u'扣非净利润滚动环比增长(元)', unit_strs)
 
     return
-
 
 def data_clean_finance_lrb():
     """
@@ -483,7 +482,6 @@ def data_clean_finance_lrb():
     dcu.change_number(u'上市信息财务信息-利润表', u'归属母公司所有者净利润(元)')
 
     return
-
 
 def data_clean_finance_xjllb():
     """
@@ -854,7 +852,6 @@ def data_clean_finance_xjllb():
 
     return
 
-
 def data_clean_finance_ylnlzb():
     """
             Dirty value handle for table 上市信息财务信息盈利能力指标.xlsx.
@@ -935,7 +932,7 @@ def data_clean_finance_yynlzb():
     """
         Dirty value handle for table 上市信息财务信息运营能力指标.xlsx.
     
-        ['企业总评分','标题','日期','总资产周转率(次)','应收账款周转天数(天)','存货周转天数(天)']'
+        ['企业总评分','标题','日期','总资产周转率(次)','应收账款周转天数(天)','存货周转天数(天)']
     
     
         -----------------------------
@@ -982,12 +979,10 @@ def data_clean_finance_yynlzb():
 
     return
 
-
 def data_clean_finance_zcfzb():
     """
         Dirty value handle for table 上市信息财务信息资产负债表.xlsx.
         First we'll drop rows that empty value is too many.
-        # ['主营业务收入','净利润','利润总额','所有者权益合计', '纳税总额','营业总收入','负债总额','资产总额']
        ['企业总评分','标题','日期','资产:货币资金(元)','资产:应收账款(元)','资产:其它应收款(元)','资产:存货(元)','资产:流动资产合计(元)','资产:长期股权投资(元)','资产:累计折旧(元)','资产:固定资产(元)','资产:无形资产(元)','资产:资产总计(元)','负债:应付账款(元)','负债:预收账款(元)','负债:存货跌价准备(元)','负债:流动负债合计(元)','负债:长期负债合计(元)','负债:负债合计(元)','权益:实收资本(或股本)(元)','权益:资本公积金(元)','权益:盈余公积金(元)','权益:股东权益合计(元)','流动比率']
     
     
@@ -1207,7 +1202,6 @@ def data_clean_finance_zcfzb():
     dcu.merge_number_with_c(u'上市信息财务信息资产负债表', u'权益:股东权益合计(元)')
 
     return
-
 
 def empty_value_handle_basic_info():
     """
