@@ -786,3 +786,13 @@ def append_score():
         fu.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
     return
 
+
+def drop_score_empty():
+    empty_check_list = [u'企业评分'.encode('utf-8')]
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
+                       dst_file_url=corporation_index_file_url)
+        # dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
+        #                              dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)

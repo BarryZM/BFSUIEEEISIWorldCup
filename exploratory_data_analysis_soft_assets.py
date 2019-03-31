@@ -17,7 +17,7 @@ from file_directions import clean_data_temp_file_url, corporation_index_file_url
 import pandas as pd
 import exploratory_data_utils as edu
 from dateutil import parser
-import numpy as np
+import data_clean_utils as dcu
 # Visualization
 import matplotlib.pyplot as plt
 
@@ -581,3 +581,12 @@ def append_score():
     return
 
 
+def drop_score_empty():
+    empty_check_list = [u'企业评分'.encode('utf-8')]
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
+                       dst_file_url=corporation_index_file_url)
+        # dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
+        #                              dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
