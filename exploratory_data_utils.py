@@ -5,6 +5,8 @@
 """
 import sys
 
+from dateutil import parser
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -64,3 +66,14 @@ def cal_growth_rate(x, column1, column2, default):
     if x[column2] == 0:
         return default
     return column1 / column2 - 1
+
+
+def cal_year_in_work_copyright(x):
+    x_str = x
+    if u'国' in x_str:
+        x_strs = x_str.split('-')
+        if len(x_strs) > 1:
+            x_str = x_strs[1]
+        else:
+            x_str = str(1000)
+    return parser.parse(x_str).year

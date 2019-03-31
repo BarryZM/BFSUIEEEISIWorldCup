@@ -145,3 +145,67 @@ def generate_index_products(corporate_start, corporate_end):
 def generate_index_products_work():
     generate_index_products(1001, 4000)
     return
+
+
+def generate_index_work(corporate_start, corporate_end):
+    """
+    ***作品著作权***
+    指标1：作品著作权个数，总计1个，int
+    指标2：近1年作品著作权个数，总计1个，int
+    指标3：近3年作品著作权个数，总计1个，int
+    指标4：分类别作品著作权个数，总计9个，int
+
+    总计12个
+    :return:
+    """
+    columns = ['works_total',
+               'works_2018',
+               'works_2016_2019',
+               'works_1',
+               'works_2',
+               'works_3',
+               'works_4',
+               'works_5',
+               'works_6',
+               'works_7',
+               'works_8',
+               'works_9'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'作品著作权')
+    data_frame['year'] = data_frame[u'作品著作权登记日期'.encode('utf-8')].apply(
+        lambda x: edu.cal_year_in_work_copyright(x))
+
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        df_temp = data_frame[data_frame[corporate_index_false] == corporate]
+
+        # 作品著作权个数
+        row_list.append(len(df_temp))
+
+        # 作品著作权个数2018
+        df_y_temp = df_temp[df_temp['year'] == 2018]
+        row_list.append(len(df_y_temp))
+
+        # 作品著作权个数2016-2019
+        df_y_temp = df_temp[df_temp['year'] >= 2016]
+        row_list.append(len(df_y_temp))
+
+        # 分类别作品著作权个数
+        for category in range(1, 10):
+            df_c_temp = df_temp[df_temp[u'作品著作权类别'.encode('utf-8')] == category]
+            row_list.append(len(df_c_temp))
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'作品著作权_index', index=True)
+    return
+
+
+def generate_index_work_work():
+    generate_index_work(1001, 4000)
+    return
