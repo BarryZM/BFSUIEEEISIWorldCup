@@ -31,13 +31,6 @@ def generate_index_patent(corporate_start, corporate_end):
     指标4：专利2016年增长率（2016/2015-1），总计1个，int
     :return:
     """
-    # numeric first
-    status_1 = [u'发明专利', u'发明公布', u'发明公布更正', u'发明授权', u'发明授权更正']
-    status_2 = [u'外观设计', u'外观设计更正']
-    status_3 = [u'实用新型', u'实用新型更正']
-    status_list = [status_1, status_2, status_3]
-    status_after = [0, 1, 2]
-    dcu.merge_status(u'专利', u'专利类型'.encode('utf-8'), status_list, status_after)
 
     columns = ['patent_count_total',
                'patent_count_pre_2001',
@@ -230,108 +223,8 @@ def generate_index_trademark(corporate_start, corporate_end):
 
     :return:
     """
-
-    # numeric first
-    # registered
-    status_1 = [u'商标已注册',
-                u'出具商标注册证明中',
-                u'出具商标注册证明完成',
-                u'排版送达公告(商标注册证)',
-                u'排版送达公告(商标注册证商品服务附页)',
-                u'排版送达公告(商标注册证明)',
-                u'排版送达公告(商标续展注册证明)',
-                u'排版送达公告(补发注册证领证通知书)',
-                u'排版送达公告(领取商标注册证通知书)'
-                ]
-    status_2 = [u'核准证明打印发送',
-                u'核准通知书打印发送',
-                u'核准通知打印发送',
-                u'等待注册公告公示期',
-                u'等待注册发文',
-                u'等待结案通知书发文',
-                u'等待继续有效通知发文',
-                u'许可合同备案完成',
-                u'许可合同备案待审中',
-                u'评审分案'
-                ]
-    status_3 = [u'注册',
-                u'注册申请初步审定',
-                u'注册申请部分驳回',
-                u'注册证发文',
-                u'排版注册公告',
-                u'申请收文',
-                u'商标注册申请中',
-                u'商标注册申请受理通知书',
-                u'商标注册申请受理通知书发文',
-                u'商标注册申请注册公告排版完成',
-                u'商标注册申请等待受理中',
-                u'商标注册申请等待受理通知书发文',
-                u'商标注册申请等待驳回复审',
-                u'商标注册申请等待驳回通知发文',
-                u'商标注册申请驳回通知发文',
-                u'商标注册申请注册公告排版完成',
-                u'商标注册申请完成',
-                u'商标使用许可备案中',
-                u'商标使用许可备案完成',
-                u'初步审定公告',
-                u'等待受理通知书发文',
-                u'等待受理通知发文',
-                u'等待实审裁文发文',
-                u'等待实质审查',
-                u'等待审查意见书发文',
-                u'等待意见书回文',
-                u'等待打印受理通知',
-                u'等待打印受理通知书',
-                u'等待打印注册证',
-                u'等待抽签发文',
-                u'等待提供证明通知发文',
-                ]
-    status_4 = [u'驳回复审不予受理',
-                u'驳回复审中',
-                u'驳回复审完成',
-                u'驳回复审待审中',
-                u'驳回复审排版送达公告(初步审定公告通知书)',
-                u'驳回复审排版送达公告(商标注册证)',
-                u'驳回复审排版送达公告(商标评审申请受理通知书)',
-                u'驳回复审排版送达公告(驳回复审决定书)',
-                u'驳回复审有退信(商标评审申请受理通知书)',
-                u'驳回复审有退信(领取商标注册证通知书)',
-                u'驳回复审注册公告排版完成',
-                u'驳回复审评审实审裁文发文',
-                u'驳回复审评审实审裁文等待实审裁文发文',
-                u'驳回复审评审形审不予受理通知发文',
-                u'驳回复审评审形审视为撤回发文',
-                u'驳回复审领退信(商标评审申请受理通知书)',
-                u'驳回复审领退信(驳回复审决定书)',
-                u'驳回转让完成',
-                u'驳回通知发文'
-                ]
-    status_5 = [u'商标无效',
-                u'变更视为放弃',
-                u'冻结商标中',
-                u'冻结商标完成',
-                u'无效宣告中',
-                u'无效宣告完成',
-                u'无效宣告排版送达公告(商标无效宣告答辩通知书)',
-                u'无效宣告排版送达公告(商标评审申请受理通知书)',
-                u'无效宣告排版送达公告(无效宣告请求裁定书)',
-                u'无效宣告有退信(无效宣告请求裁定书)',
-                u'无效宣告评审实审裁文发文',
-                u'无效宣告领退信(商标无效宣告答辩通知书)'
-                ]
-    status_6 = [u'商标续展中',
-                u'商标续展完成',
-                u'商标续展待审中',
-                ]
-    status_7 = [u'商标转让中',
-                u'商标转让完成',
-                ]
-
-    status_list = [status_1, status_2, status_3, status_4, status_5, status_6, status_7]
-    status_after = [0, 1, 2, 3, 4, 5, 6, 7]
-    # dcu.merge_status(u'商标', u'商标状态'.encode('utf-8'), status_list, status_after, others=8)
-
     columns = ['tra_mark_total',
+               'tra_mark_0',
                'tra_mark_1',
                'tra_mark_2',
                'tra_mark_3',
@@ -339,7 +232,6 @@ def generate_index_trademark(corporate_start, corporate_end):
                'tra_mark_5',
                'tra_mark_6',
                'tra_mark_7',
-               'tra_mark_8',
                'tra_mark_pre_1993',
                'tra_mark_pre_2000',
                'tra_mark_pre_2010',
@@ -367,7 +259,7 @@ def generate_index_trademark(corporate_start, corporate_end):
         row_list.append(len(df_temp))
 
         # 分状态商标数
-        for category in range(1, 9):
+        for category in range(0, 8):
             df_c_temp = df_temp[df_temp[u'商标状态'.encode('utf-8')] == category]
             row_list.append(len(df_c_temp))
 
@@ -414,4 +306,114 @@ def generate_index_trademark(corporate_start, corporate_end):
 
 def generate_index_trademark_work():
     generate_index_trademark(1001, 4000)
+    return
+
+
+def generate_index_certificate(corporate_start, corporate_end):
+    """
+    ***资质认证***
+    指标1：资质认证总个数，总计1个，int
+    指标1.1：资质认证种类数，总计1个，int
+    指标1.2：有效资质认证种类数，总计1个，int
+    指标2：有效期截至日期在2019-01-01（含）之后的个数，总计1个，int
+    指标3：有效期截至日期在2023-01-01（含）之后的个数，总计1个，int
+    指标4：有效期截至日期在2024-01-01（含）之后的个数，总计1个，int
+    指标5：有效期起止日期在2011-01-01（不含）之前的个数，总计1个，int
+    指标6：有效期起止日期在2006-01-01（不含）之前的个数，总计1个，int
+    指标7：各状态资质认证个数，总计3个，int
+    指标8：各种类资质数，总计7个，int
+
+    总计19个
+
+    :return:
+    """
+    columns = ['certi_total',
+               'certi_cat_total',
+               'certi_valid_cat_total',
+               'certi_after_2019',
+               'certi_after_2023',
+               'certi_after_2024',
+               'certi_before_2011',
+               'certi_before_2006',
+               'certi_valid',
+               'certi_invalid',
+               'certi_sta_unkw',
+               'certi_cat_0',
+               'certi_cat_1',
+               'certi_cat_2',
+               'certi_cat_3',
+               'certi_cat_4',
+               'certi_cat_5',
+               'certi_cat_6',
+               'certi_cat_7'
+               ]
+    dis_df = pd.DataFrame(columns=columns)
+
+    data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'资质认证')
+    data_frame['start_year'] = data_frame[u'有效期起止日期'.encode('utf-8')].apply(
+        lambda x: edu.cal_year_in_certificate(x))
+    data_frame['end_year'] = data_frame[u'有效期截至日期'.encode('utf-8')].apply(
+        lambda x: edu.cal_year_in_certificate(x))
+
+    for corporate in range(corporate_start, corporate_end + 1):
+        row_dict = {}
+        row_list = []
+
+        df_temp = data_frame[data_frame[corporate_index_false] == corporate]
+
+        # 资质认证总个数
+        row_list.append(len(df_temp))
+
+        # 资质认证种类数
+        value = df_temp.nunique().get(u'证书名称'.encode('utf-8'))
+        if not isinstance(value, int):
+            value = 0
+        row_list.append(value)
+
+        # 有效资质认证种类数
+        df_s_temp = df_temp[df_temp[u'状态'.encode('utf-8')] == 0]
+        value = df_s_temp.nunique().get(u'证书名称'.encode('utf-8'))
+        if not isinstance(value, int):
+            value = 0
+        row_list.append(value)
+
+        # 有效期截至日期在2019-01-01（含）之后的个数
+        df_y_temp = df_temp[df_temp['end_year'] >= 2019]
+        row_list.append(len(df_y_temp))
+
+        # 有效期截至日期在2023-01-01（含）之后的个数
+        df_y_temp = df_y_temp[df_y_temp['end_year'] >= 2023]
+        row_list.append(len(df_y_temp))
+
+        # 有效期截至日期在2024-01-01（含）之后的个数
+        df_y_temp = df_y_temp[df_y_temp['end_year'] >= 2024]
+        row_list.append(len(df_y_temp))
+
+        # 有效期起止日期在2011-01-01（不含）之前的个数
+        df_y_temp = df_temp[df_temp['start_year'] < 2011][df_temp['start_year'] > 1000]
+        row_list.append(len(df_y_temp))
+
+        # 有效期起止日期在2006-01-01（不含）之前的个数
+        df_y_temp = df_y_temp[df_y_temp['start_year'] < 2006]
+        row_list.append(len(df_y_temp))
+
+        # 各状态资质认证个数
+        for status in range(0, 3):
+            df_s_temp = df_temp[df_temp[u'状态'.encode('utf-8')] == status]
+            row_list.append(len(df_s_temp))
+
+        # 各种类资质认证个数
+        for category in range(0, 8):
+            df_c_temp = df_temp[df_temp[u'categories'] == category]
+            row_list.append(len(df_c_temp))
+
+        row_dict[corporate] = row_list
+        dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
+
+    fu.write_file(dis_df, corporation_index_file_url, u'资质认证_index', index=True)
+    return
+
+
+def generate_index_certificate_work():
+    generate_index_certificate(1001, 4000)
     return

@@ -162,6 +162,31 @@ def merge_status(file_name, column_name, status, status_names, others='', empty_
     return
 
 
+def merge_status_new_column(file_name, column_name, new_column_name, status, status_names, others='', empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type status_names: list
+    :type status: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    data_frame[new_column_name] = empty_mask
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, new_column_name, empty_mask)
+        is_categorized = False
+        for j in range(0, len(status)):
+            if content in status[j]:
+                data_frame.set_value(index, new_column_name, status_names[j])
+                is_categorized = True
+        if (not is_categorized) and (not others == ''):
+            data_frame.set_value(index, new_column_name, others)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
 # 把万，亿，万亿结尾的金额改为数字
 def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """

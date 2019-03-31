@@ -88,3 +88,14 @@ def cal_year_in_trademark(x):
         else:
             x_str = str(1000)
     return parser.parse(x_str).year
+
+
+def cal_year_in_certificate(x):
+    try:
+        return parser.parse(str(x)).year
+    except ValueError as ve:
+        print (ve)
+        return 1000
+    except TypeError as te:
+        print (te)
+        return 1000
