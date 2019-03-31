@@ -77,3 +77,14 @@ def cal_year_in_work_copyright(x):
         else:
             x_str = str(1000)
     return parser.parse(x_str).year
+
+
+def cal_year_in_trademark(x):
+    x_str = x
+    if u'至' in x_str:
+        x_strs = x_str.split(u'至')
+        if len(x_strs) > 1:
+            x_str = x_strs[1]
+        else:
+            x_str = str(1000)
+    return parser.parse(x_str).year
