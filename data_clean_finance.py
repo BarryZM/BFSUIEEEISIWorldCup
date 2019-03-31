@@ -104,6 +104,7 @@ def data_clean_finance_mgzb():
     """
     dcu.drop_columns(u'上市公司财务信息-每股指标', u'标题')
     dcu.adjust_time(u'上市公司财务信息-每股指标', u'日期')
+    dcu.merge_rows_by_columns(u'上市公司财务信息-每股指标',keys=[u'企业总评分',u'日期'])
 
     # dcu.drop_columns(u'temp', u'c')
     # dcu.change_number('temp','a')
