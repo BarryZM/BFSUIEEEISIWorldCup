@@ -13,10 +13,18 @@
 """
 import file_utils as fu
 from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false, \
-    corporate_index_true
+    corporate_index_true, working_file_url
 import pandas as pd
 import exploratory_data_utils as edu
 from dateutil import parser
+import numpy as np
+# Visualization
+import matplotlib.pyplot as plt
+
+# matplotlib inline
+plt.style.use('fivethirtyeight')
+plt.rcParams['font.size'] = 18
+plt.rcParams['patch.edgecolor'] = 'k'
 
 
 def generate_index_patent(corporate_start, corporate_end):
@@ -545,3 +553,31 @@ def generate_index_program(corporate_start, corporate_end):
 def generate_index_program_work():
     generate_index_program(1001, 4000)
     return
+
+
+soft_assets_indexes = [u'专利',
+                       u'产品',
+                       u'作品著作权',
+                       u'商标',
+                       u'资质认证',
+                       u'软著著作权',
+                       u'项目信息'
+                       ]
+
+
+def append_score():
+    score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
+    score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
+
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame = data_frame.set_index('Unnamed: 0')
+
+        data_frame = data_frame.join(score_frame)
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
+    return
+
+

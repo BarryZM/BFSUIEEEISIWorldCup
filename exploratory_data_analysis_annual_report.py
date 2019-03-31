@@ -13,7 +13,7 @@
     年报-股东（发起人）及出资信息
 """
 import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
 import pandas as pd
 import exploratory_data_utils as edu
 import data_clean_utils as dcu
@@ -759,3 +759,30 @@ def generate_index_share_holder_info_work():
     df = df.fillna(0)
     fu.write_file(df, corporation_index_file_url, u'年报-股东（发起人）及出资信息_index')
     return
+
+
+soft_assets_indexes = [u'年报-企业基本信息',
+                       u'年报-企业资产状况信息',
+                       u'年报-对外投资信息',
+                       u'年报-的对外提供保证担保信息',
+                       u'年报-社保信息',
+                       u'年报-股东股权转让',
+                       u'年报-股东（发起人）及出资信息'
+                       ]
+
+
+def append_score():
+    score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
+    score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
+
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame = data_frame.set_index('Unnamed: 0')
+
+        data_frame = data_frame.join(score_frame)
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
+    return
+
