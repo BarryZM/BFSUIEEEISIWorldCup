@@ -10,6 +10,7 @@ from file_directions import working_file_url, clean_data_temp_file_url, corporat
 import pandas
 import data_clean_utils as dcu
 from files_category_info import category_finance_files
+import visualize_utils as vu
 
 
 # 把面板数据变成截面数据，先建立空表
@@ -155,6 +156,15 @@ def score_integerize():
         data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
 
         file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
+def pic_scatter():
+    """
+    plot scatter pictures for each index and score.
+    :return:
+    """
+    print category_finance_files
+    vu.pic_scatter(category_finance_files, 'finance')
 
 
 """

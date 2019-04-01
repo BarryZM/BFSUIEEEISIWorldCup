@@ -22,13 +22,13 @@ def pic_scatter(index_files, category_name, index_file_url=corporation_index_fil
     :param scatter_url: scatter image url to be stored.
     :return:
     """
+    fig = plt.figure(figsize=(14, 9))
     for file_n in index_files:
         print file_n
         data_frame = fu.read_file_to_df(index_file_url, file_n + '_index')
         for column in data_frame.columns:
             if column == 'Unnamed: 0':
                 continue
-            plt.figure(figsize=(14, 9))
 
             plt.title(column)
             plt.xlabel('score')
@@ -46,6 +46,7 @@ def pic_scatter(index_files, category_name, index_file_url=corporation_index_fil
 
             # plt.show()
 
-            plt.savefig(fu.check_file_url(
-                scatter_url + '/' + category_name + '/' + file_n + '/') + column + '.png', dpi=150)
-            plt.close()
+            fig.savefig(fu.check_file_url(
+                scatter_url + '/' + category_name + '/' + file_n + '/') + str(column).replace('/', '-') + '.png',
+                        dpi=150)
+            plt.clf()
