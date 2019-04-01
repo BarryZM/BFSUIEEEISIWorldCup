@@ -489,11 +489,11 @@ def generate_index_social_security_info(corporate_start, corporate_end):
                'real_pay_medic_insure_2016',
                'real_pay_injur_insure_2016',
                'real_pay_mater_insure_2016',
-               'integ_pay_endow_insure_2016',
-               'integ_pay_unemp_insure_2016',
-               'integ_pay_medic_insure_2016',
-               'integ_pay_injur_insure_2016',
-               'integ_pay_mater_insure_2016',
+               'integ_unpay_endow_insure_2016',
+               'integ_unpay_unemp_insure_2016',
+               'integ_unpay_medic_insure_2016',
+               'integ_unpay_injur_insure_2016',
+               'integ_unpay_mater_insure_2016',
                'peo_endow_insure_2017',
                'peo_unemp_insure_2017',
                'peo_medic_insure_2017',
@@ -553,6 +553,39 @@ def generate_index_social_security_info_work():
     df = df.fillna(0)
     fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
     return
+
+
+def generate_index_social_security_growth_rate():
+    """
+    add growth rate indexes in 年报-社保信息_index
+    :return:
+    """
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-社保信息_index')
+    growth_list = ['peo_endow_insure_',
+                   'peo_unemp_insure_',
+                   'peo_medic_insure_',
+                   'peo_injur_insure_',
+                   'peo_mater_insure_',
+                   'pay_base_endow_insure_',
+                   'pay_base_unemp_insure_',
+                   'pay_base_medic_insure_',
+                   'pay_base_mater_insure_',
+                   'real_pay_endow_insure_',
+                   'real_pay_unemp_insure_',
+                   'real_pay_medic_insure_',
+                   'real_pay_injur_insure_',
+                   'real_pay_mater_insure_',
+                   'integ_unpay_endow_insure_',
+                   'integ_unpay_unemp_insure_',
+                   'integ_unpay_medic_insure_',
+                   'integ_unpay_injur_insure_',
+                   'integ_unpay_mater_insure_'
+                   ]
+    for item in growth_list:
+        # df[item + '06-07'] = df[item + '2016'] / df[item + '2017']
+        df[item + '16-17'] = df.apply(lambda x: edu.cal_growth_rate(x, item + '2017', item + '2016', 65535), axis=1)
+
+    fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
 
 
 def generate_index_share_exchange_info(corporate_start, corporate_end):

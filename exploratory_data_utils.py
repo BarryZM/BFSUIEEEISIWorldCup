@@ -65,7 +65,7 @@ def cal_growth_rate(x, column1, column2, default):
     """
     if x[column2] == 0:
         return default
-    return column1 / column2 - 1
+    return x[column1] / x[column2] - 1
 
 
 def cal_year_in_work_copyright(x):
