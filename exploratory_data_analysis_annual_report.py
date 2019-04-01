@@ -774,6 +774,10 @@ annual_report_indexes = [u'年报-企业基本信息',
 
 
 def append_score():
+    """
+        append score to each index file.
+        :return:
+        """
     score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
     score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
 
@@ -790,6 +794,10 @@ def append_score():
 
 
 def drop_score_empty():
+    """
+    some corporates lack of scores, we need to drop them.
+    :return:
+    """
     empty_check_list = [u'企业总评分'.encode('utf-8')]
     for file_n in annual_report_indexes:
         print file_n
@@ -801,6 +809,10 @@ def drop_score_empty():
 
 
 def score_integerize():
+    """
+    scores are float, and we want try if integers will helps.
+    :return:
+    """
     for file_n in annual_report_indexes:
         print file_n
 
@@ -811,4 +823,8 @@ def score_integerize():
 
 
 def pic_scatter():
+    """
+    plot scatter pictures for each index and score.
+    :return:
+    """
     vu.pic_scatter(annual_report_indexes, 'annual_report')

@@ -14,6 +14,14 @@ plt.rcParams['patch.edgecolor'] = 'k'
 
 def pic_scatter(index_files, category_name, index_file_url=corporation_index_file_url,
                 scatter_url=corporation_index_scatter_file_url):
+    """
+    scatter picture for each index and the score.
+    :param index_files: the index file we need to analyse.
+    :param category_name: the category of the index, the images will be stored at this file folder.
+    :param index_file_url: file url to index files.
+    :param scatter_url: scatter image url to be stored.
+    :return:
+    """
     for file_n in index_files:
         print file_n
         data_frame = fu.read_file_to_df(index_file_url, file_n + '_index')
