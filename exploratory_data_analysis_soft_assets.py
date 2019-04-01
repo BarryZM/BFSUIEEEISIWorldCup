@@ -11,20 +11,15 @@
     软著著作权
     项目信息
 """
+import pandas as pd
+from dateutil import parser
+
+import data_clean_utils as dcu
+import exploratory_data_utils as edu
 import file_utils as fu
+import visualize_utils as vu
 from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false, \
     corporate_index_true, working_file_url
-import pandas as pd
-import exploratory_data_utils as edu
-from dateutil import parser
-import data_clean_utils as dcu
-# Visualization
-import matplotlib.pyplot as plt
-
-# matplotlib inline
-plt.style.use('fivethirtyeight')
-plt.rcParams['font.size'] = 18
-plt.rcParams['patch.edgecolor'] = 'k'
 
 
 def generate_index_patent(corporate_start, corporate_end):
@@ -566,6 +561,10 @@ soft_assets_indexes = [u'专利',
 
 
 def append_score():
+    """
+    append score to each index file.
+    :return:
+    """
     score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
     score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
 
@@ -582,6 +581,10 @@ def append_score():
 
 
 def drop_score_empty():
+    """
+    some corporates lack of scores, we need to drop them.
+    :return:
+    """
     empty_check_list = [u'企业总评分'.encode('utf-8')]
     for file_n in soft_assets_indexes:
         print file_n
@@ -590,3 +593,25 @@ def drop_score_empty():
                        dst_file_url=corporation_index_file_url)
         dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
                                      dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
+
+
+def score_integerize():
+    """
+    scores are float, and we want try if integers will helps.
+    :return:
+    """
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
+def pic_scatter():
+    """
+    plot scatter pictures for each index and score.
+    :return:
+    """
+    vu.pic_scatter(soft_assets_indexes, 'soft_assets')
