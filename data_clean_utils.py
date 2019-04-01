@@ -61,6 +61,7 @@ def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=cle
 
     return
 
+
 def merge_rows_by_columns(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):
     """
     merge a table's rows with the same unique keys.
@@ -82,7 +83,7 @@ def merge_rows_by_columns(file_name, keys=None, file_url=working_file_url, dst_f
         for key in keys:
             if index == 1:
                 str_keys.append(key.encode('utf-8'))
-            temp_df = temp_df.loc[temp_df[key.encode('utf-8')] == anchor_row.loc[index-1, key.encode('utf-8')]]
+            temp_df = temp_df.loc[temp_df[key.encode('utf-8')] == anchor_row.loc[index - 1, key.encode('utf-8')]]
 
         duplicated_num = len(temp_df)
         for j in range(0, duplicated_num):
@@ -138,7 +139,8 @@ def drop_columns(file_name, columns, file_url=clean_data_temp_file_url, dst_file
     return
 
 
-def merge_status(file_name, column_name, status, status_names, others='', empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def merge_status(file_name, column_name, status, status_names, others='', empty_mask='Unknown',
+                 file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
 
     :type status_names: list
@@ -162,6 +164,33 @@ def merge_status(file_name, column_name, status, status_names, others='', empty_
     return
 
 
+def merge_status_new_column(file_name, column_name, new_column_name, status, status_names, others='',
+                            empty_mask='Unknown', file_url=clean_data_temp_file_url,
+                            dst_file_url=clean_data_temp_file_url):
+    """
+
+    :type status_names: list
+    :type status: list
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    data_frame[new_column_name] = empty_mask
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, new_column_name, empty_mask)
+        is_categorized = False
+        for j in range(0, len(status)):
+            if content in status[j]:
+                data_frame.set_value(index, new_column_name, status_names[j])
+                is_categorized = True
+        if (not is_categorized) and (not others == ''):
+            data_frame.set_value(index, new_column_name, others)
+
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                          sheet_name='Sheet', index=False)
+    return
+
+
 # 把万，亿，万亿结尾的金额改为数字
 def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
@@ -173,13 +202,13 @@ def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
         if str(content).endswith(u'万'):
-            num=str(content).replace(u'万', '') # 把前面的改成后面的，此处是删去结尾的'万'
-            numb=float(num)
-            data_frame.set_value(index, column_name, numb*(10**4))
+            num = str(content).replace(u'万', '')  # 把前面的改成后面的，此处是删去结尾的'万'
+            numb = float(num)
+            data_frame.set_value(index, column_name, numb * (10 ** 4))
         elif str(content).endswith(u'万亿'):
-            num=str(content).replace(u'万亿', '') # 把前面的改成后面的，此处是删去结尾的'万'
-            numb=float(num)
-            data_frame.set_value(index, column_name, numb*(10**12))
+            num = str(content).replace(u'万亿', '')  # 把前面的改成后面的，此处是删去结尾的'万'
+            numb = float(num)
+            data_frame.set_value(index, column_name, numb * (10 ** 12))
         elif str(content).endswith(u'亿'):
             num = str(content).replace(u'亿', '')  # 把前面的改成后面的，此处是删去结尾的'万'
             numb = float(num)
@@ -190,8 +219,8 @@ def change_number(file_name, column_name, file_url=clean_data_temp_file_url, dst
     return
 
 
-def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
-
+def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_mask=-1,
+                          file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -223,8 +252,8 @@ def mark_invalid_num_data(file_name, column_name, operator, thresh_value, error_
     return
 
 
-def drop_invalid_data(file_name, column_name, operator, thresh_value, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
-
+def drop_invalid_data(file_name, column_name, operator, thresh_value, file_url=clean_data_temp_file_url,
+                      dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -249,7 +278,8 @@ def drop_invalid_data(file_name, column_name, operator, thresh_value, file_url=c
     return
 
 
-def drop_prefix_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_prefix_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url,
+                     dst_file_url=clean_data_temp_file_url):
     """
 
     :type unit_strs: list
@@ -268,7 +298,8 @@ def drop_prefix_unit(file_name, column_name, unit_strs, empty_mask='Unknown', fi
     return
 
 
-def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url,
+              dst_file_url=clean_data_temp_file_url):
     """
 
     :type unit_strs: list
@@ -287,7 +318,8 @@ def drop_unit(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=
     return
 
 
-def drop_unit_with_transfer(file_name, column_name, unit_strs, transfer_map, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_unit_with_transfer(file_name, column_name, unit_strs, transfer_map, empty_mask='Unknown',
+                            file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     """
 
     :type transfer_map: dict
@@ -323,7 +355,8 @@ def drop_unit_with_transfer(file_name, column_name, unit_strs, transfer_map, emp
     return
 
 
-def drop_unit_remove_minus(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_unit_remove_minus(file_name, column_name, unit_strs, empty_mask='Unknown', file_url=clean_data_temp_file_url,
+                           dst_file_url=clean_data_temp_file_url):
     """
 
     :type unit_strs: list
@@ -346,7 +379,8 @@ def drop_unit_remove_minus(file_name, column_name, unit_strs, empty_mask='Unknow
     return
 
 
-def drop_unit_with_float_format(file_name, column_name, unit_strs, empty_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def drop_unit_with_float_format(file_name, column_name, unit_strs, empty_mask=-1, file_url=clean_data_temp_file_url,
+                                dst_file_url=clean_data_temp_file_url):
     """
 
     :type unit_strs: list
@@ -367,8 +401,8 @@ def drop_unit_with_float_format(file_name, column_name, unit_strs, empty_mask=-1
     return
 
 
-def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', others_mask='Others', file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
-
+def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', others_mask='Others',
+                    file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -388,7 +422,8 @@ def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', othe
     return
 
 
-def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_url,
+                        dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -409,7 +444,8 @@ def time_periods_format(file_name, column_name, file_url=clean_data_temp_file_ur
                           sheet_name='Sheet', index=False)
 
 
-def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_url,
+                        dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -424,8 +460,8 @@ def time_unicode_format(file_name, column_name, file_url=clean_data_temp_file_ur
                           sheet_name='Sheet', index=False)
 
 
-def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
-
+def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_data_temp_file_url,
+                dst_file_url=clean_data_temp_file_url):
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
@@ -446,9 +482,9 @@ def count_split(file_name, column_name, splits, empty_mask=-1, file_url=clean_da
     return
 
 
-
 # 把以万，亿结尾的数据标为Unknown
-def merge_number_with_c(file_name, column_name, file_url=clean_data_temp_file_url, dst_file_url=clean_data_temp_file_url):
+def merge_number_with_c(file_name, column_name, file_url=clean_data_temp_file_url,
+                        dst_file_url=clean_data_temp_file_url):
     """
 
     :type status_names: list
@@ -462,30 +498,20 @@ def merge_number_with_c(file_name, column_name, file_url=clean_data_temp_file_ur
         elif str(content).endswith(u'亿'):
             data_frame.set_value(index, column_name, 'Unknown')
 
-    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
-                            sheet_name='Sheet', index=False)
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name, sheet_name='Sheet',
+                          index=False)
 
-    # 时间由14-03-30转为2014-03-30
-def adjust_time(file_name, column_name, empty_mask='Unknown', file_url=clean_data_temp_file_url,
-                    dst_file_url=clean_data_temp_file_url):
-    """
-    """
-    data_frame = file_utils.read_file_to_df(file_url, file_name)
-    for index in range(0, len(data_frame)):
-        content = data_frame.at[index, column_name]
-        if pandas.isnull(content):
-            data_frame.set_value(index, column_name, empty_mask)
-        if  len(str(content)) > 2:
-            if str(content)[2] == u'-':
-                data_frame.set_value(index, column_name, '20' + str(content))
 
-    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
-                              sheet_name='Sheet', index=False)
-        # 14.2-18.4 19个季度
-        #     status_list = [[u'14-06-30'], [u'14-09-30'], [u'14-12-31'],
-        #                    [u'15-03-31'] [u'15-06-30'], [u'15-09-30'], [u'15-12-31'],
-        # [u'15-03-31'] [u'15-06-30'], [u'15-09-30'], [u'15-12-31'],
-        #                    ]
-        #     status_after = [1,2,3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16,17,18,19]
-        #     dcu.merge_status(file_name, column_name, status_list, status_after)
-    return
+def cal_industry(x):
+    try:
+        strs = str(x).split()
+        if strs[0] == u'传统行业' and len(strs) > 1:
+            return strs[1]
+        else:
+            return strs[0]
+    except ValueError as ve:
+        print (ve)
+        return x
+    except TypeError as te:
+        print (te)
+        return x

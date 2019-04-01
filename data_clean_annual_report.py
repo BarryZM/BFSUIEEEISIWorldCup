@@ -871,9 +871,9 @@ def empty_value_handle_share_holder_info():
     # 认缴出资额（万元）
     # 实缴出资额（万元）
     dcu.drop_unit_with_transfer(u'年报-股东（发起人）及出资信息_rearranged', u'认缴出资额（万元）'.encode('utf-8'),
-                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7}, empty_mask=-1)
+                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7, u'人民币': 0.0001}, empty_mask=-1)
     dcu.drop_unit_with_transfer(u'年报-股东（发起人）及出资信息_rearranged', u'实缴出资额（万元）'.encode('utf-8'),
-                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7}, empty_mask=-1)
+                                [u'万', u'万元', u'万元人民币', u'万人民币'], {u'万美元': 6.7, u'人民币': 0.0001}, empty_mask=-1)
 
     return
 
