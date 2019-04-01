@@ -356,7 +356,6 @@ def generate_index_out_warrant_info(corporate_start, corporate_end):
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
-
         total_num1 = 0
         total_num2 = 0
         total_num3 = 0

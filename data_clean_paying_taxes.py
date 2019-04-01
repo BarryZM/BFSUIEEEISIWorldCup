@@ -15,7 +15,6 @@ from file_directions import clean_data_temp_file_url
 import file_utils as fu
 
 
-
 def raw_files_primary_analysis():
     """
     primary analysis for raw files without handled
@@ -32,7 +31,6 @@ def duplicate_handle():
         dcu.merge_rows(name + '.xlsx')
 
 
-
 def primary_analysis_after_duplicate_handled():
     """
     primary analysis after duplicate data handled
@@ -42,21 +40,40 @@ def primary_analysis_after_duplicate_handled():
                                         file_url=clean_data_temp_file_url)
 
 
-def empty_value_handle_basic_info():
-    """
-    empty_value handle for table 年报-企业基本信息.
-    :return:
-    """
-    empty_check_list = [u'纳税人资格',
-                        u'有效截止日期',
-                        u'纳税人状态',
-                        u'是否具有一般纳税人资格',
-                        u'登记注册类型',
-                        u'出口状态备案状态']
-    dcu.drop_rows_too_many_empty(u'一般纳税人.xlsx', columns=empty_check_list, thresh=4)
-    # panaly.list_category_columns_values([u'一般纳税人'], u'一般纳税人_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+# def empty_value_handle_basic_info():
+#     """
+#     empty_value handle for table 年报-企业基本信息.
+#     :return:
+#     """
+#     empty_check_list = [u'纳税人资格',
+#                         u'有效截止日期',
+#                         u'纳税人状态',
+#                         u'是否具有一般纳税人资格',
+#                         u'登记注册类型',
+#                         u'出口状态备案状态']
+#     dcu.drop_rows_too_many_empty(u'一般纳税人.xlsx', columns=empty_check_list, thresh=4)
+#     # panaly.list_category_columns_values([u'一般纳税人'], u'一般纳税人_empty_handled',
+#     #                                     file_url=clean_data_temp_file_url)
+#     return
+
+def pre_clean():
+    file_name = u'一般纳税人'
+    dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'纳税人状态'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'出口状态备案状态'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'登记注册类型'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'纳税人资格'.encode('utf-8'), [], [], empty_mask='Unknown')
+
+    dcu.drop_columns(file_name, u'有效日期期起'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'有效截止日期'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'是否具有一般纳税人资格'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'扣缴义务'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'是否按季申报'.encode('utf-8'))
+
     return
+
+
+
 
 
 def rearrange_excel():
@@ -65,14 +82,10 @@ def rearrange_excel():
     :return:
     """
     wr1 = fu.read_file_to_df(clean_data_temp_file_url, u'一般纳税人.xlsx',
-                             sheet_name=u'一般纳税人')
-    wr1.fillna({u'纳税人资格': 'unknown'}) # 对空值进行处理以进行索引
-    wr1.ix[wr1[u'纳税人资格'].str.contains(u'出口退（免）税企业'),[u'出口状态备案状态']] = u'出口退（免）税企业'
-    fu.write_file(wr1, clean_data_temp_file_url, u'一般纳税人_rearranged', ext='.xlsx',
+                             sheet_name='Sheet')
+    wr1.ix[wr1[u'纳税人资格'.encode('utf-8')].str.contains(u'出口退（免）税企业'), [u'出口状态备案状态'.encode('utf-8')]] = u'出口退（免）税企业'
+    fu.write_file(wr1, clean_data_temp_file_url, u'一般纳税人', ext='.xlsx',
                   sheet_name='Sheet', index=False)
-
-
-
 
 
 """
@@ -199,18 +212,74 @@ def rearrange_excel():
 """
 
 
-def drop_unimportant_cloumn():
-    wr = fu.read_file_to_df(clean_data_temp_file_url, u'一般纳税人.xlsx',
-                             sheet_name=u'一般纳税人')
-    wr_drop = wr.drop([u'有效日期期起', u'有效截止日期',u'是否具有一般纳税人资格',u'扣缴义务',u'是否按季申报'], axis= 1)
-    fu.write_file(wr_drop, clean_data_temp_file_url, u'一般纳税人_rearranged', ext='.xlsx',
-                  sheet_name='Sheet', index=False)
+def kind_taxers(file_name, column_name):
+    status_1 = [u'增值税一般纳税人', u'增值税汇总纳税企业', u'外商投资企业', u'外资企业采购国产设备', u'简易办法征收一般纳税人',
+                u'辅导期增值税一般纳税人',u'一般纳税人']
+    status_2 = [u'出口退（免）税企业', u'内资企业采购国产设备', u'有进出口经营权的外贸公司', u'经济实体（安置富余人员）',
+                u'资源综合利用企业', u'软件及集成电路生产企业', u'销售供出口货物企业', u'饲料产品企业', u'高新技术产业企业']
+    status_3 = [u'增值税小规模纳税人', u'按征收率征收增值税小规模纳税人', u'按适用税率征收增值税小规模纳税人', u'非一般纳税人']
+    status_4 = [u'其他', u'消费税汇总纳税企业', u'金银首饰消费税纳税人']
+    status_no = ['Unknown']
+    status_list = [status_1, status_2, status_3, status_4, status_no]
+    status_after = [1, 2, 3, 4, -1]
+    dcu.merge_status(file_name, column_name, status_list, status_after)
     return
 
 
+def status_taxers(file_name, column_name):
+    status_1 = [u'是',u'正常']
+    status_2 = [u'报验']
+    status_3 = [u'核销报验',u'注销']
+    status_no = ['Unknown']
+    status_list = [status_1, status_2, status_3, status_no]
+    status_after = [1, 2, 3, -1]
+    dcu.merge_status(file_name, column_name, status_list, status_after)
+    return
+
+
+def status_register(file_name, column_name):
+    status_1 = [u'国有企业',u'国有相对控股上市企业', u'国有相对控股非上市企业', u'国有绝对控股上市企业', u'国有绝对控股非上市企业']
+    status_2 = [ u'股份合作企业', u'集体企业']
+    status_3 = [u'私营有限责任公司',u'私营股份有限公司']
+    status_4 = [u'外商投资股份有限公司', u'外资企业', u'港、澳、台商投资股份有限公司']
+    status_5 = [u'中外合资经营企业', u'合资经营企业（港或澳、台资）']
+    status_6 = [ u'其他',u'其他企业',u'其他有限责任公司',u'非国有控股上市企业',u'非国有控股非上市企业']
+    status_no = ['Unknown']
+    status_list = [status_1, status_2, status_3, status_4, status_5, status_6, status_no]
+    status_after = [1, 2, 3, 4, 5, 6, -1]
+    dcu.merge_status(file_name, column_name, status_list, status_after)
+    return
+
+
+def status_export(file_name, column_name):
+    status_1 = [u'出口退（免）税企业']
+    status_2 = [u'非出口退（免）税企业']
+    status_no = ['Unknown']
+    status_list = [status_1, status_2, status_no]
+    status_after = [1, 2, -1]
+    dcu.merge_status(file_name, column_name, status_list, status_after)
+    return
+
 
 def clean_tax():
-    file_name = u'一般纳税人_rearranged'
-    dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    file_name = u'一般纳税人'
+    # dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    # dcu.merge_status(file_name, u'纳税人状态'.encode('utf-8'), [], [], empty_mask='Unknown')
+    # dcu.merge_status(file_name, u'出口状态备案状态'.encode('utf-8'), [], [], empty_mask='Unknown')
+    #
+    #
+    # dcu.drop_columns(file_name, u'有效日期期起'.encode('utf-8'))
+    # dcu.drop_columns(file_name,u'有效截止日期'.encode('utf-8'))
+    # dcu.drop_columns(file_name, u'是否具有一般纳税人资格'.encode('utf-8'))
+    # dcu.drop_columns(file_name, u'扣缴义务'.encode('utf-8'))
+    # dcu.drop_columns(file_name, u'是否按季申报'.encode('utf-8'))
+
+
+    kind_taxers(file_name, u'纳税人资格'.encode('utf-8'))
+    status_taxers(file_name, u'纳税人状态'.encode('utf-8'))
+    status_export(file_name, u'出口状态备案状态'.encode('utf-8'))
+    status_register(file_name, u'登记注册类型'.encode('utf-8'))
+
+    dcu.time_unicode_format(file_name, column_name=u'认定日期'.encode('utf-8'))
 
     return
