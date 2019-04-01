@@ -9,9 +9,10 @@ import file_utils
 from file_directions import working_file_url, clean_data_temp_file_url, corporation_index_file_url
 import pandas
 import data_clean_utils as dcu
+from files_category_info import category_finance_files
 
 
-#把面板数据变成截面数据，先建立空表
+# 把面板数据变成截面数据，先建立空表
 def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_url=corporation_index_file_url):
     """
 
@@ -89,6 +90,16 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     var_date[i]
     """
     return
+
+
+def drop_indexes_too_many_empty():
+    for file_n in category_finance_files:
+        if file_n == u'上市信息财务信息-现金流量表':
+            continue
+        df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        df = df.dropna(axis=1, thresh=1000)
+        df = df.fillna(-65535)  # empty value is filled with -65535
+        file_utils.write_file(df, corporation_index_file_url, file_n + '_index')
 
 """
 运行框
