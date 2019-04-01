@@ -12,16 +12,14 @@
     年报-股东股权转让
     年报-股东（发起人）及出资信息
 """
-import numpy as np
 import pandas as pd
 from dateutil import parser
 
 import data_clean_utils as dcu
 import exploratory_data_utils as edu
 import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url, \
-    corporation_index_scatter_file_url
 import visualize_utils as vu
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
 
 
 def generate_index_basic_info(corporate_start, corporate_end):

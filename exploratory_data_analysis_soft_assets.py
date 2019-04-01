@@ -17,9 +17,9 @@ from dateutil import parser
 import data_clean_utils as dcu
 import exploratory_data_utils as edu
 import file_utils as fu
+import visualize_utils as vu
 from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false, \
     corporate_index_true, working_file_url
-import visualize_utils as vu
 
 
 def generate_index_patent(corporate_start, corporate_end):
