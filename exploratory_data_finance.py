@@ -101,6 +101,62 @@ def drop_indexes_too_many_empty():
         df = df.fillna(-65535)  # empty value is filled with -65535
         file_utils.write_file(df, corporation_index_file_url, file_n + '_index')
 
+
+def append_score():
+    """
+        append score to each index file.
+        :return:
+        """
+    score_frame = file_utils.read_file_to_df(working_file_url, u'企业评分')
+    score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
+
+    for file_n in category_finance_files:
+        if file_n == u'上市信息财务信息-现金流量表':
+            continue
+        print file_n
+
+        data_frame = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame = data_frame.set_index('Unnamed: 0')
+
+        data_frame = data_frame.join(score_frame)
+
+        file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
+    return
+
+
+def drop_score_empty():
+    """
+    some corporates lack of scores, we need to drop them.
+    :return:
+    """
+    empty_check_list = [u'企业总评分'.encode('utf-8')]
+    for file_n in category_finance_files:
+        if file_n == u'上市信息财务信息-现金流量表':
+            continue
+        print file_n
+
+        dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
+                       dst_file_url=corporation_index_file_url)
+        dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
+                                     dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
+
+
+def score_integerize():
+    """
+    scores are float, and we want try if integers will helps.
+    :return:
+    """
+    for file_n in category_finance_files:
+        if file_n == u'上市信息财务信息-现金流量表':
+            continue
+        print file_n
+
+        data_frame = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+
+        file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
 """
 运行框
     file_name=u'上市信息财务信息-财务风险指标'
