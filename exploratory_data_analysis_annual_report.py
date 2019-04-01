@@ -12,12 +12,16 @@
     年报-股东股权转让
     年报-股东（发起人）及出资信息
 """
-import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
+import numpy as np
 import pandas as pd
-import exploratory_data_utils as edu
-import data_clean_utils as dcu
 from dateutil import parser
+
+import data_clean_utils as dcu
+import exploratory_data_utils as edu
+import file_utils as fu
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url, \
+    corporation_index_scatter_file_url
+import visualize_utils as vu
 
 
 def generate_index_basic_info(corporate_start, corporate_end):
@@ -761,21 +765,21 @@ def generate_index_share_holder_info_work():
     return
 
 
-soft_assets_indexes = [u'年报-企业基本信息',
-                       u'年报-企业资产状况信息',
-                       u'年报-对外投资信息',
-                       u'年报-的对外提供保证担保信息',
-                       u'年报-社保信息',
-                       u'年报-股东股权转让',
-                       u'年报-股东（发起人）及出资信息'
-                       ]
+annual_report_indexes = [u'年报-企业基本信息',
+                         u'年报-企业资产状况信息',
+                         u'年报-对外投资信息',
+                         u'年报-的对外提供保证担保信息',
+                         u'年报-社保信息',
+                         u'年报-股东股权转让',
+                         u'年报-股东（发起人）及出资信息'
+                         ]
 
 
 def append_score():
     score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
     score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
 
-    for file_n in soft_assets_indexes:
+    for file_n in annual_report_indexes:
         print file_n
 
         data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
@@ -789,10 +793,24 @@ def append_score():
 
 def drop_score_empty():
     empty_check_list = [u'企业总评分'.encode('utf-8')]
-    for file_n in soft_assets_indexes:
+    for file_n in annual_report_indexes:
         print file_n
 
         dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
                        dst_file_url=corporation_index_file_url)
         dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
                                      dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
+
+
+def score_integerize():
+    for file_n in annual_report_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
+def pic_scatter():
+    vu.pic_scatter(annual_report_indexes, 'annual_report')
