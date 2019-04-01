@@ -188,22 +188,12 @@ def primary_analysis_after_duplicate_handled():
     -----------------------------
 """
 
-def time_rearranged(file_name, column_name):
 
+
+def time_rearranged(file_name, column_name,  i = 0):
     # 用split分开时间， 注意：之后数据分析所要用时间表头为0（数字格式）
-    table = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
-    wr1 = pd.concat([table, table[column_name].str.split(r'-', expand=True)], axis=2, names=['year', 'month','day'])
-    fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',sheet_name='Sheet', index=False)
-
-    dcu.drop_columns(file_name, 1 )
-    return
-
-
-
-
-def time_rearranged(file_name, column_name):
     df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
-    df["year"], df["month"], df["day"] = df[column_name].str.split("-", n=2).str  # 分成三个表 n为劈开的次数
+    df["year"+str(i)], df["month"+str(i)], df["day"+str(i)] = df[column_name].str.split("-", n=2).str  # 分成三个表 n为劈开的次数
     df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
     fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False) # 保存
 
@@ -591,12 +581,12 @@ def province(file_name, column_name):
     status_32 = [u'台湾']
     status_33 = [u'香港']
     status_34 = [u'澳门']
-    status_no = ['Unknown']  # 错误的类别
+    status_no = ['Unknown', u'全国']  # 错误的类别
     status_list = [status_1, status_2, status_3, status_4, status_5, status_6, status_7, status_8, status_9, status_10,
                    status_11, status_12, status_13, status_14, status_15, status_16, status_17, status_18, status_19,
                    status_20,  status_21, status_22, status_23, status_24, status_25, status_26, status_27, status_28,
                    status_29, status_30,  status_31, status_32, status_33, status_34, status_no]
-    status_after = [11, 12, 13, 14, 15, 21, 22, 23, 31, 32, 33, 34, 35, 36, 37, 41, 42, 43, 44, 45, 46, 51, 52, 53, 54,
+    status_after = [11, 12, 13, 14, 15, 21, 22, 23, 31, 32, 33, 34, 35, 36, 37, 41, 42, 43, 44, 45, 46, 50, 51, 52, 53, 54,
                     61, 62, 63, 64, 65, 71, 81, 82, -1]
     dcu.merge_status(file_name, column_name, status_list, status_after)
     return
@@ -620,11 +610,12 @@ def clean_tender():
     dcu.merge_status(file_name, u'省份'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'发布时间'.encode('utf-8'), ['1970-01-01'], ['Unknown'], empty_mask='Unknown')
 
+    time_rearranged(file_name, u'发布时间'.encode('utf-8'))
 
     status_of_announcement(file_name, u'公告类型'.encode('utf-8'))
     bidding_or_tendering(file_name, u'中标或招标'.encode('utf-8'))
     province(file_name, u'省份'.encode('utf-8'))
-    time_rearranged(file_name, u'发布时间'.encode('utf-8'))
+
     return
 
 
@@ -794,7 +785,7 @@ def interest_pay(file_name, column_name):
 def clean_bond():
     file_name = u'债券信息'
     dcu.merge_status(file_name, u'债券信用评级'.encode('utf-8'), [], [], empty_mask='Unknown')
-    dcu.merge_status(file_name, u'付息日期'.encode('utf-8'), [], [], empty_mask='0000-00-00')
+    dcu.merge_status(file_name, u'付息日期'.encode('utf-8'), [], [], empty_mask='00-00')
     dcu.merge_status(file_name, u'兑付日期'.encode('utf-8'), [], [], empty_mask='0000-00-00')
     dcu.merge_status(file_name, u'主体信用评级'.encode('utf-8'), [], [], empty_mask='Unknown')  # 空值改为Unknown
     dcu.merge_status(file_name, u'债券品种'.encode('utf-8'),[], [], empty_mask='Unknown')
@@ -802,23 +793,11 @@ def clean_bond():
 
     dcu.drop_unit(file_name, u'债券期限'.encode('utf-8'), [u'年'], empty_mask='Unknown')
 
-    dcu.drop_columns(file_name, u'实际发行总额（亿元）'.encode('utf-8'))
-    dcu.drop_columns(file_name, u'币种'.encode('utf-8'))
-    dcu.drop_columns(file_name, u'流通场所'.encode('utf-8'))
-
     wr1 = fu.read_file_to_df(clean_data_temp_file_url,file_name,
                              sheet_name='Sheet')
     wr1 = wr1.fillna({u'纳税人资格'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
     fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',
                   sheet_name='Sheet', index=False)
-
-
-    # wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
-    #                          sheet_name='Sheet')
-    # wr1 = wr1.fillna({u'实际发行总额（亿元）'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
-    # fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',
-    #               sheet_name='Sheet', index=False)
-
 
     wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name,
                              sheet_name='Sheet')
@@ -829,6 +808,7 @@ def clean_bond():
 
     dcu.drop_columns(file_name, u'币种'.encode('utf-8'))
     dcu.drop_columns(file_name, u'流通场所'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'实际发行总额（亿元）'.encode('utf-8'))
 
 
     ranking_of_bond(file_name, u'债券信用评级'.encode('utf-8'))
@@ -836,26 +816,8 @@ def clean_bond():
     ranking_of_co(file_name, u'主体信用评级'.encode('utf-8'))
     interest_pay(file_name, u'付息方式'.encode('utf-8'))
 
-
-    time_rearranged(file_name, u'发行日期'.encode('utf-8'))
-    time_rearranged(file_name, u'兑付日期'.encode('utf-8'))
-
-
-    # status_normal = [u'']  # 搜索满足这个条件的
-    # status_list = [status_normal]
-    # status_after = ['Unknown']  # 改成这个
-    # dcu.merge_status(u'债券信息', u'实际发行总额（亿元）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
-
-    # status_normal = [ ]  # 搜索满足这个条件的
-    # status_list = [status_normal]
-    # status_after = ['Unknown']  # 改成这个
-    # dcu.merge_status(u'债券信息', u'票面利率（%）'.encode('utf-8'), status_list, status_after, empty_mask='Unknown')  # 空值改为Unknown
-
-
-
-    # status_normal = []  # 搜索满足这个条件的
-    # status_list = [status_normal]
-    # status_after = []  # 改成这个
+    time_rearranged(file_name, u'发行日期'.encode('utf-8'), i = 0)
+    time_rearranged(file_name, u'兑付日期'.encode('utf-8'), i = 1)
 
 
     return
