@@ -1,15 +1,20 @@
 # *- coding:utf-8 -*-
 
 import file_utils as fu
-from file_directions import corporation_index_file_url, corporation_index_scatter_file_url
+from file_directions import corporation_index_file_url, corporation_index_scatter_file_url, \
+    corporation_index_heat_map_file_url
 import numpy as np
+import seaborn as sns
+
 # Visualization
 import matplotlib.pyplot as plt
 
 # matplotlib inline
 plt.style.use('fivethirtyeight')
-plt.rcParams['font.size'] = 16
+plt.rcParams['font.size'] = 14
 plt.rcParams['patch.edgecolor'] = 'k'
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 步骤一（替换sans-serif字体）
+plt.rcParams['axes.unicode_minus'] = False
 
 
 def pic_scatter(index_files, category_name, index_file_url=corporation_index_file_url,
@@ -50,3 +55,20 @@ def pic_scatter(index_files, category_name, index_file_url=corporation_index_fil
                 scatter_url + '/' + category_name + '/' + file_n + '/') + str(column).replace('/', '-') + '.png',
                         dpi=150)
             plt.clf()
+
+
+def pic_corr_heat_map(index_files, category_name, index_file_url=corporation_index_file_url,
+                      heat_map_url=corporation_index_heat_map_file_url):
+    fig = plt.figure(figsize=(26, 18))
+    for file_n in index_files:
+        print file_n
+        data_frame = fu.read_file_to_df(index_file_url, file_n + '_index')
+        data_frame = data_frame.drop(columns=['Unnamed: 0', u'企业总评分'.encode('utf-8')])
+        corr_matrix = data_frame.corr()
+        print (corr_matrix)
+        sns.heatmap(corr_matrix, annot=True, vmax=1, vmin=0, xticklabels=True, yticklabels=True, square=True)
+        plt.title(file_n)
+
+        fig.savefig(fu.check_file_url(
+            heat_map_url + '/' + category_name + '/') + file_n + '.png', dpi=75)
+        plt.clf()

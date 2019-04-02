@@ -860,3 +860,114 @@ def pic_scatter():
     :return:
     """
     vu.pic_scatter(annual_report_indexes, 'annual_report')
+
+
+indexes_filter = ['inv_count_2013',
+                  'inv_count_2014',
+                  'inv_count_2015',
+                  'inv_count_2016',
+                  'inv_count_2017',
+                  'inv_count_total',
+                  'inv_over_50_count_2013',
+                  'inv_over_50_count_total',
+                  'max_inv_ratio_total',
+                  'pri_cred_right_count_2013',
+                  'pri_cred_right_count_2014',
+                  'pri_cred_right_count_2015',
+                  'pri_cred_right_count_2016',
+                  'pri_cred_right_count_2017',
+                  'pri_cred_right_count_total',
+                  'pay_base_endow_insure_16-17',
+                  'pay_base_endow_insure_2017',
+                  'pay_base_mater_insure_16-17',
+                  'pay_base_mater_insure_2017',
+                  'pay_base_medic_insure_16-17',
+                  'pay_base_medic_insure_2017',
+                  'pay_base_unemp_insure_16-17',
+                  'pay_base_unemp_insure_2017',
+                  'peo_endow_insure_2017',
+                  'peo_injur_insure_2017',
+                  'peo_mater_insure_2017',
+                  'peo_medic_insure_2017',
+                  'peo_unemp_insure_2017',
+                  'real_pay_endow_insure_16-17',
+                  'real_pay_endow_insure_2017',
+                  'real_pay_injur_insure_16-17',
+                  'real_pay_injur_insure_2017',
+                  'real_pay_medic_insure_2017',
+                  'real_pay_unemp_insure_16-17',
+                  'real_pay_unemp_insure_2016',
+                  'sha_hol_confirm_2013',
+                  'sha_hol_confirm_2014',
+                  'sha_hol_confirm_2015',
+                  'sha_hol_confirm_2016',
+                  'sha_hol_confirm_2017',
+                  'sha_hol_confirm_ca1_2013',
+                  'sha_hol_confirm_ca1_2014',
+                  'sha_hol_confirm_ca1_2015',
+                  'sha_hol_confirm_ca1_2016',
+                  'sha_hol_confirm_ca1_2017',
+                  'sha_hol_confirm_ca2_2013',
+                  'sha_hol_confirm_ca2_2014',
+                  'sha_hol_confirm_ca2_2015',
+                  'sha_hol_confirm_ca2_2016',
+                  'sha_hol_confirm_ca2_2017',
+                  'sha_hol_confirm_max_2013',
+                  'sha_hol_confirm_max_2014',
+                  'sha_hol_confirm_max_2015',
+                  'sha_hol_confirm_max_2016',
+                  'sha_hol_confirm_max_2017',
+                  'sha_hol_subsc_2013',
+                  'sha_hol_subsc_2014',
+                  'sha_hol_subsc_2015',
+                  'sha_hol_subsc_2016',
+                  'sha_hol_subsc_2017',
+                  'sha_hol_subsc_ca1_2013',
+                  'sha_hol_subsc_ca1_2014',
+                  'sha_hol_subsc_ca1_2015',
+                  'sha_hol_subsc_ca1_2016',
+                  'sha_hol_subsc_ca1_2017',
+                  'sha_hol_subsc_max_2013',
+                  'sha_hol_subsc_max_2014',
+                  'sha_hol_subsc_max_2015',
+                  'sha_hol_subsc_max_2016',
+                  'sha_hol_subsc_max_2017',
+                  'sha_sub_conf_neq_2013',
+                  'sha_sub_conf_neq_2014',
+                  'sha_sub_conf_neq_2015',
+                  'sha_sub_conf_neq_2016',
+                  'sha_sub_conf_neq_2017',
+                  'sha_ex_count_total',
+                  'sha_ex_over3_count_2013',
+                  'sha_ex_over3_count_2014',
+                  'sha_ex_over3_count_2015',
+                  'sha_ex_over3_count_2016',
+                  'sha_ex_over3_count_2017',
+                  'sha_ex_over3_count_total'
+                  ]
+
+
+def drop_useless_indexes():
+    """
+
+    :return:
+    """
+    print ('total indexes: ' + str(len(indexes_filter)))
+    counts = 0
+    for file_n in annual_report_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        for column in data_frame.columns:
+            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
+                continue
+            if column not in indexes_filter:
+                data_frame = data_frame.drop(column, axis=1)
+        counts += len(data_frame.columns) - 3
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+    print ('set indexes: ' + str(counts))
+
+
+def display_indexes_corr():
+    vu.pic_corr_heat_map(annual_report_indexes, 'annual_report')
+

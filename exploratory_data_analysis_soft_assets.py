@@ -615,3 +615,92 @@ def pic_scatter():
     :return:
     """
     vu.pic_scatter(soft_assets_indexes, 'soft_assets')
+
+
+indexes_filter = ['fm_patent_count',
+                  'patent_count_2010-13',
+                  'patent_count_2014',
+                  'patent_count_2015',
+                  'patent_count_2016',
+                  'patent_count_2017',
+                  'patent_count_2018',
+                  'patent_count_2019',
+                  'patent_count_pre_2001',
+                  'patent_count_pre_2010',
+                  'patent_count_total',
+                  'sy_patent_count',
+                  'wg_patent_count',
+                  'works_3',
+                  'works_4',
+                  'works_6',
+                  'works_8',
+                  'works_2016_2019',
+                  'tra_mark_0',
+                  'tra_mark_1',
+                  'tra_mark_2',
+                  'tra_mark_3',
+                  'tra_mark_4',
+                  'tra_mark_5',
+                  'tra_mark_6',
+                  'tra_mark_7',
+                  'tra_mark_apply_2017_2018',
+                  'tra_mark_over_2019',
+                  'tra_mark_over_2024',
+                  'tra_mark_over_2029',
+                  'tra_mark_pre_1993',
+                  'tra_mark_pre_2000',
+                  'tra_mark_total',
+                  'certi_after_2019',
+                  'certi_after_2023',
+                  'certi_after_2024',
+                  'certi_before_2006',
+                  'certi_before_2011',
+                  'certi_cat_0',
+                  'certi_cat_1',
+                  'certi_cat_2',
+                  'certi_cat_3',
+                  'certi_cat_4',
+                  'certi_cat_5',
+                  'certi_cat_6',
+                  'certi_cat_7',
+                  'certi_cat_total',
+                  'certi_invalid',
+                  'certi_sta_unkw',
+                  'certi_total',
+                  'certi_valid_cat_total',
+                  'certi_valid',
+                  'copyright_after_2017',
+                  'copyright_before_2006',
+                  'copyright_total',
+                  'co_industry_1',
+                  'program_total',
+                  ]
+
+
+def drop_useless_indexes():
+    """
+
+    :return:
+    """
+    print ('total indexes: ' + str(len(indexes_filter)))
+    indexes_filter_temp = indexes_filter
+    counts = 0
+    for file_n in soft_assets_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        for column in data_frame.columns:
+            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
+                continue
+            if column not in indexes_filter:
+                data_frame = data_frame.drop(column, axis=1)
+            else:
+                indexes_filter_temp.remove(column)
+        counts += len(data_frame.columns) - 3
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+    print ('set indexes: ' + str(counts))
+    print (indexes_filter_temp)
+
+
+def display_indexes_corr():
+    vu.pic_corr_heat_map(soft_assets_indexes, 'soft_assets')
