@@ -617,6 +617,7 @@ def pic_scatter():
     vu.pic_scatter(soft_assets_indexes, 'soft_assets')
 
 
+# These are indexes we filtered through scatter pictures
 indexes_filter = ['fm_patent_count',
                   'patent_count_2010-13',
                   'patent_count_2014',
@@ -679,7 +680,7 @@ indexes_filter = ['fm_patent_count',
 
 def drop_useless_indexes():
     """
-
+    Drop indexes we think is useless from the image of scatter.
     :return:
     """
     print ('total indexes: ' + str(len(indexes_filter)))
@@ -703,4 +704,8 @@ def drop_useless_indexes():
 
 
 def display_indexes_corr():
+    """
+    Draw the correlations between each index.
+    :return:
+    """
     vu.pic_corr_heat_map(soft_assets_indexes, 'soft_assets')

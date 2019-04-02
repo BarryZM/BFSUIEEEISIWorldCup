@@ -862,6 +862,7 @@ def pic_scatter():
     vu.pic_scatter(annual_report_indexes, 'annual_report')
 
 
+# These are indexes we filtered through scatter pictures
 indexes_filter = ['inv_count_2013',
                   'inv_count_2014',
                   'inv_count_2015',
@@ -949,7 +950,7 @@ indexes_filter = ['inv_count_2013',
 
 def drop_useless_indexes():
     """
-
+    Drop indexes we think is useless from the image of scatter.
     :return:
     """
     print ('total indexes: ' + str(len(indexes_filter)))
@@ -969,5 +970,9 @@ def drop_useless_indexes():
 
 
 def display_indexes_corr():
+    """
+    Draw the correlations between each index.
+    :return:
+    """
     vu.pic_corr_heat_map(annual_report_indexes, 'annual_report')
 
