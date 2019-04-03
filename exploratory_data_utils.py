@@ -7,6 +7,9 @@ import sys
 
 from dateutil import parser
 
+import file_utils as fu
+from file_directions import corporation_index_file_url
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -99,3 +102,29 @@ def cal_year_in_common(x):
     except TypeError as te:
         print (te)
         return 1000
+
+
+def drop_useless_indexes(index_files, ind_fil, read_url=corporation_index_file_url,
+                         write_url=corporation_index_file_url):
+    """
+    Drop indexes we think is useless from the image of scatter.
+    :return:
+    """
+    print ('total indexes: ' + str(len(ind_fil)))
+    indexes_filter_temp = ind_fil
+    counts = 0
+    for file_n in index_files:
+        print file_n
+
+        data_frame = fu.read_file_to_df(read_url, file_n + '_index')
+        for column in data_frame.columns:
+            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
+                continue
+            if column not in ind_fil:
+                data_frame = data_frame.drop(column, axis=1)
+            else:
+                indexes_filter_temp.remove(column)
+        counts += len(data_frame.columns) - 3
+        fu.write_file(data_frame, fu.check_file_url(write_url), file_n + '_index')
+    print ('set indexes: ' + str(counts))
+    print (indexes_filter_temp)

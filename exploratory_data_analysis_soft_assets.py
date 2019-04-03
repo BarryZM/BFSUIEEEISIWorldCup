@@ -677,35 +677,72 @@ indexes_filter = ['fm_patent_count',
                   'program_total',
                   ]
 
+# These are indexes we filtered through heatmap pictures
+indexes_filter_second = ['patent_count_2010-13',
+                         'patent_count_2018',
+                         'patent_count_pre_2001',
+                         'patent_count_total',
+                         'wg_patent_count',
+                         'works_3',
+                         'works_4',
+                         'works_6',
+                         'works_8',
+                         'works_2016_2019',
+                         'tra_mark_0',
+                         'tra_mark_1',
+                         'tra_mark_2',
+                         'tra_mark_3',
+                         'tra_mark_4',
+                         'tra_mark_5',
+                         'tra_mark_6',
+                         'tra_mark_7',
+                         'tra_mark_apply_2017_2018',
+                         'tra_mark_over_2029',
+                         'tra_mark_pre_1993',
+                         'tra_mark_pre_2000',
+                         'tra_mark_total',
+                         'certi_after_2023',
+                         'certi_after_2024',
+                         'certi_cat_1',
+                         'certi_cat_2',
+                         'certi_cat_3',
+                         'certi_cat_4',
+                         'certi_cat_5',
+                         'certi_cat_6',
+                         'certi_cat_7',
+                         'certi_cat_total',
+                         'certi_sta_unkw',
+                         'certi_total',
+                         'certi_valid_cat_total',
+                         'copyright_after_2017',
+                         'copyright_before_2006',
+                         'copyright_total',
+                         'co_industry_1',
+                         'program_total',
+                         ]
 
-def drop_useless_indexes():
-    """
-    Drop indexes we think is useless from the image of scatter.
-    :return:
-    """
-    print ('total indexes: ' + str(len(indexes_filter)))
-    indexes_filter_temp = indexes_filter
-    counts = 0
-    for file_n in soft_assets_indexes:
-        print file_n
 
-        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
-        for column in data_frame.columns:
-            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
-                continue
-            if column not in indexes_filter:
-                data_frame = data_frame.drop(column, axis=1)
-            else:
-                indexes_filter_temp.remove(column)
-        counts += len(data_frame.columns) - 3
-        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
-    print ('set indexes: ' + str(counts))
-    print (indexes_filter_temp)
+def drop_useless_indexes_first_stage():
+    edu.drop_useless_indexes(soft_assets_indexes, indexes_filter)
 
 
-def display_indexes_corr():
+def drop_useless_indexes_second_stage():
+    edu.drop_useless_indexes(soft_assets_indexes, indexes_filter_second,
+                             write_url=corporation_index_file_url + 'second_stage/')
+
+
+def display_indexes_corr_first_stage():
     """
     Draw the correlations between each index.
     :return:
     """
     vu.pic_corr_heat_map(soft_assets_indexes, 'soft_assets')
+
+
+def display_indexes_corr_second_stage():
+    """
+    Draw the correlations between each index.
+    :return:
+    """
+    vu.pic_corr_heat_map(soft_assets_indexes, 'soft_assets',
+                         index_file_url=corporation_index_file_url + 'second_stage/')
