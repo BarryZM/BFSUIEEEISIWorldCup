@@ -17,5 +17,5 @@ def cal_rmse(prediction, target):
         squared_error.append(val * val)  # target-prediction之差平方
         abs_error.append(abs(val))  # 误差绝对值
 
-    print("RMSE = ", sqrt(sum(squared_error) / len(squared_error)))  # 均方根误差RMSE
-    print("MAE = ", sum(abs_error) / len(abs_error))  # 平均绝对误差MAE
+    print("RMSE = " + str(sqrt(sum(squared_error) / len(squared_error))))  # 均方根误差RMSE
+    print("MAE = " + str(sum(abs_error) / len(abs_error)))  # 平均绝对误差MAE

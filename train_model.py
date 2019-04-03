@@ -67,17 +67,17 @@ def generate_dataframe():
     data_frame7 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'商标_index')
     data_frames.append(data_frame7)
 
-    data_frame8 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-对外投资信息_index')
-    data_frames.append(data_frame8)
-    data_frame9 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-的对外提供保证担保信息_index')
-    data_frames.append(data_frame9)
-    data_frame10 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-社保信息_index')
-    data_frames.append(data_frame10)
-    data_frame11 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-股东股权转让_index')
-    data_frames.append(data_frame11)
-    data_frame12 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-股东（发起人）及出资信息_index')
-    data_frames.append(data_frame12)
-    #
+    # data_frame8 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-对外投资信息_index')
+    # data_frames.append(data_frame8)
+    # data_frame9 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-的对外提供保证担保信息_index')
+    # data_frames.append(data_frame9)
+    # data_frame10 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-社保信息_index')
+    # data_frames.append(data_frame10)
+    # data_frame11 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-股东股权转让_index')
+    # data_frames.append(data_frame11)
+    # data_frame12 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-股东（发起人）及出资信息_index')
+    # data_frames.append(data_frame12)
+
     # data_frame13 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-利润表_index')
     # data_frames.append(data_frame13)
     # data_frame14 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-成长能力指标_index')
@@ -90,8 +90,8 @@ def generate_dataframe():
     # data_frames.append(data_frame17)
     # data_frame18 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息运营能力指标_index')
     # data_frames.append(data_frame18)
-    data_frame19 = fu.read_file_to_df(corporation_index_file_url, u'上市公司财务信息-每股指标_index')
-    data_frames.append(data_frame19)
+    # data_frame19 = fu.read_file_to_df(corporation_index_file_url, u'上市公司财务信息-每股指标_index')
+    # data_frames.append(data_frame19)
 
     for i in range(0, len(data_frames)):
         print(i)
@@ -110,15 +110,15 @@ def train_random_forest():
     data_frame = generate_dataframe()
 
     test_set = data_frame.loc[test_corporates]
-    test_target = test_set['int_score'].tolist()
+    test_target = test_set[u'企业总评分'].tolist()
     test_set = test_set.drop(columns=[u'企业总评分', 'int_score'])
 
     train_set = data_frame.drop(test_corporates)
     train_target = train_set['int_score']
     train_set = train_set.drop(columns=[u'企业总评分', 'int_score'])
 
-    train_set, test_set = models.get_fitted_data_set(train_set, test_set)
-    models.random_forest(train_set, train_target, test_set, test_target)
+    train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
+    models.random_forest(train_set, train_target, test_set, test_target, features)
 
 
 def train_gradient_boosting():

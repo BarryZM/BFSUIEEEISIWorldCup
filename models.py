@@ -11,7 +11,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import cross_val_score
 import validation
+import pandas as pd
 
 # Custom scorer for cross validation
 scorer = make_scorer(f1_score, greater_is_better=True, average='macro')
@@ -26,15 +28,22 @@ def get_fitted_data_set(train_set, test_set):
     # Fit and transform training data
     train_set = pipeline.fit_transform(train_set)
     test_set = pipeline.transform(test_set)
-    return train_set, test_set
+    return train_set, test_set, features
 
 
-def random_forest(data, target, test_data, test_target):
-    model = RandomForestClassifier(n_estimators=10, random_state=10, n_jobs=-1)
+def random_forest(data, target, test_data, test_target, features=None):
+    model = RandomForestClassifier(n_estimators=400, random_state=10, n_jobs=-1)
     model.fit(data, target)
     prediction = model.predict(test_data)
-    print(prediction)
-    print(test_target)
+    cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
+    # print(prediction)
+    # print(test_target)
+    print ('F1 score = ' + str(cv_score.mean()))
+    print ('F1 score std = ' + str(cv_score.std()))
+    # Feature importances into a dataframe
+    if features is not None:
+        feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
+        print(feature_importances.head())
     return validation.cal_rmse(prediction, test_target)
 
 

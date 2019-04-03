@@ -10,7 +10,7 @@ from file_directions import working_file_url, clean_data_temp_file_url, corporat
 import pandas
 import data_clean_utils as dcu
 from files_category_info import category_finance_files
-# import visualize_utils as vu
+import visualize_utils as vu
 
 
 # 把面板数据变成截面数据，先建立空表
@@ -198,7 +198,7 @@ def pic_scatter():
     :return:
     """
     print category_finance_files
-    # vu.pic_scatter(category_finance_files, 'finance')
+    vu.pic_scatter(category_finance_files, 'finance')
 
 
 
