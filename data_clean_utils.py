@@ -501,17 +501,28 @@ def merge_number_with_c(file_name, column_name, file_url=clean_data_temp_file_ur
     file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name, sheet_name='Sheet',
                           index=False)
 
+    # 时间由14-03-30转为2014-03-30
+# 把14年改成2014
+def adjust_time(file_name, column_name, empty_mask='Unknown', file_url=clean_data_temp_file_url,
+                    dst_file_url=clean_data_temp_file_url):
+    """
+    """
+    data_frame = file_utils.read_file_to_df(file_url, file_name)
+    for index in range(0, len(data_frame)):
+        content = data_frame.at[index, column_name]
+        if pandas.isnull(content):
+            data_frame.set_value(index, column_name, empty_mask)
+        if  len(str(content)) > 2:
+            if str(content)[2] == u'-':
+                data_frame.set_value(index, column_name, '20' + str(content))
 
-def cal_industry(x):
-    try:
-        strs = str(x).split()
-        if strs[0] == u'传统行业' and len(strs) > 1:
-            return strs[1]
-        else:
-            return strs[0]
-    except ValueError as ve:
-        print (ve)
-        return x
-    except TypeError as te:
-        print (te)
-        return x
+    file_utils.write_file(data_frame, file_utils.check_file_url(dst_file_url), file_name,
+                              sheet_name='Sheet', index=False)
+        # 14.2-18.4 19个季度
+        #     status_list = [[u'14-06-30'], [u'14-09-30'], [u'14-12-31'],
+        #                    [u'15-03-31'] [u'15-06-30'], [u'15-09-30'], [u'15-12-31'],
+        # [u'15-03-31'] [u'15-06-30'], [u'15-09-30'], [u'15-12-31'],
+        #                    ]
+        #     status_after = [1,2,3,4,5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16,17,18,19]
+        #     dcu.merge_status(file_name, column_name, status_list, status_after)
+    return

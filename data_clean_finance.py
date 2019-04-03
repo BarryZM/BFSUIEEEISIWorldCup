@@ -789,6 +789,7 @@ def data_clean_finance_xjllb():
         -----------------------------
     """
     dcu.drop_columns(u'上市信息财务信息-现金流量表', u'标题')
+    dcu.adjust_time(u'上市信息财务信息-现金流量表', u'日期')
 
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -900,6 +901,7 @@ def data_clean_finance_ylnlzb():
         -----------------------------
     """
     dcu.drop_columns(u'上市信息财务信息盈利能力指标', u'标题')
+    dcu.adjust_time(u'上市信息财务信息盈利能力指标', u'日期')
 
     status_normal = [ u'--%']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -964,6 +966,8 @@ def data_clean_finance_yynlzb():
         -----------------------------
         """
     dcu.drop_columns(u'上市信息财务信息运营能力指标', u'标题')
+    dcu.adjust_time(u'上市信息财务信息运营能力指标', u'日期')
+
 
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
@@ -1152,6 +1156,7 @@ def data_clean_finance_zcfzb():
         -----------------------------
     """
     dcu.drop_columns(u'上市信息财务信息资产负债表', u'标题')
+    dcu.adjust_time(u'上市信息财务信息资产负债表',u'日期')
 
     status_normal = [u'--']  # 搜索满足这个条件的
     status_list = [status_normal]
