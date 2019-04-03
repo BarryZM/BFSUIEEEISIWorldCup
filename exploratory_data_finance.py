@@ -103,14 +103,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
         u'负债:负债合计(元)',u'权益:实收资本(或股本)(元)',u'权益:资本公积金(元)',u'权益:盈余公积金(元)',u'权益:股东权益合计(元)',u'流动比率']
     import exploratory_data_finance
 
-    exploratory_data_finance.cross_section(u'上市信息财务信息-现金流量表', [u'经营:销售商品、提供劳务收到的现金(元)',u'经营:收到的税费返还(元)',
-                u'经营:收到其他与经营活动有关的现金(元)', u'经营:经营活动现金流入小计(元)',u'经营:购买商品、接受劳务支付的现金(元)',u'经营:支付给职工以及为职工支付的现金(元)',
-                u'经营:支付的各项税费(元)',u'经营:支付其他与经营活动有关的现金(元)',u'经营:经营活动现金流出小计(元)',u'经营:经营活动产生的现金流量净额(元)',
-                u'投资:取得投资收益所收到的现金(元)',u'投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)',u'投资:投资活动现金流入小计(元)',
-                u'投资:购建固定资产、无形资产和其他长期资产支付的现金(元)',u'投资:投资支付的现金(元)',u'投资:投资活动现金流出小计(元)',
-                u'投资:投资活动产生的现金流量净额(元)',u'筹资:吸收投资收到的现金(元)',u'筹资:取得借款收到的现金(元)',u'筹资:筹资活动现金流入小计(元)',
-                u'筹资:偿还债务支付的现金(元)',u'筹资:分配股利、利润或偿付利息支付的现金(元)',u'筹资:筹资活动现金流出小计(元)',u'筹资活动产生的现金流量净额(元)'])
-
+    
     
     exploratory_data_finance.cross_section(u'上市公司财务信息-每股指标', [u'基本每股收益(元)', u'扣非每股收益(元)', u'稀释每股收益(元)',
                 u'每股净资产(元)', u'每股公积金(元)', u'每股未分配利润(元)', u'每股经营现金流(元)'])
@@ -120,6 +113,14 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
         u'营业总收入滚动环比增长(元)',u'归属净利润滚动环比增长(元)',u'扣非净利润滚动环比增长(元)'])
     exploratory_data_finance.cross_section(u'上市信息财务信息-利润表', [u'营业收入(元)',u'营业成本(元)',u'销售费用(元)',u'财务费用(元)',
        u'管理费用(元)',u'资产减值损失(元)',u'投资收益(元)',u'营业利润(元)',u'利润总额(元)',u'所得税(元)',u'归属母公司所有者净利润(元)'])
+    exploratory_data_finance.cross_section(u'上市信息财务信息-现金流量表', [u'经营:销售商品、提供劳务收到的现金(元)',u'经营:收到的税费返还(元)',
+                u'经营:收到其他与经营活动有关的现金(元)', u'经营:经营活动现金流入小计(元)',u'经营:购买商品、接受劳务支付的现金(元)',u'经营:支付给职工以及为职工支付的现金(元)',
+                u'经营:支付的各项税费(元)',u'经营:支付其他与经营活动有关的现金(元)',u'经营:经营活动现金流出小计(元)',u'经营:经营活动产生的现金流量净额(元)',
+                u'投资:取得投资收益所收到的现金(元)',u'投资:处置固定资产、无形资产和其他长期资产收回的现金净额(元)',u'投资:投资活动现金流入小计(元)',
+                u'投资:购建固定资产、无形资产和其他长期资产支付的现金(元)',u'投资:投资支付的现金(元)',u'投资:投资活动现金流出小计(元)',
+                u'投资:投资活动产生的现金流量净额(元)',u'筹资:吸收投资收到的现金(元)',u'筹资:取得借款收到的现金(元)',u'筹资:筹资活动现金流入小计(元)',
+                u'筹资:偿还债务支付的现金(元)',u'筹资:分配股利、利润或偿付利息支付的现金(元)',u'筹资:筹资活动现金流出小计(元)',u'筹资活动产生的现金流量净额(元)'])
+
     exploratory_data_finance.cross_section(u'上市信息财务信息盈利能力指标', [u'加权净资产收益率(%)',u'摊薄净资产收益率(%)',u'摊薄总资产收益率(%)',u'毛利率(%)',u'净利率(%)',u'实际税率(%)'])
     exploratory_data_finance.cross_section(u'上市信息财务信息运营能力指标', [u'总资产周转率(次)',u'应收账款周转天数(天)',u'存货周转天数(天)'])
     exploratory_data_finance.cross_section(u'上市信息财务信息资产负债表', [u'资产:货币资金(元)',u'资产:应收账款(元)',u'资产:其它应收款(元)',u'资产:存货(元)',
@@ -131,7 +132,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     return
 
 
-def drop_indexes_too_many_empty(): #删空行太多的列
+def drop_indexes_too_many_empty(): #删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
     for file_n in category_finance_files:
         df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
         df = df.dropna(axis=1, thresh=1000)
@@ -169,7 +170,7 @@ def drop_score_empty(): #删去评分为空的公式
     some corporates lack of scores, we need to drop them.
     :return:
     """
-    empty_check_list = [u'企业总评分'.encode('utf-8')]
+    empty_check_list = [u'企业总评分']
     for file_n in category_finance_files:
         print file_n
 
@@ -185,12 +186,10 @@ def score_integerize(): # 评分化为整数
     :return:
     """
     for file_n in category_finance_files:
-        if file_n == u'上市信息财务信息-现金流量表':
-            continue
         print file_n
 
         data_frame = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
-        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+        data_frame['int_score'] = data_frame[u'企业总评分'].apply(lambda x: round(x))
 
         file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index')
 
