@@ -129,13 +129,12 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     """
     return
 
-file_n=u'上市信息财务信息-财务风险指标'
 def drop_indexes_too_many_empty(): #删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
     for file_n in category_finance_files:
         df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
         df = df.dropna(axis=1, thresh=1000)
         df = df.fillna(-65535)  # empty value is filled with -65535
-        file_utils.write_file(df, corporation_index_file_url, file_n + '_index',index=True)
+        file_utils.write_file(df, corporation_index_file_url, file_n + '_index')
 
 
 def append_score(): #加上评分
