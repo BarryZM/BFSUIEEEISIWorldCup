@@ -102,8 +102,6 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
         u'负债:预收账款(元)',u'负债:存货跌价准备(元)',u'负债:流动负债合计(元)',u'负债:长期负债合计(元)',
         u'负债:负债合计(元)',u'权益:实收资本(或股本)(元)',u'权益:资本公积金(元)',u'权益:盈余公积金(元)',u'权益:股东权益合计(元)',u'流动比率']
     import exploratory_data_finance
-
-    
     
     exploratory_data_finance.cross_section(u'上市公司财务信息-每股指标', [u'基本每股收益(元)', u'扣非每股收益(元)', u'稀释每股收益(元)',
                 u'每股净资产(元)', u'每股公积金(元)', u'每股未分配利润(元)', u'每股经营现金流(元)'])
@@ -131,7 +129,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     """
     return
 
-
+file_n=u'上市信息财务信息-财务风险指标'
 def drop_indexes_too_many_empty(): #删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
     for file_n in category_finance_files:
         df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
@@ -151,7 +149,8 @@ def append_score(): #加上评分
     for file_n in category_finance_files:
         print file_n
         data_frame = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
-
+        # columns = data_frame.columns.values.tolist()
+        # print data_frame
         try:
             data_frame = data_frame.set_index('Unnamed: 0')
         except KeyError, f:
@@ -165,7 +164,7 @@ def append_score(): #加上评分
     return
 
 
-def drop_score_empty(): #删去评分为空的公式
+def drop_score_empty(): #删去评分为空的公式，如果第一列名为空，第一列也会被删
     """
     some corporates lack of scores, we need to drop them.
     :return:
