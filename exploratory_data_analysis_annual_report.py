@@ -12,12 +12,14 @@
     年报-股东股权转让
     年报-股东（发起人）及出资信息
 """
-import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
 import pandas as pd
-import exploratory_data_utils as edu
-import data_clean_utils as dcu
 from dateutil import parser
+
+import data_clean_utils as dcu
+import exploratory_data_utils as edu
+import file_utils as fu
+import visualize_utils as vu
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
 
 
 def generate_index_basic_info(corporate_start, corporate_end):
@@ -356,7 +358,6 @@ def generate_index_out_warrant_info(corporate_start, corporate_end):
     for corporate in range(corporate_start, corporate_end + 1):
         row_dict = {}
         row_list = []
-
         total_num1 = 0
         total_num2 = 0
         total_num3 = 0
@@ -487,11 +488,11 @@ def generate_index_social_security_info(corporate_start, corporate_end):
                'real_pay_medic_insure_2016',
                'real_pay_injur_insure_2016',
                'real_pay_mater_insure_2016',
-               'integ_pay_endow_insure_2016',
-               'integ_pay_unemp_insure_2016',
-               'integ_pay_medic_insure_2016',
-               'integ_pay_injur_insure_2016',
-               'integ_pay_mater_insure_2016',
+               'integ_unpay_endow_insure_2016',
+               'integ_unpay_unemp_insure_2016',
+               'integ_unpay_medic_insure_2016',
+               'integ_unpay_injur_insure_2016',
+               'integ_unpay_mater_insure_2016',
                'peo_endow_insure_2017',
                'peo_unemp_insure_2017',
                'peo_medic_insure_2017',
@@ -551,6 +552,39 @@ def generate_index_social_security_info_work():
     df = df.fillna(0)
     fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
     return
+
+
+def generate_index_social_security_growth_rate():
+    """
+    add growth rate indexes in 年报-社保信息_index
+    :return:
+    """
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-社保信息_index')
+    growth_list = ['peo_endow_insure_',
+                   'peo_unemp_insure_',
+                   'peo_medic_insure_',
+                   'peo_injur_insure_',
+                   'peo_mater_insure_',
+                   'pay_base_endow_insure_',
+                   'pay_base_unemp_insure_',
+                   'pay_base_medic_insure_',
+                   'pay_base_mater_insure_',
+                   'real_pay_endow_insure_',
+                   'real_pay_unemp_insure_',
+                   'real_pay_medic_insure_',
+                   'real_pay_injur_insure_',
+                   'real_pay_mater_insure_',
+                   'integ_unpay_endow_insure_',
+                   'integ_unpay_unemp_insure_',
+                   'integ_unpay_medic_insure_',
+                   'integ_unpay_injur_insure_',
+                   'integ_unpay_mater_insure_'
+                   ]
+    for item in growth_list:
+        # df[item + '06-07'] = df[item + '2016'] / df[item + '2017']
+        df[item + '16-17'] = df.apply(lambda x: edu.cal_growth_rate(x, item + '2017', item + '2016', 65535), axis=1)
+
+    fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
 
 
 def generate_index_share_exchange_info(corporate_start, corporate_end):
@@ -761,21 +795,25 @@ def generate_index_share_holder_info_work():
     return
 
 
-soft_assets_indexes = [u'年报-企业基本信息',
-                       u'年报-企业资产状况信息',
-                       u'年报-对外投资信息',
-                       u'年报-的对外提供保证担保信息',
-                       u'年报-社保信息',
-                       u'年报-股东股权转让',
-                       u'年报-股东（发起人）及出资信息'
-                       ]
+annual_report_indexes = [u'年报-企业基本信息',
+                         u'年报-企业资产状况信息',
+                         u'年报-对外投资信息',
+                         u'年报-的对外提供保证担保信息',
+                         u'年报-社保信息',
+                         u'年报-股东股权转让',
+                         u'年报-股东（发起人）及出资信息'
+                         ]
 
 
 def append_score():
+    """
+        append score to each index file.
+        :return:
+        """
     score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
     score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
 
-    for file_n in soft_assets_indexes:
+    for file_n in annual_report_indexes:
         print file_n
 
         data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
@@ -788,11 +826,153 @@ def append_score():
 
 
 def drop_score_empty():
+    """
+    some corporates lack of scores, we need to drop them.
+    :return:
+    """
     empty_check_list = [u'企业总评分'.encode('utf-8')]
-    for file_n in soft_assets_indexes:
+    for file_n in annual_report_indexes:
         print file_n
 
         dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
                        dst_file_url=corporation_index_file_url)
         dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
                                      dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
+
+
+def score_integerize():
+    """
+    scores are float, and we want try if integers will helps.
+    :return:
+    """
+    for file_n in annual_report_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
+def pic_scatter():
+    """
+    plot scatter pictures for each index and score.
+    :return:
+    """
+    vu.pic_scatter(annual_report_indexes, 'annual_report')
+
+
+# These are indexes we filtered through scatter pictures
+indexes_filter = ['inv_count_2013',
+                  'inv_count_2014',
+                  'inv_count_2015',
+                  'inv_count_2016',
+                  'inv_count_2017',
+                  'inv_count_total',
+                  'inv_over_50_count_2013',
+                  'inv_over_50_count_total',
+                  'max_inv_ratio_total',
+                  'pri_cred_right_count_2013',
+                  'pri_cred_right_count_2014',
+                  'pri_cred_right_count_2015',
+                  'pri_cred_right_count_2016',
+                  'pri_cred_right_count_2017',
+                  'pri_cred_right_count_total',
+                  'pay_base_endow_insure_16-17',
+                  'pay_base_endow_insure_2017',
+                  'pay_base_mater_insure_16-17',
+                  'pay_base_mater_insure_2017',
+                  'pay_base_medic_insure_16-17',
+                  'pay_base_medic_insure_2017',
+                  'pay_base_unemp_insure_16-17',
+                  'pay_base_unemp_insure_2017',
+                  'peo_endow_insure_2017',
+                  'peo_injur_insure_2017',
+                  'peo_mater_insure_2017',
+                  'peo_medic_insure_2017',
+                  'peo_unemp_insure_2017',
+                  'real_pay_endow_insure_16-17',
+                  'real_pay_endow_insure_2017',
+                  'real_pay_injur_insure_16-17',
+                  'real_pay_injur_insure_2017',
+                  'real_pay_medic_insure_2017',
+                  'real_pay_unemp_insure_16-17',
+                  'real_pay_unemp_insure_2016',
+                  'sha_hol_confirm_2013',
+                  'sha_hol_confirm_2014',
+                  'sha_hol_confirm_2015',
+                  'sha_hol_confirm_2016',
+                  'sha_hol_confirm_2017',
+                  'sha_hol_confirm_ca1_2013',
+                  'sha_hol_confirm_ca1_2014',
+                  'sha_hol_confirm_ca1_2015',
+                  'sha_hol_confirm_ca1_2016',
+                  'sha_hol_confirm_ca1_2017',
+                  'sha_hol_confirm_ca2_2013',
+                  'sha_hol_confirm_ca2_2014',
+                  'sha_hol_confirm_ca2_2015',
+                  'sha_hol_confirm_ca2_2016',
+                  'sha_hol_confirm_ca2_2017',
+                  'sha_hol_confirm_max_2013',
+                  'sha_hol_confirm_max_2014',
+                  'sha_hol_confirm_max_2015',
+                  'sha_hol_confirm_max_2016',
+                  'sha_hol_confirm_max_2017',
+                  'sha_hol_subsc_2013',
+                  'sha_hol_subsc_2014',
+                  'sha_hol_subsc_2015',
+                  'sha_hol_subsc_2016',
+                  'sha_hol_subsc_2017',
+                  'sha_hol_subsc_ca1_2013',
+                  'sha_hol_subsc_ca1_2014',
+                  'sha_hol_subsc_ca1_2015',
+                  'sha_hol_subsc_ca1_2016',
+                  'sha_hol_subsc_ca1_2017',
+                  'sha_hol_subsc_max_2013',
+                  'sha_hol_subsc_max_2014',
+                  'sha_hol_subsc_max_2015',
+                  'sha_hol_subsc_max_2016',
+                  'sha_hol_subsc_max_2017',
+                  'sha_sub_conf_neq_2013',
+                  'sha_sub_conf_neq_2014',
+                  'sha_sub_conf_neq_2015',
+                  'sha_sub_conf_neq_2016',
+                  'sha_sub_conf_neq_2017',
+                  'sha_ex_count_total',
+                  'sha_ex_over3_count_2013',
+                  'sha_ex_over3_count_2014',
+                  'sha_ex_over3_count_2015',
+                  'sha_ex_over3_count_2016',
+                  'sha_ex_over3_count_2017',
+                  'sha_ex_over3_count_total'
+                  ]
+
+
+def drop_useless_indexes():
+    """
+    Drop indexes we think is useless from the image of scatter.
+    :return:
+    """
+    print ('total indexes: ' + str(len(indexes_filter)))
+    counts = 0
+    for file_n in annual_report_indexes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        for column in data_frame.columns:
+            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
+                continue
+            if column not in indexes_filter:
+                data_frame = data_frame.drop(column, axis=1)
+        counts += len(data_frame.columns) - 3
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+    print ('set indexes: ' + str(counts))
+
+
+def display_indexes_corr():
+    """
+    Draw the correlations between each index.
+    :return:
+    """
+    vu.pic_corr_heat_map(annual_report_indexes, 'annual_report')
+

@@ -128,11 +128,17 @@ def primary_analysis_after_duplicate_handled():
 def time_rearranged(file_name, column_name):
 
     # 用split分开时间， 注意：之后数据分析所要用时间表头为0（数字格式）
-    table = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
-    wr1 = pd.concat([table, table[column_name].str.split(r' ', expand=True)], axis=1, names=['times', 'min'])
-    fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',sheet_name='Sheet', index=False)
+    df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
+    df["time"], df["minute"], df["day"] = df[column_name].str.split(" ", n=1).str  # 分成两个表 n为劈开的次数
+    df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
+    df.drop("minute", axis=1, inplace=True)  #删除具体时间
+    fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False)  # 保存
 
-    dcu.drop_columns(file_name, 1 )
+    # table = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
+    # wr1 = pd.concat([table, table[column_name].str.split(r' ', expand=True)], axis=1, names=['time','miniute'])
+    # fu.write_file(wr1, clean_data_temp_file_url, file_name, ext='.xlsx',sheet_name='Sheet', index=False)
+    #
+    # dcu.drop_columns(file_name, 1 )
     return
 
 
@@ -152,9 +158,9 @@ def land_usage(file_name, column_name):
                      u'冰川及永久积雪',u'水域及水利设施用地']
     status_12 = [u'12', u'121', u'122', u'123', u'124', u'125', u'126', u'127', u'空闲地', u'设施农用地',
                      u'田坎', u'盐碱地', u'沼泽地', u'沙地', u'裸地',u'其他土地']
-    status_0 = [u'0',u'土地面积(公顷)'] #错误的类别
-    status_list = [status_5, status_6, status_7, status_8, status_9, status_10, status_11, status_12, status_0]
-    status_after = [5, 6, 7, 8, 9, 10, 11, 12, 0]
+    status_no = [u'0',u'土地面积(公顷)'] #错误的类别
+    status_list = [status_5, status_6, status_7, status_8, status_9, status_10, status_11, status_12, status_no]
+    status_after = [5, 6, 7, 8, 9, 10, 11, 12, -1]
     dcu.merge_status(file_name, column_name, status_list, status_after)
     return
 

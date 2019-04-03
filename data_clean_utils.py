@@ -411,6 +411,7 @@ def extract_keyword(file_name, column_name, keywords, empty_mask='Unknown', othe
         for j in range(0, len(keywords)):
             if keywords[j] in str(content):
                 data_frame.set_value(index, column_name, keywords[j])
+                break
 
     for index in range(0, len(data_frame)):
         content = data_frame.at[index, column_name]
