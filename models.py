@@ -10,6 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.ensemble import GradientBoostingClassifier
 import validation
 
 # Custom scorer for cross validation
@@ -29,8 +30,16 @@ def get_fitted_data_set(train_set, test_set):
 
 
 def random_forest(data, target, test_data, test_target):
-    model = RandomForestClassifier(n_estimators=100, random_state=10,
-                                   n_jobs=-1)
+    model = RandomForestClassifier(n_estimators=10, random_state=10, n_jobs=-1)
+    model.fit(data, target)
+    prediction = model.predict(test_data)
+    print(prediction)
+    print(test_target)
+    return validation.cal_rmse(prediction, test_target)
+
+
+def gradient_boosting(data, target, test_data, test_target):
+    model = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=24, random_state=0)
     model.fit(data, target)
     prediction = model.predict(test_data)
     print(prediction)

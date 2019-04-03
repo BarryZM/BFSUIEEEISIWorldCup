@@ -28,7 +28,7 @@ def read_file_to_df(file_dir, file_name, ext='.xlsx', sheet_name='Sheet'):
 
 
 def write_file_without_save(pf, writer, sheet_name='Sheet', index=False):
-    pf.to_excel(writer, sheet_name=sheet_name, index=index)
+    pf.to_excel(writer, sheet_name=sheet_name, index=index, index_label='Unnamed: 0')
 
 
 def write_file_with_writer(pf, writer, sheet_name='Sheet', index=False):

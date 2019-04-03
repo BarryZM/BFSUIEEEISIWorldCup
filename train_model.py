@@ -7,7 +7,7 @@
 import random
 import models
 import file_utils as fu
-from file_directions import corporation_index_second_stage_file_url
+from file_directions import corporation_index_second_stage_file_url, corporation_index_file_url
 
 
 def generate_random_test_corporates():
@@ -77,8 +77,24 @@ def generate_dataframe():
     data_frames.append(data_frame11)
     data_frame12 = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-股东（发起人）及出资信息_index')
     data_frames.append(data_frame12)
+    #
+    # data_frame13 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-利润表_index')
+    # data_frames.append(data_frame13)
+    # data_frame14 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-成长能力指标_index')
+    # data_frames.append(data_frame14)
+    # data_frame15 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-财务风险指标_index')
+    # data_frames.append(data_frame15)
+    # data_frame16 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息盈利能力指标_index')
+    # data_frames.append(data_frame16)
+    # data_frame17 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息资产负债表_index')
+    # data_frames.append(data_frame17)
+    # data_frame18 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息运营能力指标_index')
+    # data_frames.append(data_frame18)
+    data_frame19 = fu.read_file_to_df(corporation_index_file_url, u'上市公司财务信息-每股指标_index')
+    data_frames.append(data_frame19)
 
     for i in range(0, len(data_frames)):
+        print(i)
         data_frames[i] = data_frames[i].set_index('Unnamed: 0')
         if i > 0:
             data_frames[i] = data_frames[i].drop(columns=[u'企业总评分', 'int_score'])
@@ -103,6 +119,21 @@ def train_random_forest():
 
     train_set, test_set = models.get_fitted_data_set(train_set, test_set)
     models.random_forest(train_set, train_target, test_set, test_target)
+
+
+def train_gradient_boosting():
+    data_frame = generate_dataframe()
+
+    test_set = data_frame.loc[test_corporates]
+    test_target = test_set['int_score'].tolist()
+    test_set = test_set.drop(columns=[u'企业总评分', 'int_score'])
+
+    train_set = data_frame.drop(test_corporates)
+    train_target = train_set['int_score']
+    train_set = train_set.drop(columns=[u'企业总评分', 'int_score'])
+
+    train_set, test_set = models.get_fitted_data_set(train_set, test_set)
+    models.gradient_boosting(train_set, train_target, test_set, test_target)
 
 
 def train_linear_regress():
