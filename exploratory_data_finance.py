@@ -6,9 +6,11 @@
 import sys
 import numpy
 import file_utils
-from file_directions import working_file_url, clean_data_temp_file_url, corporation_index_file_url,corporation_index_scatter_file_url
+from file_directions import working_file_url, clean_data_temp_file_url, corporation_index_file_url, \
+    corporation_index_scatter_file_url
 import pandas
 import data_clean_utils as dcu
+import exploratory_data_utils as edu
 from files_category_info import category_finance_files
 import visualize_utils as vu
 
@@ -36,17 +38,17 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
 
     data_frame = file_utils.read_file_to_df(file_url, file_name)
     date = data_frame[u'日期']  # 日期列
-    unique_date = numpy.sort(list(set(date))) #删除重复，并按时间排列
-    #只保留 16.9之后的
+    unique_date = numpy.sort(list(set(date)))  # 删除重复，并按时间排列
+    # 只保留 16.9之后的
     # for j in range(0, len(unique_date)):
     #     if unique_date[j][0:3]<2016 or unique_date[j][5:6]<09:
     #         unique_date[j]=[]
 
-    #新表的列名，是变量名和日期的交叉项
-    var_date=[]
-    for i in range(0,len(vars)):
-        for j in range(0,len(unique_date)):
-            var_date.append(vars[i]+ unique_date[j].encode('utf-8'))
+    # 新表的列名，是变量名和日期的交叉项
+    var_date = []
+    for i in range(0, len(vars)):
+        for j in range(0, len(unique_date)):
+            var_date.append(vars[i] + unique_date[j].encode('utf-8'))
     """
     尝试
     a = []
@@ -67,22 +69,22 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
 
     # 建立空表
     b = []
-    b = pandas.DataFrame(index = [range(1001,4001)],columns = var_date)
+    b = pandas.DataFrame(index=[range(1001, 4001)], columns=var_date)
 
-    #赋值
+    # 赋值
     for i in range(0, len(vars)):
         for j in range(0, len(data_frame)):  # 原表中的每一行
-            company = data_frame.iloc[j,0]
+            company = data_frame.iloc[j, 0]
             # at后要写列的名字，不能写列数
             # company = data_frame.at[j, u'企业总评分']
             this_season = data_frame.at[j, u'日期']
             this_number = data_frame.at[j, vars[i]]
             if this_number != 'Unknown':
-                column = vars[i]+ this_season.encode('utf-8')
-                b.set_value(company,column,this_number)
+                column = vars[i] + this_season.encode('utf-8')
+                b.set_value(company, column, this_number)
 
-    file_utils.write_file(b, file_utils.check_file_url(dst_file_url), file_name+'_index', ext='.xlsx',
-                      sheet_name='Sheet', index=True)
+    file_utils.write_file(b, file_utils.check_file_url(dst_file_url), file_name + '_index', ext='.xlsx',
+                          sheet_name='Sheet', index=True)
 
     """
     空值的处理有点问题
@@ -129,7 +131,8 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     """
     return
 
-def drop_indexes_too_many_empty(): #删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
+
+def drop_indexes_too_many_empty():  # 删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
     for file_n in category_finance_files:
         df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
         df = df.dropna(axis=1, thresh=1000)
@@ -137,7 +140,7 @@ def drop_indexes_too_many_empty(): #删空行太多的列。已经跑过一遍�
         file_utils.write_file(df, corporation_index_file_url, file_n + '_index')
 
 
-def append_score(): #加上评分
+def append_score():  # 加上评分
     """
         append score to each index file.
         :return:
@@ -157,13 +160,13 @@ def append_score(): #加上评分
         try:
             data_frame = data_frame.join(score_frame)
             file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
-        except ValueError,e:
+        except ValueError, e:
             print e.message
 
     return
 
 
-def drop_score_empty(): #删去评分为空的公式，如果第一列名为空，第一列也会被删
+def drop_score_empty():  # 删去评分为空的公式，如果第一列名为空，第一列也会被删
     """
     some corporates lack of scores, we need to drop them.
     :return:
@@ -178,7 +181,7 @@ def drop_score_empty(): #删去评分为空的公式，如果第一列名为空�
                                      dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
 
 
-def score_integerize(): # 评分化为整数
+def score_integerize():  # 评分化为整数
     """
     scores are float, and we want try if integers will helps.
     :return:
@@ -201,5 +204,16 @@ def pic_scatter():
     vu.pic_scatter(category_finance_files, 'finance')
 
 
+def gen_growth_ratio():
+    data_frame = file_utils.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-利润表' + '_index')
+    print data_frame.columns
+    # data_frame['interest_growth_1709-1809'] = data_frame.apply(
+    #     lambda x: edu.cal_growth_rate(x, u'利润总额(元)2018-09-30'.encode('utf-8'), u'利润总额(元)2017-09-30'.encode('utf-8'),
+    #                                   default=0, jump_value=-65535), axis=1)
+    data_frame['interest_growth_range_1709-1809'] = data_frame.apply(
+        lambda x: edu.cal_growth_rate_range(x, u'利润总额(元)2018-09-30'.encode('utf-8'),
+                                            u'利润总额(元)2017-09-30'.encode('utf-8'),
+                                            [-100, -50, -10, -5, -3, -1, 0, 1, 3, 5, 10, 50, 100, 300],
+                                            default=0, jump_value=-65535), axis=1)
 
-
+    file_utils.write_file(data_frame, corporation_index_file_url, u'上市信息财务信息-利润表' + '_index')

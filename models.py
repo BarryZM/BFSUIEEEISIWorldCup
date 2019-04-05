@@ -12,6 +12,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.tree import DecisionTreeRegressor
+from xgboost import XGBClassifier
 import validation
 import pandas as pd
 
@@ -32,7 +34,28 @@ def get_fitted_data_set(train_set, test_set):
 
 
 def random_forest(data, target, test_data, test_target, features=None):
-    model = RandomForestClassifier(n_estimators=400, random_state=10, n_jobs=-1)
+    # for n in range(405, 430):
+        n = 406  # 406 seems best in these values
+        print ('n = ' + str(n))
+        model = RandomForestClassifier(n_estimators=n, random_state=10, n_jobs=-1, max_features=58)
+        model.fit(data, target)
+        prediction = model.predict(test_data)
+        cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
+        # print(prediction)
+        # print(test_target)
+        print ('F1 score = ' + str(cv_score.mean()))
+        print ('F1 score std = ' + str(cv_score.std()))
+        # Feature importances into a dataframe
+        if features is not None:
+            feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
+            # print(feature_importances.head())
+        validation.cal_rmse(prediction, test_target)
+
+
+def xgboost(data, target, test_data, test_target, features=None):
+    n = 406
+    print ('n = ' + str(n))
+    model = XGBClassifier()
     model.fit(data, target)
     prediction = model.predict(test_data)
     cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
@@ -43,16 +66,19 @@ def random_forest(data, target, test_data, test_target, features=None):
     # Feature importances into a dataframe
     if features is not None:
         feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
-        print(feature_importances.head())
-    return validation.cal_rmse(prediction, test_target)
+        # print(feature_importances.head())
+    validation.cal_rmse(prediction, test_target)
 
 
 def gradient_boosting(data, target, test_data, test_target):
     model = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=24, random_state=0)
     model.fit(data, target)
     prediction = model.predict(test_data)
-    print(prediction)
-    print(test_target)
+    cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
+    # print(prediction)
+    # print(test_target)
+    print ('F1 score = ' + str(cv_score.mean()))
+    print ('F1 score std = ' + str(cv_score.std()))
     return validation.cal_rmse(prediction, test_target)
 
 
@@ -74,4 +100,16 @@ def kneighbors_reg(data, target, test_data, test_target):
     model = KNeighborsRegressor()
     model.fit(data, target)
     prediction = model.predict(test_data)
+    return validation.cal_rmse(prediction, test_target)
+
+
+def decision_tree_reg(data, target, test_data, test_target):
+    model = DecisionTreeRegressor()
+    model.fit(data, target)
+    prediction = model.predict(test_data)
+    cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
+    # print(prediction)
+    # print(test_target)
+    print ('F1 score = ' + str(cv_score.mean()))
+    print ('F1 score std = ' + str(cv_score.std()))
     return validation.cal_rmse(prediction, test_target)
