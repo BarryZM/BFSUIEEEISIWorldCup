@@ -24,7 +24,6 @@ scorer = make_scorer(f1_score, greater_is_better=True, average='macro')
 
 def get_fitted_data_set(train_set, test_set):
     features = list(train_set.columns)
-
     pipeline = Pipeline([('imputer', Imputer(strategy='median')),
                          ('scaler', MinMaxScaler())])
 
@@ -48,9 +47,9 @@ def random_forest(data, target, test_data, test_target, features=None):
         print ('F1 score = ' + str(cv_score.mean()))
         print ('F1 score std = ' + str(cv_score.std()))
         # Feature importances into a dataframe
-        if features is not None:
-            feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
-            # print(feature_importances.head())
+        # if features is not None:
+        #     feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
+        #     # print(feature_importances.head())
         validation.cal_rmse(prediction, test_target)
         return prediction_fit, prediction
 
