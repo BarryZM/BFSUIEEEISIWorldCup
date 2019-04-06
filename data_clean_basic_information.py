@@ -737,7 +737,6 @@ def ranking_of_bond(file_name, column_name):
     dcu.merge_status(file_name, column_name, status_list, status_after)
     return
 
-
 # {'中央企业债':1,'企业债券':2,'公司'、企业债':3,'地方企业债':4,'沪企债':5,'深企债':6,'银行间企债':7}.
 def kind_of_bond(file_name, column_name):
     status_1 = [u'中央企业债']
@@ -791,7 +790,8 @@ def clean_bond():
     dcu.merge_status(file_name, u'债券品种'.encode('utf-8'),[], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'付息方式'.encode('utf-8'), [], [], empty_mask='Unknown')
 
-    dcu.drop_unit(file_name, u'债券期限'.encode('utf-8'), [u'年'], empty_mask='Unknown')
+
+    dcu.drop_unit(file_name, u'债券期限'.encode('utf-8'), [u'年'], empty_mask= -1)
 
     wr1 = fu.read_file_to_df(clean_data_temp_file_url,file_name,
                              sheet_name='Sheet')
@@ -912,8 +912,10 @@ def round(file_name, column_name):  # 行业类别进行数字化处理
 
 def clean_financing():
     file_name = u'融资信息'
-    dcu.merge_status(file_name, u'融资日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'融资日期'.encode('utf-8'), [], [], empty_mask='0000-00-00')
     dcu.merge_status(file_name, u'轮次'.encode('utf-8'), [], [], empty_mask='Unknown')
+
+    time_rearranged(file_name, u'融资日期'.encode('utf-8'))
 
     round(file_name, u'轮次'.encode('utf-8'))
 
@@ -925,10 +927,10 @@ def clean_financing():
     for index in range(0, len(wr1)):
         content = wr1.at[index, column_name]
         if str(content).startswith(u'数'):
-            str1 = 'Unknown'
+            str1 = '-65556'
             wr1.set_value(index, column_name, str1)
         elif str(content).startswith(u'未披露'):
-            str1 = 'Unknown'
+            str1 = '-65556'
             wr1.set_value(index, column_name, str1)
     fu.write_file(wr1, clean_data_temp_file_url, u'融资信息', ext='.xlsx',
                   sheet_name='Sheet', index=False)
@@ -960,6 +962,8 @@ def clean_financing():
             numb = float(num)
             numc = numb * (10 ** 4)
             wr1.set_value(index, column_name, numc)
+
+
     fu.write_file(wr1, clean_data_temp_file_url, u'融资信息', ext='.xlsx',
                   sheet_name='Sheet', index=False)
 
