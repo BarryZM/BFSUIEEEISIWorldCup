@@ -57,7 +57,7 @@ def generate_random_test_corporates():
 def generate_test_corporates():
     data_frame = fu.read_file_to_df(corporation_index_second_stage_file_url, u'年报-企业基本信息_index')
     corporates = list(data_frame['Unnamed: 0'])
-    ran_list = random.sample(range(0, 2957), 428)
+    ran_list = random.sample(range(0, 2956), 428)
     test_cos = []
     print(len(list(set(ran_list))))
     print (sorted(ran_list))
