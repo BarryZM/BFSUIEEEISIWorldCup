@@ -436,7 +436,7 @@ def level_of_credit(file_name, column_name):
     status_3 = [u'一般认证企业']
     status_4 = [u'高级认证企业']
     status_no = ['Unknown']  # 错误的类别
-    status_list = [status_1, status_2, status_3, status_4, status_5, status_no]
+    status_list = [status_1, status_2, status_3, status_4, status_no]
     status_after = [1, 2, 3, 4, 5, -1]
     dcu.merge_status(file_name, column_name, status_list, status_after)
     return
@@ -460,7 +460,7 @@ def clean_custom_credit():
     kind_of_range(file_name, u'经济区划'.encode('utf-8'))
     kind_of_tax_company(file_name, u'经营类别'.encode('utf-8'))
     log_out_custom(file_name,  u'海关注销标志'.encode('utf-8'))
-    status_of_company(file_name, u'年报情况'.encode('utf-8'))
+    status_of_annual_report(file_name, u'年报情况'.encode('utf-8'))
     level_of_credit(file_name, u'信用等级'.encode('utf-8'))
 
     return
