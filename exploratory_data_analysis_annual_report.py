@@ -947,32 +947,78 @@ indexes_filter = ['inv_count_2013',
                   'sha_ex_over3_count_total'
                   ]
 
+# These are indexes we filtered through heatmap pictures
+indexes_filter_second = ['inv_count_2013',
+                         'inv_count_total',
+                         'max_inv_ratio_total',
+                         'pri_cred_right_count_2013',
+                         'pri_cred_right_count_2014',
+                         'pri_cred_right_count_total',
+                         'pay_base_endow_insure_16-17',
+                         'pay_base_endow_insure_2017',
+                         'pay_base_medic_insure_16-17',
+                         'peo_mater_insure_2017',
+                         'real_pay_endow_insure_16-17',
+                         'real_pay_endow_insure_2017',
+                         'real_pay_injur_insure_16-17',
+                         'real_pay_injur_insure_2017',
+                         'real_pay_unemp_insure_2016',
+                         'sha_hol_confirm_2013',
+                         'sha_hol_confirm_2014',
+                         'sha_hol_confirm_2015',
+                         'sha_hol_confirm_2016',
+                         'sha_hol_confirm_2017',
+                         'sha_hol_confirm_ca2_2013',
+                         'sha_hol_confirm_ca2_2014',
+                         'sha_hol_confirm_ca2_2015',
+                         'sha_hol_confirm_ca2_2016',
+                         'sha_hol_confirm_ca2_2017',
+                         'sha_hol_confirm_max_2013',
+                         'sha_hol_confirm_max_2014',
+                         'sha_hol_confirm_max_2015',
+                         'sha_hol_confirm_max_2016',
+                         'sha_hol_confirm_max_2017',
+                         'sha_hol_subsc_max_2013',
+                         'sha_hol_subsc_max_2014',
+                         'sha_hol_subsc_max_2015',
+                         'sha_hol_subsc_max_2016',
+                         'sha_hol_subsc_max_2017',
+                         'sha_sub_conf_neq_2013',
+                         'sha_sub_conf_neq_2014',
+                         'sha_sub_conf_neq_2015',
+                         'sha_sub_conf_neq_2016',
+                         'sha_sub_conf_neq_2017',
+                         'sha_ex_count_total',
+                         'sha_ex_over3_count_2013',
+                         'sha_ex_over3_count_2014',
+                         'sha_ex_over3_count_2015',
+                         'sha_ex_over3_count_2016',
+                         'sha_ex_over3_count_2017',
+                         'sha_ex_over3_count_total',
+                         ]
 
-def drop_useless_indexes():
-    """
-    Drop indexes we think is useless from the image of scatter.
-    :return:
-    """
-    print ('total indexes: ' + str(len(indexes_filter)))
-    counts = 0
-    for file_n in annual_report_indexes:
-        print file_n
 
-        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
-        for column in data_frame.columns:
-            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
-                continue
-            if column not in indexes_filter:
-                data_frame = data_frame.drop(column, axis=1)
-        counts += len(data_frame.columns) - 3
-        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
-    print ('set indexes: ' + str(counts))
+def drop_useless_indexes_first_stage():
+    edu.drop_useless_indexes(annual_report_indexes, indexes_filter)
 
 
-def display_indexes_corr():
+def drop_useless_indexes_second_stage():
+    edu.drop_useless_indexes(annual_report_indexes, indexes_filter_second,
+                             write_url=corporation_index_file_url + 'second_stage/')
+
+
+def display_indexes_corr_first_stage():
     """
     Draw the correlations between each index.
     :return:
     """
     vu.pic_corr_heat_map(annual_report_indexes, 'annual_report')
 
+
+def display_indexes_corr_second_stage():
+    """
+    Draw the correlations between each index.
+    :return:
+    """
+    vu.pic_corr_heat_map(annual_report_indexes, 'annual_report',
+                         index_file_url=corporation_index_file_url + 'second_stage/')
