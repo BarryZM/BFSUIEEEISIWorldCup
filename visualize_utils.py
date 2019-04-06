@@ -59,6 +59,14 @@ def pic_scatter(index_files, category_name, index_file_url=corporation_index_fil
 
 def pic_corr_heat_map(index_files, category_name, index_file_url=corporation_index_file_url,
                       heat_map_url=corporation_index_heat_map_file_url):
+    """
+    Draw correlation heat map pictures in order to filter features.
+    :param index_files:
+    :param category_name:
+    :param index_file_url:
+    :param heat_map_url: where to store these pictures.
+    :return:
+    """
     fig = plt.figure(figsize=(26, 18))
     for file_n in index_files:
         print file_n
