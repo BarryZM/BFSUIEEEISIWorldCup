@@ -125,108 +125,73 @@ def generate_dataframe():
     return data_frame
 
 
-def train_random_forest():
+def get_data_set():
     data_frame = generate_dataframe()
-
     test_set = data_frame.loc[test_corporates]
     test_target = test_set[u'企业总评分'.encode('utf-8')].tolist()
     test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
 
     train_set = data_frame.drop(test_corporates)
     train_target = train_set['int_score']
+    train_reg_target = train_set[u'企业总评分'.encode('utf-8')]
     train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
 
+    return train_set, train_target, test_set, test_target, train_reg_target
+
+
+def train_random_forest():
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     print('indexes count: ' + str(len(train_set.columns)))
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.random_forest(train_set, train_target, test_set, test_target, features)
 
 
+def train_random_forest_kneighbours_reg():
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
+    print('indexes count: ' + str(len(train_set.columns)))
+    train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
+    models.random_forest_kneighbours_reg(train_set, train_target, train_reg_target, test_set, test_target, features)
+
+
+def train_random_forest_linear_reg():
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
+    print('indexes count: ' + str(len(train_set.columns)))
+    train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
+    models.random_forest_linear_reg(train_set, train_target, train_reg_target, test_set, test_target, features)
+
+
 def train_xgboost():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set[u'企业总评分'.encode('utf-8')].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set['int_score']
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     print('indexes count: ' + str(len(train_set.columns)))
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.xgboost(train_set, train_target, test_set, test_target, features)
 
 
 def train_gradient_boosting():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set['int_score'].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set['int_score']
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.gradient_boosting(train_set, train_target, test_set, test_target)
 
 
 def train_linear_regress():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set[u'企业总评分'.encode('utf-8')].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set[u'企业总评分']
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
-    models.linear_regression(train_set, train_target, test_set, test_target)
+    models.linear_regression(train_set, train_reg_target, test_set, test_target)
 
 
 def train_kneighbors():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set['int_score'].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set['int_score']
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.kneighbors(train_set, train_target, test_set, test_target)
 
 
 def train_kneighbors_regress():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set[u'企业总评分'.encode('utf-8')].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set[u'企业总评分'.encode('utf-8')]
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
-    models.kneighbors_reg(train_set, train_target, test_set, test_target)
+    models.kneighbors_reg(train_set, train_reg_target, test_set, test_target)
 
 
 def train_decision_tree_regress():
-    data_frame = generate_dataframe()
-
-    test_set = data_frame.loc[test_corporates]
-    test_target = test_set[u'企业总评分'.encode('utf-8')].tolist()
-    test_set = test_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
-    train_set = data_frame.drop(test_corporates)
-    train_target = train_set['int_score']
-    train_set = train_set.drop(columns=[u'企业总评分'.encode('utf-8'), 'int_score'])
-
+    train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.decision_tree_reg(train_set, train_target, test_set, test_target)

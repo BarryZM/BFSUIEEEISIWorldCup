@@ -16,6 +16,7 @@ from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBClassifier
 import validation
 import pandas as pd
+import numpy as np
 
 # Custom scorer for cross validation
 scorer = make_scorer(f1_score, greater_is_better=True, average='macro')
@@ -39,6 +40,7 @@ def random_forest(data, target, test_data, test_target, features=None):
         print ('n = ' + str(n))
         model = RandomForestClassifier(n_estimators=n, random_state=10, n_jobs=-1, max_features=58)
         model.fit(data, target)
+        prediction_fit = model.predict(data)
         prediction = model.predict(test_data)
         cv_score = cross_val_score(model, data, target, cv=10, scoring=scorer)
         # print(prediction)
@@ -50,6 +52,21 @@ def random_forest(data, target, test_data, test_target, features=None):
             feature_importances = pd.DataFrame({'feature': features, 'importance': model.feature_importances_})
             # print(feature_importances.head())
         validation.cal_rmse(prediction, test_target)
+        return prediction_fit, prediction
+
+
+def random_forest_kneighbours_reg(data, target, reg_target, test_data, test_target, features=None):
+    prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
+    data = np.c_[data, prediction_fit]
+    test_data = np.c_[test_data, prediction]
+    kneighbors_reg(data, reg_target, test_data, test_target)
+
+
+def random_forest_linear_reg(data, target, reg_target, test_data, test_target, features=None):
+    prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
+    data = np.c_[data, prediction_fit]
+    test_data = np.c_[test_data, prediction]
+    linear_regression(data, reg_target, test_data, test_target)
 
 
 def xgboost(data, target, test_data, test_target, features=None):
