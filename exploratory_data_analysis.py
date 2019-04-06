@@ -19,7 +19,10 @@ def score_integerize(file_holder_url):
         print file_n
 
         data_frame = fu.read_file_to_df(file_holder_url, file_n)
-        data_frame['int_score_root'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: int(x))
+        try:
+            data_frame['int_score_root'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: int(x))
+        except KeyError, ke:
+            pass
 
         fu.write_file(data_frame, file_holder_url, file_n)
 

@@ -144,13 +144,13 @@ def drop_useless_indexes(index_files, ind_fil, read_url=corporation_index_file_u
 
         data_frame = fu.read_file_to_df(read_url, file_n + '_index')
         for column in data_frame.columns:
-            if column in ['Unnamed: 0', u'企业总评分', 'int_score']:
+            if column in ['Unnamed: 0', u'企业总评分', 'int_score', 'int_score_root']:
                 continue
             if column not in ind_fil:
                 data_frame = data_frame.drop(column, axis=1)
             else:
                 indexes_filter_temp.remove(column)
-        counts += len(data_frame.columns) - 3
+        counts += len(data_frame.columns) - 4
         fu.write_file(data_frame, fu.check_file_url(write_url), file_n + '_index')
     print ('set indexes: ' + str(counts))
     print (indexes_filter_temp)

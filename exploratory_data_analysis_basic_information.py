@@ -607,7 +607,6 @@ def score_integerize():
 
         data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
         data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
-        data_frame['int_score_root'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: int(x))
 
         fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
 
@@ -619,3 +618,20 @@ def pic_scatter():
     """
     vu.pic_scatter(category_basic_information, 'basic_info')
 
+#
+# indexes_filter = ['financing_count',
+#                   'invest_year_between_2009_and_2013',
+#                   'investment_amount_between_100million_and_500_million',
+#                   'investment_amount_less_than_100_million',
+#                   'investment_amount_more_than_500_million',
+#                   'investment_year_after_2013',
+#                   'investment_year_before_2009'
+#                   ]
+
+
+indexes_filter = ['bidding'
+                  ]
+
+
+def drop_useless_indexes_first_stage():
+    edu.drop_useless_indexes([u'招投标'], indexes_filter)

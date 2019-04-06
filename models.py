@@ -34,10 +34,10 @@ def get_fitted_data_set(train_set, test_set):
 
 
 def random_forest(data, target, test_data, test_target, features=None):
-    # for n in range(405, 430):
-        n = 406  # 406 seems best in these values
+    # for n in range(407, 410):
+        n = 408  # 408 seems best with max_features 59 in these values
         print ('n = ' + str(n))
-        model = RandomForestClassifier(n_estimators=n, random_state=10, n_jobs=-1, max_features=58)
+        model = RandomForestClassifier(n_estimators=n, random_state=10, n_jobs=-1, max_features=59)
         model.fit(data, target)
         prediction_fit = model.predict(data)
         prediction = model.predict(test_data)

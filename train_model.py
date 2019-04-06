@@ -99,7 +99,7 @@ def generate_dataframe():
 
     # data_frame13 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-利润表_index')
     # data_frames.append(data_frame13)
-    data_frame14 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-成长能力指标_index')
+    data_frame14 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-成长能力指标_index')  # changed
     data_frames.append(data_frame14)
     # data_frame15 = fu.read_file_to_df(corporation_index_file_url, u'上市信息财务信息-财务风险指标_index')
     # data_frames.append(data_frame15)
@@ -114,20 +114,20 @@ def generate_dataframe():
 
     # data_frame20 = fu.read_file_to_df(corporation_index_file_url, u'一般纳税人_index')
     # data_frames.append(data_frame20)
-    data_frame21 = fu.read_file_to_df(corporation_index_file_url, u'债券信息_index')
-    data_frames.append(data_frame21)
-    data_frame22 = fu.read_file_to_df(corporation_index_file_url, u'工商基本信息表_index')
-    data_frames.append(data_frame22)
-    data_frame23 = fu.read_file_to_df(corporation_index_file_url, u'招投标_index')
+    # data_frame21 = fu.read_file_to_df(corporation_index_file_url, u'债券信息_index')
+    # data_frames.append(data_frame21)
+    # data_frame22 = fu.read_file_to_df(corporation_index_file_url, u'工商基本信息表_index')
+    # data_frames.append(data_frame22)
+    data_frame23 = fu.read_file_to_df(corporation_index_file_url, u'招投标_index')  # changed
     data_frames.append(data_frame23)
-    data_frame24 = fu.read_file_to_df(corporation_index_file_url, u'海关进出口信用_index')
-    data_frames.append(data_frame24)
+    # data_frame24 = fu.read_file_to_df(corporation_index_file_url, u'海关进出口信用_index')
+    # data_frames.append(data_frame24)
     # data_frame25 = fu.read_file_to_df(corporation_index_file_url, u'竞品_index')
     # data_frames.append(data_frame25)
     # data_frame26 = fu.read_file_to_df(corporation_index_file_url, u'纳税A级年份_index')
     # data_frames.append(data_frame26)
-    data_frame27 = fu.read_file_to_df(corporation_index_file_url, u'融资信息_index')
-    data_frames.append(data_frame27)
+    # data_frame27 = fu.read_file_to_df(corporation_index_file_url, u'融资信息_index')
+    # data_frames.append(data_frame27)
 
     for i in range(0, len(data_frames)):
         print(i)
