@@ -298,8 +298,8 @@ def clean_basic_info():
     dcu.merge_status(file_name, u'经营状态'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'行业大类（代码）'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name,  u'行业小类（代码）'.encode('utf-8'), [], [], empty_mask='-1')
-    dcu.merge_status(file_name, u'经营期限自'.encode('utf-8'), [], [], empty_mask='0000-00-00')
-    dcu.merge_status(file_name, u'员工人数'.encode('utf-8'), [], [], empty_mask='-65535')
+    dcu.merge_status(file_name, u'成立日期'.encode('utf-8'), [], [], empty_mask='0000-00-00')
+    dcu.merge_status(file_name, u'员工人数'.encode('utf-8'), [], [], empty_mask='0')
     dcu.merge_status(file_name, u'注销原因'.encode('utf-8'), [], [], empty_mask='-1')
     dcu.merge_status(file_name, u'注销时间'.encode('utf-8'), [], [], empty_mask='-1')
 
@@ -608,7 +608,7 @@ def clean_tender():
     dcu.merge_status(file_name, u'公告类型'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'中标或招标'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'省份'.encode('utf-8'), [], [], empty_mask='Unknown')
-    dcu.merge_status(file_name, u'发布时间'.encode('utf-8'), ['1970-01-01'], ['Unknown'], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'发布时间'.encode('utf-8'), ['1970-01-01'], ['0000-00-00'], empty_mask='0000-00-00')
 
     time_rearranged(file_name, u'发布时间'.encode('utf-8'))
 
@@ -927,10 +927,10 @@ def clean_financing():
     for index in range(0, len(wr1)):
         content = wr1.at[index, column_name]
         if str(content).startswith(u'数'):
-            str1 = '-65556'
+            str1 = '0'
             wr1.set_value(index, column_name, str1)
         elif str(content).startswith(u'未披露'):
-            str1 = '-65556'
+            str1 = '0'
             wr1.set_value(index, column_name, str1)
     fu.write_file(wr1, clean_data_temp_file_url, u'融资信息', ext='.xlsx',
                   sheet_name='Sheet', index=False)

@@ -58,7 +58,7 @@ def primary_analysis_after_duplicate_handled():
 
 def pre_clean():
     file_name = u'一般纳税人'
-    dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'认定日期'.encode('utf-8'), [], [], empty_mask='0000-00-00')
     dcu.merge_status(file_name, u'纳税人状态'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'出口状态备案状态'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'登记注册类型'.encode('utf-8'), [], [], empty_mask='Unknown')
@@ -210,6 +210,14 @@ def rearrange_excel():
 
 
 """
+def time_split(file_name, column_name, i = 0):
+    df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
+    df["year"+str(i)], df["month"+str(i)], df["day"+str(i)] = df[column_name].str.split("-", n=2).str  # 分成三个表 n为劈开的次数
+    df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
+    fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False) # 保存
+    return
+
+
 
 
 def kind_taxers(file_name, column_name):
@@ -281,5 +289,6 @@ def clean_tax():
     status_register(file_name, u'登记注册类型'.encode('utf-8'))
 
     dcu.time_unicode_format(file_name, column_name=u'认定日期'.encode('utf-8'))
+    time_split(file_name, u'认定日期'.encode('utf-8'), i = 0)
 
     return
