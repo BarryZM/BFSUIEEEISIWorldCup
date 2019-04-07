@@ -125,13 +125,13 @@ def primary_analysis_after_duplicate_handled():
 #     return
 
 
-def time_rearranged(file_name, column_name):
+def time_rearranged(file_name, column_name, i = 0):
 
     # 用split分开时间， 注意：之后数据分析所要用时间表头为0（数字格式）
     df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
-    df["time"], df["minute"], df["day"] = df[column_name].str.split(" ", n=1).str  # 分成两个表 n为劈开的次数
+    df["time"+str(i)], df["minute"+str(i)] = df[column_name].str.split(" ", n=1).str  # 分成两个表 n为劈开的次数
     df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
-    df.drop("minute", axis=1, inplace=True)  #删除具体时间
+    df.drop("minute"+str(i), axis=1, inplace=True)  #删除具体时间
     fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False)  # 保存
 
     # table = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
@@ -140,6 +140,15 @@ def time_rearranged(file_name, column_name):
     #
     # dcu.drop_columns(file_name, 1 )
     return
+
+
+def time_split(file_name, column_name, i = 0):
+    df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
+    df["year"+str(i)], df["month"+str(i)], df["day"+str(i)] = df[column_name].str.split("-", n=2).str  # 分成三个表 n为劈开的次数
+    df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
+    fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False) # 保存
+    return
+
 
 
 def land_usage(file_name, column_name):
@@ -158,41 +167,31 @@ def land_usage(file_name, column_name):
                      u'冰川及永久积雪',u'水域及水利设施用地']
     status_12 = [u'12', u'121', u'122', u'123', u'124', u'125', u'126', u'127', u'空闲地', u'设施农用地',
                      u'田坎', u'盐碱地', u'沼泽地', u'沙地', u'裸地',u'其他土地']
-    status_no = [u'0',u'土地面积(公顷)'] #错误的类别
+    status_no = [u'0',u'土地面积(公顷)', 'Unknown'] #错误的类别
     status_list = [status_5, status_6, status_7, status_8, status_9, status_10, status_11, status_12, status_no]
     status_after = [5, 6, 7, 8, 9, 10, 11, 12, -1]
-    dcu.merge_status(file_name, column_name, status_list, status_after)
+    dcu.merge_status(file_name, column_name, status_list, status_after, empty_mask='-1')
     return
 
 
 
 
 def clean_gddkgs():
-    time_rearranged(u'购地-地块公示', u'时间')
-
     file_name = u'购地-地块公示'
-    dcu.drop_columns(file_name, u'行政区')
-    dcu.drop_columns(file_name, u'出让年限')
-    dcu.drop_columns(file_name, u'土地使用条件')
 
-    dcu.merge_status(file_name, u'公示日期', [], [], empty_mask='-65535')
+    time_rearranged(file_name, u'时间'.encode('utf-8'))
+    time_split(file_name, 'time0', i = 0)
 
 
-    # wr1 = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')
-    # # wr1 = wr1.fillna({u'纳税人资格'.encode('utf-8'): 'unknown'})  # 对空值进行处理以进行索引
-    #
-    # fu.write_file(wr1, clean_data_temp_file_url,file_name, ext='.xlsx', sheet_name='Sheet', index=False)
+    dcu.drop_columns(file_name, u'行政区'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'出让年限'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地使用条件'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'公示日期'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'成交价（万元）'.encode('utf-8'))
 
-    land_usage(u'购地-地块公示', u'土地用途')
+    land_usage(file_name, u'土地用途'.encode('utf-8'))
 
     return
-
-    # AB =1 CD =2
-    # status_1 = [u'A', u'B']
-    # status_2 = [u'C', u'D']
-    # status_list = [status_1,status_2]
-    # status_after = [1,2]
-    # dcu.merge_status('temp', 'a',status_list, status_after)
 
 #把土地用途转换为数字
 
@@ -279,42 +278,41 @@ def clean_gddkgs():
 
 '''
 
-def empty_value_handle_gdscjytddy():
-    """
-    empty_value handle for table
-    :return:
-    """
-    empty_check_list = [u'抵押面积(公顷)'.encode('utf-8'),
-                        u'土地用途'.encode('utf-8'),
-                        u'抵押土地用途'.encode('utf-8'),
-                        u'抵押土地权属性质与使用权类型'.encode('utf-8'),
-                        u'评估金额(万元)'.encode('utf-8'),
-                        u'抵押金额(万元)'.encode('utf-8'),
-                        u'土地抵押登记结束时间'.encode('utf-8')]
-    dcu.drop_rows_too_many_empty(u'购地-市场交易-土地抵押.xlsx', columns=empty_check_list, thresh=3)
-    # panaly.list_category_columns_values([u'购地-市场交易-土地抵押'], u'购地-市场交易-土地抵押_empty_handled',
-    #                                     file_url=clean_data_temp_file_url)
+def land_status(file_name, column_name):
+    status_5 = [u'国有']
+    status_6 = [u'集体']
+    status_no = ['-1'] #错误的类别
+    status_list = [status_5, status_6, status_no]
+    status_after = [1, 2, -1]
+    dcu.merge_status(file_name, column_name, status_list, status_after, empty_mask='-1')
     return
+
 
 
 
 def clean_gdscjytddy():
     file_name = u'购地-市场交易-土地抵押'
 
-    time_rearranged(file_name, u'土地抵押登记起始时间')  # 两种时间会被分割为0和0.1的表头
-    time_rearranged(file_name, u'土地抵押登记结束时间')
 
-    dcu.drop_columns(file_name, u'土地抵押人性质')
 
-    dcu.merge_status(file_name, u'抵押面积(公顷)', [], [], empty_mask='-65535')
-    dcu.merge_status(file_name, u'土地面积', [], [], empty_mask='-65535')
-    dcu.merge_status(file_name, u'评估金额(万元)', [], [], empty_mask='-65535')
-    dcu.merge_status(file_name, u'抵押金额(万元)', [], [], empty_mask='-65535')
+    dcu.drop_columns(file_name, u'土地抵押人性质'.encode('utf-8'))
 
-    land_usage(file_name, u'土地用途')
-    land_usage(file_name, u'抵押土地用途')
+    dcu.merge_status(file_name, u'抵押面积(公顷)'.encode('utf-8'), [], [], empty_mask='0')
+    dcu.merge_status(file_name, u'土地面积'.encode('utf-8'), [], [], empty_mask='0')
+    dcu.merge_status(file_name, u'评估金额(万元)'.encode('utf-8'), [], [], empty_mask='0')
+    dcu.merge_status(file_name, u'抵押金额(万元)'.encode('utf-8'), [], [], empty_mask='0')
+    dcu.merge_status(file_name, u'土地抵押登记结束时间'.encode('utf-8'), [], [], empty_mask='0000-00-00')
 
-    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型', [u'国有', u'集体'], empty_mask='Unknown', others_mask='Others')
+    time_rearranged(file_name, u'土地抵押登记起始时间'.encode('utf-8'), i = 0)
+    time_split(file_name, 'time0'.encode('utf-8'), i = 0)
+    time_rearranged(file_name, u'土地抵押登记结束时间'.encode('utf-8'), i = 1)
+    time_split(file_name, 'time1'.encode('utf-8'), i=1)
+
+    land_usage(file_name, u'土地用途'.encode('utf-8'))
+    land_usage(file_name, u'抵押土地用途'.encode('utf-8'))
+
+    dcu.extract_keyword(file_name, u'抵押土地权属性质与使用权类型'.encode('utf-8'), [u'国有', u'集体'], empty_mask='-1', others_mask='3')
+    land_status(file_name, u'抵押土地权属性质与使用权类型'.encode('utf-8')) # 1：国有，2：集体，3：others，-1：Unknown
 
     return
 
@@ -409,20 +407,19 @@ def clean_gdscjytddy():
 
 def clean_gdscjytdzr():
     file_name = u'购地-市场交易-土地转让'
-    time_rearranged(file_name, u'成交时间'.encode('utf-8'))
+    time_rearranged(file_name, u'成交时间'.encode('utf-8'), i = 0)
+    time_split(file_name, 'time0', i = 0)
 
-    # 时间会被分割为0的表头
+    dcu.drop_columns(file_name, u'土地使用年限'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地级别'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地使用权类型'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地利用状况'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'转让方式'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'转让价格(万元)'.encode('utf-8'))
 
-    dcu.drop_columns(file_name, u'土地使用年限')
-    dcu.drop_columns(file_name, u'土地级别')
-    dcu.drop_columns(file_name, u'土地使用权类型')
-    dcu.drop_columns(file_name, u'土地利用状况')
-    dcu.drop_columns(file_name, u'转让方式')
-    dcu.drop_columns(file_name, u'转让价格(万元)')
+    dcu.merge_status(file_name, u'土地面积(公顷)'.encode('utf-8'), [], [], empty_mask='0')
 
-    dcu.merge_status(file_name, u'土地面积(公顷)', [], [], empty_mask='-65535')
-
-    land_usage(file_name, u'土地用途')
+    land_usage(file_name, u'土地用途'.encode('utf-8'))
 
     return
 
@@ -483,18 +480,22 @@ def data_clean_landing_purchase_fdcdqygdqk():
         98% null, turn null into 'Unknown'
         -----------------------------
         """
-    dcu.drop_columns(u'购地-房地产大企业购地情况', u'行政区')  # 删除行政区
+    file_name = u'购地-房地产大企业购地情况'
+    dcu.drop_columns(file_name, u'行政区'.encode('utf-8'))  # 删除行政区
+    dcu.drop_columns(file_name, u'供应方式'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'成交价款（万元）'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'最小容积率'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'最大容积率'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定动工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定竣工时间'.encode('utf-8'))
+
     # 日期：需要去掉小数部分
+    time_rearranged(file_name, u'签订日期'.encode('utf-8'), i = 0)
+    time_split(file_name, 'time0', i = 0)
 
-    land_usage(u'购地-房地产大企业购地情况', u'土地用途')  # 土地用途分类
+    land_usage(file_name, u'土地用途'.encode('utf-8'))  # 土地用途分类
 
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'供地总面积（公顷）', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')  # 空值处理
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
+    dcu.merge_status(file_name, u'供地总面积（公顷）'.encode('utf-8'), [], [],empty_mask='0')
     return
 
 
@@ -543,29 +544,25 @@ def data_clean_landing_purchase_fdcddkcrqk():
         99% null, turn null into 'Unknown'
         -----------------------------
         """
-    dcu.drop_columns(u'购地-房地产大地块出让情况', u'行政区')
+
+    file_name = u'购地-房地产大地块出让情况'
+    dcu.drop_columns(file_name, u'约定动工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定竣工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'供应方式'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'成交价款（万元）'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'容积率上限'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'容积率下限'.encode('utf-8'))
+
     # 日期：需要去掉小数部分
+    time_rearranged(file_name, u'签订日期'.encode('utf-8'), i=0)
+    time_split(file_name, 'time0', i=0)
 
-    land_usage(u'购地-房地产大地块出让情况', u'土地用途')
+    land_usage(file_name, u'土地用途'.encode('utf-8'))
 
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定动工时间',[],[])   # 其他空值unknown
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最小容积率', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'最大容积率', [], [],empty_mask='-65535')   # 其他空值unknown
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'成交价款（万元）', [], [],empty_mask='-65535') # 数值型空值-665535
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'约定竣工时间', [], [])
-    dcu.merge_status(u'购地-房地产大企业购地情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
-
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'供地总面积', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'约定动工时间',[],[])
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'容积率下限', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'容积率上限', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'成交价款（万元）', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'约定竣工时间', [], [])
-    dcu.merge_status(u'购地-房地产大地块出让情况', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
+    dcu.merge_status(file_name, u'供地总面积'.encode('utf-8'), [], [],empty_mask= 0)
     return
 
-    land_usage(u'购地-房地产大地块出让情况',u'土地用途')
+
 def data_clean_landing_purchase_jggg():
     """
                 Dirty value handle for table 购地-结果公告.xlsx.
@@ -644,27 +641,30 @@ def data_clean_landing_purchase_jggg():
         99% null, drop
         -----------------------------
         """
-    dcu.drop_columns(u'购地-结果公告', u'土地来源')
-    dcu.drop_columns(u'购地-结果公告', u'土地使用年限')
-    dcu.drop_columns(u'购地-结果公告', u'行业分类')
-    dcu.drop_columns(u'购地-结果公告', u'土地级别')
-    dcu.drop_columns(u'购地-结果公告', u'实际开工时间')
-    dcu.drop_columns(u'购地-结果公告', u'实际竣工时间')
-    dcu.drop_columns(u'购地-结果公告', u'批准单位')
+    file_name = u'购地-结果公告'
+
+    dcu.drop_columns(file_name, u'约定开工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定竣工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'实际开工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'实际竣工时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定交地时间'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'供应方式'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'批准单位'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'成交价格（万元）'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定容积率上限'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'约定容积率下限'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地级别'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'行业分类'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地来源'.encode('utf-8'))
+    dcu.drop_columns(file_name, u'土地使用年限'.encode('utf-8'))
 
     # 签订日期：需要去掉小数部分
+    time_rearranged(file_name, u'签订日期'.encode('utf-8'), i=0)
+    time_split(file_name, 'time0', i=0)
 
-    land_usage(u'购地-结果公告', u'土地用途')
+    land_usage(file_name, u'土地用途'.encode('utf-8'))
 
-    dcu.merge_status(u'购地-结果公告', u'总面积', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-结果公告', u'成交价格（万元）', [], [], empty_mask='-65535')
-    dcu.merge_status(u'购地-结果公告', u'约定容积率上限', [], [],empty_mask='-65535')
-    dcu.merge_status(u'购地-结果公告', u'约定容积率下限', [], [],empty_mask='-65535')
-
-    dcu.merge_status(u'购地-结果公告', u'约定交地时间', [], [])
-    dcu.merge_status(u'购地-结果公告', u'约定开工时间', [], [])
-    dcu.merge_status(u'购地-结果公告', u'约定竣工时间', [], [])
-    dcu.merge_status(u'购地-结果公告', u'供应方式', [[u'划拨'],[u'协议出让'],[u'拍卖出让'],[u'招标出让'],[u'挂牌出让']], [1,2,3,4,5])
+    dcu.merge_status(file_name, u'总面积'.encode('utf-8'), [], [],empty_mask= 0)
     return
 
 # data_clean_landing_purchase.data_clean_landing_purchase_fdcddkcrqk()

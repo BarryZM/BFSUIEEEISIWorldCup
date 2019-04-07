@@ -449,9 +449,9 @@ def clean_custom_credit():
     dcu.merge_status(file_name, u'经济区划'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(u'海关进出口信用', u'经营类别'.encode('utf-8'), [], [], empty_mask='Unknown')
 
-    status_normal = [u'1']  # 搜索满足这个条件的
-    status_list = [status_normal]
-    status_after = ['Unknown']  # 改成这个
+    # status_normal = [u'1']  # 搜索满足这个条件的
+    # status_list = [status_normal]
+    # status_after = ['Unknown']  # 改成这个
     dcu.merge_status(u'海关进出口信用', u'信用等级'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(u'海关进出口信用', u'经济区划'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(u'海关进出口信用', u'海关注销标志'.encode('utf-8'), [], [], empty_mask='Unknown')

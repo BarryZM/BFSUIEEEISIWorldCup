@@ -629,9 +629,20 @@ def pic_scatter():
 #                   ]
 
 
-indexes_filter = ['bidding'
-                  ]
+indexes_filter = ['bidding',
+                  'register_capital',
+                  'status_of_announcement_1',
+                  'status_of_announcement_3',
+                  'status_of_announcement_4',
+                  'status_of_announcement_6',
+                  'status_of_announcement_7',
+                  'status_of_announcement_8',
+                  'status_of_announcement_18',
+                  'province_11',
+                  'province_15',
+                  'province_23',
+                  'province_33']
 
 
 def drop_useless_indexes_first_stage():
-    edu.drop_useless_indexes([u'招投标'], indexes_filter)
+    edu.drop_useless_indexes([category_basic_information], indexes_filter)

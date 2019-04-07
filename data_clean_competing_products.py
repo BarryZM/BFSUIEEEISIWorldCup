@@ -12,6 +12,7 @@ import data_clean_utils as dcu
 import primary_analysis as panaly
 from files_category_info import category_competing_products
 from file_directions import clean_data_temp_file_url
+import file_utils as fu
 
 
 def raw_files_primary_analysis():
@@ -95,6 +96,13 @@ def primary_analysis_after_duplicate_handled():
     We consider each part as an independent status, for these empty value, we just add another status: 'Unknown'
     -----------------------------
 """
+def time_split(file_name, column_name, i = 0):
+    df = fu.read_file_to_df(clean_data_temp_file_url, file_name, sheet_name='Sheet')  # 读取工作表
+    df["year"+str(i)], df["month"+str(i)], df["day"+str(i)] = df[column_name].str.split("-", n=2).str  # 分成三个表 n为劈开的次数
+    df.drop(column_name, axis=1, inplace=True)  # 删除原有的列
+    fu.write_file(df, clean_data_temp_file_url, file_name, ext='.xlsx', sheet_name='Sheet', index=False) # 保存
+    return
+
 
 
 def industry(file_name, column_name):  # 行业类别进行数字化处理
@@ -218,7 +226,7 @@ def clean_competing_products():
     dcu.merge_status(file_name, u'竞品的行业'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'竞品详细地址'.encode('utf-8'), [], [], empty_mask='Unknown')
     dcu.merge_status(file_name, u'竞品运营状态'.encode('utf-8'), [], [], empty_mask='Unknown')
-    dcu.merge_status(file_name, u'竞品成立时间'.encode('utf-8'), [], [], empty_mask='Unknown')
+    dcu.merge_status(file_name, u'竞品成立时间'.encode('utf-8'), [], [], empty_mask='0000-00-00')
     dcu.merge_status(file_name, u'竞品轮次'.encode('utf-8'), [], [], empty_mask='Unknown')
 
     dcu.extract_keyword(file_name, u'竞品详细地址'.encode('utf-8'), [u'北京', u'上海', u'广州', u'深圳', u'成都',
@@ -252,6 +260,8 @@ def clean_competing_products():
     round(file_name, u'竞品轮次'.encode('utf-8'))
     status(file_name, u'竞品运营状态'.encode('utf-8'))
     address(file_name,u'竞品详细地址'.encode('utf-8'))
+
+    time_split(file_name,  u'竞品成立时间'.encode('utf-8'), i = 0)
 
     return
 

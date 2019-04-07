@@ -67,7 +67,10 @@ def generate_index_competing_products(corporate_start, corporate_end):
                'products_industry_33',
                'products_industry_34',
                'products_before_IPO',
-               'products_after_IPO']
+               'products_after_IPO',
+               'products_set_up_before_2000',
+               'products_set_up_between_2000_and_2010',
+               'products_set_up_after_2010']
     dis_df = pd.DataFrame(columns=columns)
 
     data_frame = fu.read_file_to_df(clean_data_temp_file_url, u'竞品')
@@ -80,6 +83,9 @@ def generate_index_competing_products(corporate_start, corporate_end):
         total_num3 = 0
         total_num4 = 0
         total_num5 = 0
+        total_num6 = 0
+        total_num7 = 0
+        total_num8 = 0
 
         df_temp = data_frame[data_frame[u'企业编号'.encode('utf-8')] == corporate]
 
@@ -125,8 +131,20 @@ def generate_index_competing_products(corporate_start, corporate_end):
         row_list.append(len(y_df))
         total_num5 += len(df_temp)
 
-        # print(len(row_list))
+        # 竞品成立时间在2000年前
+        y_df = df_temp.loc[(df_temp['year0'] > 1000) & (df_temp['year0'] <= 2000)]
+        row_list.append(len(y_df))
+        total_num6 += len(df_temp)
 
+        # 竞品成立时间在2000年-2010年之间
+        y_df = df_temp.loc[(df_temp['year0'] > 2000) & (df_temp['year0'] <= 2010)]
+        row_list.append(len(y_df))
+        total_num7 += len(df_temp)
+
+        # 竞品成立时间在2010年之后
+        y_df = df_temp.loc[df_temp['year0'] > 2010]
+        row_list.append(len(y_df))
+        total_num8 += len(df_temp)
 
         row_dict[corporate] = row_list
 
