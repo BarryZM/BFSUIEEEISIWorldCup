@@ -9,6 +9,7 @@ from sklearn.preprocessing import Imputer
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
@@ -61,7 +62,15 @@ def random_forest_kneighbours_reg(data, target, reg_target, test_data, test_targ
     kneighbors_reg(data, reg_target, test_data, test_target)
 
 
+def divide_num(x):
+    n = 3
+    return int(x/n) * n
+
+
 def random_forest_linear_reg(data, target, reg_target, test_data, test_target, features=None):
+    prediction_fit, prediction = random_forest(data, map(divide_num, target), test_data, test_target, features)
+    data = np.c_[data, prediction_fit]
+    test_data = np.c_[test_data, prediction]
     prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
     data = np.c_[data, prediction_fit]
     test_data = np.c_[test_data, prediction]
@@ -100,6 +109,13 @@ def gradient_boosting(data, target, test_data, test_target):
 
 def linear_regression(data, target, test_data, test_target):
     model = LinearRegression()
+    model.fit(data, target)
+    prediction = model.predict(test_data)
+    return validation.cal_rmse(prediction, test_target)
+
+
+def logistic_regression(data, target, test_data, test_target):
+    model = LogisticRegression()
     model.fit(data, target)
     prediction = model.predict(test_data)
     return validation.cal_rmse(prediction, test_target)
