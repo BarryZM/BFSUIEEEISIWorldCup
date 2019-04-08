@@ -63,7 +63,7 @@ def generate_index_basic_info():
     data_frame.loc[((data_frame[u'注销原因'.encode('utf-8')] == -1) & (data_frame[u'注销时间'.encode('utf-8')]== -1)), 'log_out_or_not'] = 1
     data_frame.drop([u'注销原因'.encode('utf-8'), u'注销时间'.encode('utf-8')], axis=1, inplace=True)
 
-    data_frame.drop(['month', 'day'], axis=1, inplace=True)
+    data_frame.drop(['month0', 'day0'], axis=1, inplace=True)
 
     fu.write_file(data_frame, corporation_index_file_url, u'工商基本信息表_index', index=True)
     return
@@ -273,15 +273,15 @@ def generate_index_tender(corporate_start, corporate_end):
             row_list.append(len(y_df))
             total_num3 += len(df_temp)
 
-        y_df = df_temp[df_temp['year'] <= 2009]
+        y_df = df_temp[(df_temp['year0'] <= 2009) & (df_temp['year0'] >1000)]
         row_list.append(len(y_df))
         total_num4 += len(df_temp)
 
-        y_df = df_temp[(df_temp['year0'] >2009) & (df_temp['year'] <= 2013)]
+        y_df = df_temp[(df_temp['year0'] >2009) & (df_temp['year0'] <= 2013)]
         row_list.append(len(y_df))
         total_num5 += len(df_temp)
 
-        y_df = df_temp[(df_temp['year0'] > 2013) & (df_temp['year'] <= 2019)]
+        y_df = df_temp[(df_temp['year0'] > 2013) & (df_temp['year0'] <= 2019)]
         row_list.append(len(y_df))
         total_num6 += len(df_temp)
 
@@ -414,7 +414,7 @@ def generate_index_bond(corporate_start, corporate_end):
             total_num9 += len(df_temp)
 
         # 债券发行日期在2014年之前
-        y_df = df_temp[df_temp['year0'] <= 2013]
+        y_df = df_temp[(df_temp['year0'] <= 2013) & (df_temp['year0'] > 1000)]
         row_list.append(len(y_df))
         total_num11 += len(df_temp)
 
@@ -424,7 +424,7 @@ def generate_index_bond(corporate_start, corporate_end):
         total_num10 += len(df_temp)
 
         # 债券兑付日期在2020年之前
-        y_df = df_temp[df_temp['year1'] <= 2020]
+        y_df = df_temp[df_temp['year1'] <= 2020 & (df_temp['year1'] > 1000)]
         row_list.append(len(y_df))
         total_num13 += len(df_temp)
 
@@ -540,7 +540,7 @@ def generate_index_financing(corporate_start, corporate_end):
         total_num5 += len(df_temp)
 
         # 公司融资日期在2009年之前
-        y_df = df_temp[(df_temp['year0'] > 1) & (df_temp['year0'] < 2009)]
+        y_df = df_temp[(df_temp['year0'] > 1000) & (df_temp['year0'] < 2009)]
         row_list.append(len(y_df))
         total_num6 += len(df_temp)
 

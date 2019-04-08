@@ -22,6 +22,7 @@ def generate_index_competing_products(corporate_start, corporate_end):
     指标3：竞品聚集城市，总计3个，int
     指标4：竞品分行业总数，总计34个，int
     指标5：竞品融资状态数（before IPO/ after IPO），总计2个，int
+    指标6：竞品成立时间在2000年前，2000-2010,2010年后的个数，总计3个，int
     :return:
     """
 
