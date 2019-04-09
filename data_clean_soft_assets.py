@@ -398,3 +398,25 @@ def numeric_program():
 
     panaly.list_category_columns_values([u'项目信息'], u'项目信息_empty_handled',
                                         file_url=clean_data_temp_file_url)
+
+
+def work_():
+    duplicate_handle()
+    print('duplicate_handle() done!')
+    empty_value_handle_patent()
+    print('empty_value_handle_patent() done!')
+    empty_value_handle_work()
+    print('empty_value_handle_work() done!')
+    empty_value_handle_trademark()
+    print('empty_value_handle_trademark() done!')
+    empty_value_handle_copyright()
+    print('empty_value_handle_copyright() done!')
+    numeric_patent()
+    print('numeric_patent() done!')
+    numeric_trademark()
+    print('numeric_trademark() done!')
+    numeric_certificate()
+    print('numeric_certificate() done!')
+    numeric_program()
+    print('numeric_program() done!')
+    return
