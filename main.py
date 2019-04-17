@@ -10,7 +10,7 @@ import exploratory_data_analysis_soft_assets as edasa
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-if __name__ == 'main':
+if __name__ == '__main__':
     dcar.work_()
     dcsa.work_()
 
