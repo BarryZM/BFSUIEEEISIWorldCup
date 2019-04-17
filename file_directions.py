@@ -25,6 +25,12 @@ corporation_index_second_stage_file_url = u'data/test/processed_data/corporation
 corporation_index_scatter_file_url = u'data/test/processed_data/corporation_index_scatter/'  # corporation index scatter image files
 corporation_index_heat_map_file_url = u'data/test/processed_data/corporation_index_heat_map/'  # corporation index heatmap image files
 
+corporation_index_train_file_url = u'data/processed_data/corporation_index/'  # corporation index files
+corporation_index_second_stage_train_file_url = u'data/processed_data/corporation_index/second_stage/'  # corporation index files in the second stage
+corporation_index_scatter_train_file_url = u'data/processed_data/corporation_index_scatter/'  # corporation index scatter image files
+corporation_index_heat_map_train_file_url = u'data/processed_data/corporation_index_heat_map/'  # corporation index heatmap image files
+
+
 corporate_index_false = u'企业编号'.encode('utf-8')
 corporate_index_true = u'企业编号'.encode('utf-8')
 
