@@ -19,7 +19,7 @@ import exploratory_data_utils as edu
 import file_utils as fu
 import visualize_utils as vu
 from file_directions import clean_data_temp_file_url, corporation_index_file_url, corporate_index_false, \
-    corporate_index_true, working_file_url
+    corporate_index_true, working_file_url, test_start, test_end
 
 
 def generate_index_patent(corporate_start, corporate_end):
@@ -746,3 +746,16 @@ def display_indexes_corr_second_stage():
     """
     vu.pic_corr_heat_map(soft_assets_indexes, 'soft_assets',
                          index_file_url=corporation_index_file_url + 'second_stage/')
+
+
+def work_():
+    generate_index_patent(test_start, test_end)
+    generate_index_products(test_start, test_end)
+    generate_index_work(1001, 4000)
+    generate_index_trademark(1001, 4000)
+    generate_index_certificate(1001, 4000)
+    generate_index_copyright(1001, 4000)
+    generate_index_program(1001, 4000)
+    append_score()
+    drop_useless_indexes_first_stage()
+    drop_useless_indexes_second_stage()

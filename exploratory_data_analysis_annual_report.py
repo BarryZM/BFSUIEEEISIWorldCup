@@ -19,7 +19,7 @@ import data_clean_utils as dcu
 import exploratory_data_utils as edu
 import file_utils as fu
 import visualize_utils as vu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url
+from file_directions import clean_data_temp_file_url, corporation_index_file_url, working_file_url, test_start, test_end
 
 
 def generate_index_basic_info(corporate_start, corporate_end):
@@ -1022,3 +1022,27 @@ def display_indexes_corr_second_stage():
     """
     vu.pic_corr_heat_map(annual_report_indexes, 'annual_report',
                          index_file_url=corporation_index_file_url + 'second_stage/')
+
+
+def work_():
+    generate_index_basic_info(test_start, test_end)
+    generate_index_assets_info(test_start, test_end)
+    generate_index_out_invest_info(test_start, test_end)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-对外投资信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-对外投资信息_index')
+    generate_index_out_warrant_info(test_start, test_end)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
+    generate_index_social_security_info(test_start, test_end)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-社保信息_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-社保信息_index')
+    generate_index_social_security_growth_rate()
+    generate_index_share_exchange_info(test_start, test_end)
+    df = fu.read_file_to_df(corporation_index_file_url, u'年报-股东股权转让_index')
+    df = df.fillna(0)
+    fu.write_file(df, corporation_index_file_url, u'年报-股东股权转让_index')
+    drop_useless_indexes_first_stage()
+    drop_useless_indexes_second_stage()

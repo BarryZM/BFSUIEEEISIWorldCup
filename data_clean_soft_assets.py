@@ -417,6 +417,4 @@ def work_():
     print('numeric_trademark() done!')
     numeric_certificate()
     print('numeric_certificate() done!')
-    numeric_program()
-    print('numeric_program() done!')
     return
