@@ -7,6 +7,7 @@
 import sys
 import random
 import models
+import xlsxwriter as xlsxwt
 import file_utils as fu
 from file_directions import corporation_index_second_stage_file_url, corporation_index_file_url, \
     corporation_index_second_stage_train_file_url, corporation_index_train_file_url
@@ -194,11 +195,14 @@ def train_random_forest_kneighbours_reg():
     models.random_forest_kneighbours_reg(train_set, train_target, train_reg_target, test_set, test_target, features)
 
 
-def train_random_forest_linear_reg():
+def train_random_forest_random_forest():
     train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     print('indexes count: ' + str(len(train_set.columns)))
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
-    models.random_forest_linear_reg(train_set, train_target, train_reg_target, test_set, test_target, features)
+    prediction = models.random_forest_random_forest(train_set, train_target, train_reg_target, test_set, test_target,
+                                                    features)
+    corporations = list(test_set['Unnamed: 0'])
+    save_results(corporations, prediction)
 
 
 def train_xgboost():
@@ -242,3 +246,12 @@ def train_decision_tree_regress():
     train_set, train_target, test_set, test_target, train_reg_target = get_data_set()
     train_set, test_set, features = models.get_fitted_data_set(train_set, test_set)
     models.decision_tree_reg(train_set, train_target, test_set, test_target)
+
+
+def save_results(corporations, prediction):
+    wb = xlsxwt.Workbook(corporation_index_file_url + u'赛题1结果_Infinity.xlsx')
+    ws = wb.add_worksheet('Sheet')
+    for index_row in range(0, len(corporations)):
+        ws.write(index_row, 0, corporations[index_row])
+        ws.write(index_row, 1, prediction[index_row])
+    wb.close()

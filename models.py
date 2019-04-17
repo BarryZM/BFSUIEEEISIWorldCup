@@ -67,14 +67,15 @@ def divide_num(x):
     return int(x/n) * n
 
 
-def random_forest_linear_reg(data, target, reg_target, test_data, test_target=None, features=None):
+def random_forest_random_forest(data, target, reg_target, test_data, test_target=None, features=None):
     prediction_fit, prediction = random_forest(data, map(divide_num, target), test_data, test_target, features)
     data = np.c_[data, prediction_fit]
     test_data = np.c_[test_data, prediction]
     prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
-    data = np.c_[data, prediction_fit]
-    test_data = np.c_[test_data, prediction]
-    linear_regression(data, reg_target, test_data, test_target)
+    # data = np.c_[data, prediction_fit]
+    # test_data = np.c_[test_data, prediction]
+    # return linear_regression(data, reg_target, test_data, test_target)
+    return prediction
 
 
 def xgboost(data, target, test_data, test_target=None, features=None):
@@ -111,7 +112,8 @@ def linear_regression(data, target, test_data, test_target=None):
     model = LinearRegression()
     model.fit(data, target)
     prediction = model.predict(test_data)
-    return validation.cal_rmse(prediction, test_target)
+    validation.cal_rmse(prediction, test_target)
+    return prediction
 
 
 def logistic_regression(data, target, test_data, test_target=None):
