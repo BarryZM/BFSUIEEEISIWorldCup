@@ -4,9 +4,12 @@
  module for EDA(exploratory data analysis)
 """
 import file_utils as fu
-from file_directions import clean_data_temp_file_url, corporation_index_file_url
+from file_directions import clean_data_temp_file_url, corporation_index_file_url,  working_file_url
+from files_category_info import category_paying_taxes
 import pandas as pd
 import exploratory_data_utils as edu
+import visualize_utils as vu
+import data_clean_utils as dcu
 
 def generate_index_good_tax_year(corporate_start, corporate_end):
 
@@ -147,7 +150,78 @@ def generate_index_general_taxer(corporate_start, corporate_end):
     return
 
 
+def append_score():
+    """
+    append score to each index file.
+    :return:
+    """
+    score_frame = fu.read_file_to_df(working_file_url, u'企业评分')
+    score_frame = score_frame.set_index(u'企业编号'.encode('utf-8'))
 
+    for file_n in category_paying_taxes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame = data_frame.set_index('Unnamed: 0')
+
+        data_frame = data_frame.join(score_frame)
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index', index=True)
+    return
+
+
+def drop_score_empty():
+    """
+    some corporates lack of scores, we need to drop them.
+    :return:
+    """
+    empty_check_list = [u'企业总评分'.encode('utf-8')]
+    for file_n in category_paying_taxes:
+        print file_n
+
+        dcu.merge_rows(file_n + '_index', file_url=corporation_index_file_url,
+                       dst_file_url=corporation_index_file_url)
+        dcu.drop_rows_too_many_empty(file_n + '_index', file_url=corporation_index_file_url,
+                                     dst_file_url=corporation_index_file_url, columns=empty_check_list, thresh=1)
+
+
+def score_integerize():
+    """
+    scores are float, and we want try if integers will helps.
+    :return:
+    """
+    for file_n in category_paying_taxes:
+        print file_n
+
+        data_frame = fu.read_file_to_df(corporation_index_file_url, file_n + '_index')
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
+
+        fu.write_file(data_frame, corporation_index_file_url, file_n + '_index')
+
+
+def pic_scatter():
+    """
+    plot scatter pictures for each index and score.
+    :return:
+    """
+    vu.pic_scatter(category_paying_taxes, 'paying_taxes')
+
+#
+# indexes_filter = ['financing_count',
+#                   'invest_year_between_2009_and_2013',
+#                   'investment_amount_between_100million_and_500_million',
+#                   'investment_amount_less_than_100_million',
+#                   'investment_amount_more_than_500_million',
+#                   'investment_year_after_2013',000
+#                   'investment_year_before_2009'
+#                   ]
+
+
+indexes_filter = []
+
+
+def drop_useless_indexes_first_stage():
+    edu.drop_useless_indexes(category_paying_taxes, indexes_filter)
 
 
 

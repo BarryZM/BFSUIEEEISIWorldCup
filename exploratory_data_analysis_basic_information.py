@@ -645,4 +645,4 @@ indexes_filter = ['bidding',
 
 
 def drop_useless_indexes_first_stage():
-    edu.drop_useless_indexes([category_basic_information], indexes_filter)
+    edu.drop_useless_indexes(category_basic_information, indexes_filter)
