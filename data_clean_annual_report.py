@@ -878,21 +878,19 @@ def empty_value_handle_share_holder_info():
     return
 
 
-def numeric_handle_basic_info():
-    """
-    numeric data for table 年报-企业基本信息.
-    :return:
-    """
-    print 'mmmmm'
-
-
 def work_():
+    duplicate_handle()
+    print('duplicate_handle() done!')
+    empty_value_handle_basic_info()
+    print('empty_value_handle_basic_info() done!')
+    empty_value_handle_assets_info()
+    print('empty_value_handle_assets_info() done!')
+    empty_value_handle_out_warrant_info()
+    print('empty_value_handle_out_warrant_info() done!')
     empty_value_handle_social_security_info()
     print('empty_value_handle_social_security_info() done!')
     empty_value_handle_share_exchange_info()
     print('empty_value_handle_share_exchange_info() done!')
-    empty_value_handle_share_holder_info()
-    print('empty_value_handle_share_holder_info() done!')
     return
 
 

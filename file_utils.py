@@ -24,7 +24,14 @@ def read_file_to_df(file_dir, file_name, ext='.xlsx', sheet_name='Sheet'):
     if len(fn_split) > 1:
         ext = '.' + fn_split[1]
 
-    return pandas.read_excel(file_dir + file_name + ext, sheet_name=sheet_name)
+    if ext == '.xlsx':
+        return pandas.read_excel(file_dir + file_name + ext, sheet_name=sheet_name)
+    elif ext == '.xls':
+        return pandas.read_excel(file_dir + file_name + ext, sheet_name=sheet_name)
+    elif ext == '.csv':
+        return pandas.read_csv(file_dir + file_name + ext)
+    else:
+        return pandas.read_excel(file_dir + file_name + ext, sheet_name=sheet_name)
 
 
 def write_file_without_save(pf, writer, sheet_name='Sheet', index=False):

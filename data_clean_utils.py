@@ -15,7 +15,7 @@ sys.setdefaultencoding('utf-8')
 
 def merge_rows(file_name, keys=None, file_url=working_file_url, dst_file_url=clean_data_temp_file_url):
     """
-    merge a table's rows with the same unique keys.
+    remove duplicated rows.
     :param file_name:
     :param keys:
     :param file_url:

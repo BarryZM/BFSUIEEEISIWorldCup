@@ -13,8 +13,7 @@ category_annual_report_files = [u'年报-企业基本信息',
                                 u'年报-的对外提供保证担保信息',
                                 u'年报-社保信息',
                                 u'年报-网站或网点信息',
-                                u'年报-股东股权转让',
-                                u'年报-股东（发起人）及出资信息_rearranged']
+                                u'年报-股东股权转让']
 
 category_soft_assets_files = [u'专利',
                               u'产品',
@@ -24,8 +23,7 @@ category_soft_assets_files = [u'专利',
                               u'软著著作权',
                               u'项目信息']
 
-category_finance_files = [
-     u'上市公司财务信息-每股指标',
+category_finance_files = [u'上市公司财务信息-每股指标',
                           u'上市信息财务信息-财务风险指标',
                           u'上市信息财务信息-成长能力指标',
                           u'上市信息财务信息-利润表',
@@ -33,7 +31,7 @@ category_finance_files = [
                           u'上市信息财务信息盈利能力指标',
                           u'上市信息财务信息运营能力指标',
                           u'上市信息财务信息资产负债表'
-]
+                          ]
 
 category_competing_products = [u'竞品']
 

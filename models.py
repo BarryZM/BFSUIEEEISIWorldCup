@@ -34,7 +34,7 @@ def get_fitted_data_set(train_set, test_set):
     return train_set, test_set, features
 
 
-def random_forest(data, target, test_data, test_target, features=None):
+def random_forest(data, target, test_data, test_target=None, features=None):
     # for n in range(407, 410):
         n = 408  # 408 seems best with max_features 59 in these values
         print ('n = ' + str(n))
@@ -55,7 +55,7 @@ def random_forest(data, target, test_data, test_target, features=None):
         return prediction_fit, prediction
 
 
-def random_forest_kneighbours_reg(data, target, reg_target, test_data, test_target, features=None):
+def random_forest_kneighbours_reg(data, target, reg_target, test_data, test_target=None, features=None):
     prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
     data = np.c_[data, prediction_fit]
     test_data = np.c_[test_data, prediction]
@@ -67,17 +67,18 @@ def divide_num(x):
     return int(x/n) * n
 
 
-def random_forest_linear_reg(data, target, reg_target, test_data, test_target, features=None):
+def random_forest_random_forest(data, target, reg_target, test_data, test_target=None, features=None):
     prediction_fit, prediction = random_forest(data, map(divide_num, target), test_data, test_target, features)
     data = np.c_[data, prediction_fit]
     test_data = np.c_[test_data, prediction]
     prediction_fit, prediction = random_forest(data, target, test_data, test_target, features)
-    data = np.c_[data, prediction_fit]
-    test_data = np.c_[test_data, prediction]
-    linear_regression(data, reg_target, test_data, test_target)
+    # data = np.c_[data, prediction_fit]
+    # test_data = np.c_[test_data, prediction]
+    # return linear_regression(data, reg_target, test_data, test_target)
+    return prediction
 
 
-def xgboost(data, target, test_data, test_target, features=None):
+def xgboost(data, target, test_data, test_target=None, features=None):
     n = 406
     print ('n = ' + str(n))
     model = XGBClassifier()
@@ -95,7 +96,7 @@ def xgboost(data, target, test_data, test_target, features=None):
     validation.cal_rmse(prediction, test_target)
 
 
-def gradient_boosting(data, target, test_data, test_target):
+def gradient_boosting(data, target, test_data, test_target=None):
     model = GradientBoostingClassifier(n_estimators=100, learning_rate=1.0, max_depth=24, random_state=0)
     model.fit(data, target)
     prediction = model.predict(test_data)
@@ -107,35 +108,36 @@ def gradient_boosting(data, target, test_data, test_target):
     return validation.cal_rmse(prediction, test_target)
 
 
-def linear_regression(data, target, test_data, test_target):
+def linear_regression(data, target, test_data, test_target=None):
     model = LinearRegression()
     model.fit(data, target)
     prediction = model.predict(test_data)
-    return validation.cal_rmse(prediction, test_target)
+    validation.cal_rmse(prediction, test_target)
+    return prediction
 
 
-def logistic_regression(data, target, test_data, test_target):
+def logistic_regression(data, target, test_data, test_target=None):
     model = LogisticRegression()
     model.fit(data, target)
     prediction = model.predict(test_data)
     return validation.cal_rmse(prediction, test_target)
 
 
-def kneighbors(data, target, test_data, test_target):
+def kneighbors(data, target, test_data, test_target=None):
     model = KNeighborsClassifier()
     model.fit(data, target)
     prediction = model.predict(test_data)
     return validation.cal_rmse(prediction, test_target)
 
 
-def kneighbors_reg(data, target, test_data, test_target):
+def kneighbors_reg(data, target, test_data, test_target=None):
     model = KNeighborsRegressor()
     model.fit(data, target)
     prediction = model.predict(test_data)
     return validation.cal_rmse(prediction, test_target)
 
 
-def decision_tree_reg(data, target, test_data, test_target):
+def decision_tree_reg(data, target, test_data, test_target=None):
     model = DecisionTreeRegressor()
     model.fit(data, target)
     prediction = model.predict(test_data)

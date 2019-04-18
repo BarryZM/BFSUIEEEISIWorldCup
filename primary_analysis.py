@@ -122,7 +122,7 @@ def list_single_column_values(file_name, column_name, file_url=working_file_url)
 
 def list_file_columns_values(file_name, file_url=working_file_url):
     """
-
+    list a file's columns statistic info.
     :param file_name:
     :param file_url:
     :return:
