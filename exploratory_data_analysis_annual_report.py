@@ -84,7 +84,7 @@ def generate_index_basic_info(corporate_start, corporate_end):
         row_dict[corporate] = row_list
         dis_df = dis_df.append(pd.DataFrame(row_dict, index=columns).T, ignore_index=False)
 
-    fu.write_file(dis_df, corporation_index_file_url, u'年报-企业基本信息_index', index=True)
+    fu.write_file(dis_df, fu.check_file_url(corporation_index_file_url), u'年报-企业基本信息_index', index=True)
     return
 
 
@@ -797,11 +797,9 @@ def generate_index_share_holder_info_work():
 
 annual_report_indexes = [u'年报-企业基本信息',
                          u'年报-企业资产状况信息',
-                         u'年报-对外投资信息',
                          u'年报-的对外提供保证担保信息',
                          u'年报-社保信息',
-                         u'年报-股东股权转让',
-                         u'年报-股东（发起人）及出资信息'
+                         u'年报-股东股权转让'
                          ]
 
 
@@ -1027,10 +1025,6 @@ def display_indexes_corr_second_stage():
 def work_():
     generate_index_basic_info(test_start, test_end)
     generate_index_assets_info(test_start, test_end)
-    generate_index_out_invest_info(test_start, test_end)
-    df = fu.read_file_to_df(corporation_index_file_url, u'年报-对外投资信息_index')
-    df = df.fillna(0)
-    fu.write_file(df, corporation_index_file_url, u'年报-对外投资信息_index')
     generate_index_out_warrant_info(test_start, test_end)
     df = fu.read_file_to_df(corporation_index_file_url, u'年报-的对外提供保证担保信息_index')
     df = df.fillna(0)

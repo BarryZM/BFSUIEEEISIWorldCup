@@ -13,8 +13,7 @@ category_annual_report_files = [u'年报-企业基本信息',
                                 u'年报-的对外提供保证担保信息',
                                 u'年报-社保信息',
                                 u'年报-网站或网点信息',
-                                u'年报-股东股权转让',
-                                u'年报-股东（发起人）及出资信息_rearranged']
+                                u'年报-股东股权转让']
 
 category_soft_assets_files = [u'专利',
                               u'产品',

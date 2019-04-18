@@ -555,8 +555,7 @@ soft_assets_indexes = [u'专利',
                        u'作品著作权',
                        u'商标',
                        u'资质认证',
-                       u'软著著作权',
-                       u'项目信息'
+                       u'软著著作权'
                        ]
 
 
@@ -751,11 +750,9 @@ def display_indexes_corr_second_stage():
 def work_():
     generate_index_patent(test_start, test_end)
     generate_index_products(test_start, test_end)
-    generate_index_work(1001, 4000)
-    generate_index_trademark(1001, 4000)
-    generate_index_certificate(1001, 4000)
-    generate_index_copyright(1001, 4000)
-    generate_index_program(1001, 4000)
-    append_score()
+    generate_index_work(test_start, test_end)
+    generate_index_trademark(test_start, test_end)
+    generate_index_certificate(test_start, test_end)
+    generate_index_copyright(test_start, test_end)
     drop_useless_indexes_first_stage()
     drop_useless_indexes_second_stage()
