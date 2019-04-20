@@ -7,7 +7,7 @@ import sys
 import numpy
 import file_utils
 from file_directions import working_file_url, clean_data_temp_file_url, corporation_index_file_url, \
-    corporation_index_scatter_file_url
+    corporation_index_scatter_file_url, test_start, test_end
 import pandas
 import data_clean_utils as dcu
 import exploratory_data_utils as edu
@@ -37,7 +37,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
     """
 
     data_frame = file_utils.read_file_to_df(file_url, file_name)
-    date = data_frame[u'日期']  # 日期列
+    date = data_frame[u'日期'.encode('utf-8')]  # 日期列
     unique_date = numpy.sort(list(set(date)))  # 删除重复，并按时间排列
     # 只保留 16.9之后的
     # for j in range(0, len(unique_date)):
@@ -69,7 +69,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
 
     # 建立空表
     b = []
-    b = pandas.DataFrame(index=[range(1001, 4001)], columns=var_date)
+    b = pandas.DataFrame(index=[range(test_start, test_end)], columns=var_date)
 
     # 赋值
     for i in range(0, len(vars)):
@@ -77,7 +77,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
             company = data_frame.iloc[j, 0]
             # at后要写列的名字，不能写列数
             # company = data_frame.at[j, u'企业总评分']
-            this_season = data_frame.at[j, u'日期']
+            this_season = data_frame.at[j, u'日期'.encode('utf-8')]
             this_number = data_frame.at[j, vars[i]]
             if this_number != 'Unknown':
                 column = vars[i] + this_season.encode('utf-8')
@@ -105,12 +105,12 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
         u'负债:负债合计(元)',u'权益:实收资本(或股本)(元)',u'权益:资本公积金(元)',u'权益:盈余公积金(元)',u'权益:股东权益合计(元)',u'流动比率']
     import exploratory_data_finance
     
-    exploratory_data_finance.cross_section(u'上市公司财务信息-每股指标', [u'基本每股收益(元)', u'扣非每股收益(元)', u'稀释每股收益(元)',
-                u'每股净资产(元)', u'每股公积金(元)', u'每股未分配利润(元)', u'每股经营现金流(元)'])
-    exploratory_data_finance.cross_section(u'上市信息财务信息-财务风险指标', [u'资产负债率(%)',u'流动负债/总负债(%)',u'流动比率',u'速动比率'])
-    exploratory_data_finance.cross_section(u'上市信息财务信息-成长能力指标', [u'营业总收入(元)',u'毛利润(元)',u'归属净利润(元)',
-        u'扣非净利润(元)',u'营业总收入同比增长(元)',u'归属净利润同比增长(元)',u'扣非净利润同比增长(元)',
-        u'营业总收入滚动环比增长(元)',u'归属净利润滚动环比增长(元)',u'扣非净利润滚动环比增长(元)'])
+    exploratory_data_finance.cross_section(u'上市公司财务信息-每股指标', [u'基本每股收益(元)'.encode('utf-8'), u'扣非每股收益(元)'.encode('utf-8'), u'稀释每股收益(元)'.encode('utf-8'),
+                u'每股净资产(元)'.encode('utf-8'), u'每股公积金(元)'.encode('utf-8'), u'每股未分配利润(元)'.encode('utf-8'), u'每股经营现金流(元)'.encode('utf-8')])
+    exploratory_data_finance.cross_section(u'上市信息财务信息-财务风险指标', [u'资产负债率(%)'.encode('utf-8'),u'流动负债/总负债(%)'.encode('utf-8'),u'流动比率'.encode('utf-8'),u'速动比率'.encode('utf-8')])
+    exploratory_data_finance.cross_section(u'上市信息财务信息-成长能力指标', [u'营业总收入(元)'.encode('utf-8'),u'毛利润(元)'.encode('utf-8'),u'归属净利润(元)'.encode('utf-8'),
+        u'扣非净利润(元)'.encode('utf-8'),u'营业总收入同比增长(元)'.encode('utf-8'),u'归属净利润同比增长(元)'.encode('utf-8'),u'扣非净利润同比增长(元)'.encode('utf-8'),
+        u'营业总收入滚动环比增长(元)'.encode('utf-8'),u'归属净利润滚动环比增长(元)'.encode('utf-8'),u'扣非净利润滚动环比增长(元)'.encode('utf-8')])
     exploratory_data_finance.cross_section(u'上市信息财务信息-利润表', [u'营业收入(元)',u'营业成本(元)',u'销售费用(元)',u'财务费用(元)',
        u'管理费用(元)',u'资产减值损失(元)',u'投资收益(元)',u'营业利润(元)',u'利润总额(元)',u'所得税(元)',u'归属母公司所有者净利润(元)'])
     exploratory_data_finance.cross_section(u'上市信息财务信息-现金流量表', [u'经营:销售商品、提供劳务收到的现金(元)',u'经营:收到的税费返还(元)',
@@ -135,8 +135,8 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
 def drop_indexes_too_many_empty():  # 删空行太多的列。已经跑过一遍这个函数的表再跑会加一列序号
     for file_n in category_finance_files:
         df = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
-        df = df.dropna(axis=1, thresh=1000)
-        df = df.fillna(-65535)  # empty value is filled with -65535
+        df = df.dropna(axis=1, thresh=200)
+        df = df.fillna(-0.5)
         file_utils.write_file(df, corporation_index_file_url, file_n + '_index')
 
 
@@ -217,3 +217,58 @@ def gen_growth_ratio():
                                             default=0, jump_value=-65535), axis=1)
 
     file_utils.write_file(data_frame, corporation_index_file_url, u'上市信息财务信息-利润表' + '_index')
+
+
+indexes_filter = [u'营业总收入(元)2017-12-31',
+                  u'营业总收入(元)2018-09-30',
+                  u'毛利润(元)2017-09-30',
+                  u'毛利润(元)2017-12-31',
+                  u'毛利润(元)2018-03-31',
+                  u'毛利润(元)2018-06-30'
+                  ]
+
+
+def drop_useless_indexes_first_stage():
+    edu.drop_useless_indexes([u'上市信息财务信息-成长能力指标'], indexes_filter)
+
+
+def work_():
+    cross_section(u'上市公司财务信息-每股指标',
+                  [u'基本每股收益(元)'.encode('utf-8'), u'扣非每股收益(元)'.encode('utf-8'),
+                   u'稀释每股收益(元)'.encode('utf-8'),
+                   u'每股净资产(元)'.encode('utf-8'), u'每股公积金(元)'.encode('utf-8'),
+                   u'每股未分配利润(元)'.encode('utf-8'), u'每股经营现金流(元)'.encode('utf-8')])
+    cross_section(u'上市信息财务信息-财务风险指标',
+                  [u'资产负债率(%)'.encode('utf-8'), u'流动负债/总负债(%)'.encode('utf-8'),
+                   u'流动比率'.encode('utf-8'), u'速动比率'.encode('utf-8')])
+    cross_section(u'上市信息财务信息-成长能力指标', [u'营业总收入(元)'.encode('utf-8'), u'毛利润(元)'.encode('utf-8'),
+                                       u'归属净利润(元)'.encode('utf-8'),
+                                       u'扣非净利润(元)'.encode('utf-8'),
+                                       u'营业总收入同比增长(元)'.encode('utf-8'),
+                                       u'归属净利润同比增长(元)'.encode('utf-8'),
+                                       u'扣非净利润同比增长(元)'.encode('utf-8'),
+                                       u'营业总收入滚动环比增长(元)'.encode('utf-8'),
+                                       u'归属净利润滚动环比增长(元)'.encode('utf-8'),
+                                       u'扣非净利润滚动环比增长(元)'.encode('utf-8')])
+    cross_section(u'上市信息财务信息盈利能力指标',
+                  [u'加权净资产收益率(%)'.encode('utf-8'), u'摊薄净资产收益率(%)'.encode('utf-8'), u'摊薄总资产收益率(%)'.encode('utf-8'),
+                   u'毛利率(%)'.encode('utf-8'), u'净利率(%)'.encode('utf-8'),
+                   u'实际税率(%)'.encode('utf-8')])
+    cross_section(u'上市信息财务信息运营能力指标',
+                  [u'总资产周转率(次)'.encode('utf-8'), u'应收账款周转天数(天)'.encode('utf-8'), u'存货周转天数(天)'.encode('utf-8')])
+    cross_section(u'上市信息财务信息资产负债表', [u'资产:货币资金(元)', u'资产:应收账款(元)'.encode('utf-8'), u'资产:其它应收款(元)'.encode('utf-8'),
+                                     u'资产:存货(元)'.encode('utf-8'),
+                                     u'资产:流动资产合计(元)'.encode('utf-8'), u'资产:长期股权投资(元)'.encode('utf-8'),
+                                     u'资产:累计折旧(元)'.encode('utf-8'),
+                                     u'资产:固定资产(元)'.encode('utf-8'), u'资产:无形资产(元)'.encode('utf-8'),
+                                     u'资产:资产总计(元)'.encode('utf-8'),
+                                     u'负债:应付账款(元)'.encode('utf-8'),
+                                     u'负债:预收账款(元)'.encode('utf-8'), u'负债:存货跌价准备(元)'.encode('utf-8'),
+                                     u'负债:流动负债合计(元)'.encode('utf-8'),
+                                     u'负债:长期负债合计(元)'.encode('utf-8'),
+                                     u'负债:负债合计(元)'.encode('utf-8'), u'权益:实收资本(或股本)(元)'.encode('utf-8'),
+                                     u'权益:资本公积金(元)'.encode('utf-8'),
+                                     u'权益:盈余公积金(元)'.encode('utf-8'), u'权益:股东权益合计(元)'.encode('utf-8'),
+                                     u'流动比率'.encode('utf-8')])
+    drop_indexes_too_many_empty()
+    drop_useless_indexes_first_stage()
