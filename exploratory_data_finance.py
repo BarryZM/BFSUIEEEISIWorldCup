@@ -69,7 +69,7 @@ def cross_section(file_name, vars, file_url=clean_data_temp_file_url, dst_file_u
 
     # 建立空表
     b = []
-    b = pandas.DataFrame(index=[range(test_start, test_end)], columns=var_date)
+    b = pandas.DataFrame(index=[range(test_start, test_end + 1)], columns=var_date)
 
     # 赋值
     for i in range(0, len(vars)):
@@ -171,7 +171,7 @@ def drop_score_empty():  # 删去评分为空的公式，如果第一列名为�
     some corporates lack of scores, we need to drop them.
     :return:
     """
-    empty_check_list = [u'企业总评分']
+    empty_check_list = [u'企业总评分'.encode('utf-8')]
     for file_n in category_finance_files:
         print file_n
 
@@ -190,7 +190,7 @@ def score_integerize():  # 评分化为整数
         print file_n
 
         data_frame = file_utils.read_file_to_df(corporation_index_file_url, file_n + '_index')
-        data_frame['int_score'] = data_frame[u'企业总评分'].apply(lambda x: round(x))
+        data_frame['int_score'] = data_frame[u'企业总评分'.encode('utf-8')].apply(lambda x: round(x))
 
         file_utils.write_file(data_frame, corporation_index_file_url, file_n + '_index')
 
