@@ -629,19 +629,7 @@ def pic_scatter():
 #                   ]
 
 
-indexes_filter = ['bidding',
-                  'register_capital',
-                  'status_of_announcement_1',
-                  'status_of_announcement_3',
-                  'status_of_announcement_4',
-                  'status_of_announcement_6',
-                  'status_of_announcement_7',
-                  'status_of_announcement_8',
-                  'status_of_announcement_18',
-                  'province_11',
-                  'province_15',
-                  'province_23',
-                  'province_33']
+indexes_filter = ['bidding']
 
 
 def drop_useless_indexes_first_stage():
