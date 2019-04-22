@@ -25,6 +25,8 @@ corporation_index_second_stage_file_url = u'data/test/processed_data/corporation
 corporation_index_scatter_file_url = u'data/test/processed_data/corporation_index_scatter/'  # corporation index scatter image files
 corporation_index_heat_map_file_url = u'data/test/processed_data/corporation_index_heat_map/'  # corporation index heatmap image files
 
+corporation_prediction_url = u'data/test/'
+
 corporation_index_train_file_url = u'data/processed_data/corporation_index/'  # corporation index files
 corporation_index_second_stage_train_file_url = u'data/processed_data/corporation_index/second_stage/'  # corporation index files in the second stage
 corporation_index_scatter_train_file_url = u'data/processed_data/corporation_index_scatter/'  # corporation index scatter image files
